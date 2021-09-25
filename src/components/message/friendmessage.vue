@@ -102,6 +102,7 @@ export default {
         visibleIng:true,
         wxid: this.selectedChat.wxid
       };
+      console.log(info);
       this.$store.commit("system/setHeadMenu", info);
     },
     showChatInfo() {

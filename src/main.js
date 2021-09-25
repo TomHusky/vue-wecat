@@ -33,11 +33,9 @@ Object.keys(directive).forEach(key => {
 })
 
 
-/* eslint-disable no-new */
-const vm = new Vue({
+new Vue({
   el: '#app',
   router,
   store,
-  template: '<App/>',
-  components: {App}
-})
+  render: h => h(App),
+}).$mount('#app')

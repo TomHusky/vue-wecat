@@ -65,8 +65,9 @@ export default {
         state.chat.chatlist.unshift({
           id: 1,
           type: 1,
+          wxid: friend.wxid,
           info: {
-            name: friend.nickname,
+            nickname: friend.nickname,
             img: friend.img,
             remark: friend.remark,
           },
@@ -79,6 +80,7 @@ export default {
           index: 1,
         });
       } else {
+        state.chat.selectId = msg.id;
         state.friend.selectFriendWxid = msg.wxid;
       }
       this.$router.push({path:'/chat'})

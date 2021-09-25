@@ -107,6 +107,7 @@ export default {
       border-bottom: 1px solid #D6D6D6
       font-family: inherit
       overflow: hidden
+      background-color: #F5F5F5
       background-repeat: no-repeat
       background-position: center
       background-position-x: 5px
