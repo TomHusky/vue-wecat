@@ -21,7 +21,7 @@ const actions = {
       }).then(res => {
         if (res) {
           if (res.code === 0) {
-            let token = res.data.access_token
+            let token = res.data.token
             commit('setToken', { token, auto })
             resolve(res)
           }

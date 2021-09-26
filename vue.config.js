@@ -6,10 +6,10 @@ const config = require('./src/config')
 let BASE_URL = ''
 switch (process.env.NODE_ENV) {
     case 'development':
-        BASE_URL = config.publicPath.dev  //这里是本地的请求url
+        BASE_URL = config.publicPath.dev //这里是本地的请求url
         break
     case 'production':
-        BASE_URL = config.publicPath.pro   //生产环境url
+        BASE_URL = config.publicPath.pro //生产环境url
         break
 }
 
@@ -21,6 +21,9 @@ module.exports = {
     // 如果您的应用程序部署在子路径中，则需要在这指定子路径
     // 例如：https://www.foobar.com/my-app/
     // 需要将它改为'/my-app/'
+    devServer: {
+        port: 8000, // 端口
+    },
     publicPath: BASE_URL,
     // 如果你不需要使用eslint，把lintOnSave设为false即可
     lintOnSave: false,

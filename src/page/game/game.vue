@@ -1,11 +1,7 @@
 <template>
   <div class="game">
-    <canvas
-      @click="dot"
-      id="chess"
-      width="450px"
-      height="450px"
-    ></canvas>
+    <div class="game-head" v-drag></div>
+    <canvas @click="dot" id="chess" width="450px" height="450px"></canvas>
   </div>
 </template>
 
@@ -271,16 +267,22 @@ export default {
 };
 </script>
 
-<style scoped>
-.game{
+<style lang="stylus" scoped>
+.game {
   width: 100%;
   height: 100%;
   background: #E6E6E6;
   overflow-y: scroll;
+
+  .game-head {
+    height: 60px;
+    border-bottom: 1px solid #deab8a;
+  }
 }
+
 canvas {
   display: block;
-  margin: 50px auto;
+  margin: 20px auto;
   background-color: #d39d45;
   box-shadow: 1px 1px 2px #888888;
 }

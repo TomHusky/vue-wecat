@@ -91,11 +91,11 @@ function initWebSocket() {
  */
 export function bulidWebsocket(url, reqtoken, open, successCallback, errCallback) {
   wsUrl = url
-  initWebSocket()
   token = reqtoken;
   messageCallback = successCallback;
   errorCallback = errCallback;
   websocketOpenOk = open;
+  initWebSocket()
 }
 
 /**

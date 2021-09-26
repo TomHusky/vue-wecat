@@ -80,14 +80,12 @@ export default {
       app.style.top = (height - app.offsetHeight) / 2 + "px";
     },
     wsOpen(){
-      console.log(1111)
     },
     wsMessage (data) {
       const dataJson = data
       console.log(dataJson)
     },
     wsError () {
-      console.log(222)
     },
   },
 };

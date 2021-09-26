@@ -24,20 +24,20 @@ const router = new Router({
 })
 // router.push({ path: '/' });
 
-// router.beforeEach((to, from, next) => {
-//   const token = getToken();
-//   if(to.path == "/login"){
-//     if(token){
-//       next("/");
-//     }else{
-//       next();
-//     }
-//   }else{
-//     if(token) {
-//       next();
-//     }else{
-//       next("/login");
-//     }
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  const token = getToken();
+  if(to.path == "/login"){
+    if(token){
+      next("/");
+    }else{
+      next();
+    }
+  }else{
+    if(token) {
+      next();
+    }else{
+      next("/login");
+    }
+  }
+})
 export default router

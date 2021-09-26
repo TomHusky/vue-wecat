@@ -41,11 +41,10 @@ service.interceptors.request.use((config) => {
     // config = sign(config, $config.appId, $config.appSecret, 'SHA256')
     // config.method === 'get'
     //   ? config.params = {...config.params} : config.data = qs.stringify({...config.data})
-    // const token = getToken()
-    // if (token) {
-    //   config.headers['Authorization'] = 'Bearer ' + "d25bc44190f7e68aaa179c48174683ef"
-    // }
-    config.headers['Authorization'] = 'Bearer ' + "d25bc44190f7e68aaa179c48174683ef"
+    const token = getToken()
+    if (token && !config.url.includes("login")) {
+      config.headers['Authorization'] = 'Bearer ' + token;
+    }
     return config
   }
 )
