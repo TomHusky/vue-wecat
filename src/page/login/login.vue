@@ -35,13 +35,13 @@ export default {
   data() {
     return {
       rememberPass:
-        localStorage.getItem("rememberPass") == null ||
-        localStorage.getItem("rememberPass") == ""
+        localStorage.getItem("rememberPass") === null ||
+        localStorage.getItem("rememberPass") === ""
           ? false
           : true,
       form: {
-        username: localStorage.getItem("username"),
-        password: localStorage.getItem("password"),
+        username: localStorage.getItem("username")===null?"":localStorage.getItem("username"),
+        password: localStorage.getItem("password")===null?"":localStorage.getItem("password"),
         auto: true,
       },
     };
@@ -70,8 +70,13 @@ export default {
     login() {
       let username = this.form.username;
       let password = this.form.password;
-      if (username == "" || password == "") {
-        alert("用户名密码不能为空");
+      if (username === "" ||username===null || password === ""||password===null) {
+        this.$message({
+            content:'用户名密码不能为空',
+            time:2500,
+            type:'success',
+            hasClose:true,
+        });
         return;
       }
       localStorage.setItem("username", username);

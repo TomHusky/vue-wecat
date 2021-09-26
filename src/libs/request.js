@@ -2,9 +2,12 @@ import axios from 'axios'
 import qs from 'qs'
 import $config from '@/config'
 import {getToken} from '@/libs/util'
+import Message from '@/components/other/message'
 import {sign} from '@/libs/sign'
 
 let baseUrl = '127.0.0.1:8088/wechat-mvc'
+let message = Message.install;
+
 switch (process.env.NODE_ENV) {
   case 'development':
     // 这里是本地的请求url
@@ -60,6 +63,7 @@ service.interceptors.response.use(
     } else {
       // 使用Promise.reject 响应
       // Message.error({content: response.data.message})
+      message(response.data.msg);
       return Promise.reject(response.data)
     }
   }, error => {
