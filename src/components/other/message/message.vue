@@ -43,6 +43,7 @@ export default {
   padding: 5px 20px;
   border-radius: 3px;
   color: #fff;
+  z-index: 999999999;
   background-color:rgba(0,0,0,0.4);
   position: absolute; left: 50%; top: 20%;
   transform: translate(-50%, -50%);    /* 50%为自身尺寸的一半 */
