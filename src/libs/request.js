@@ -1,5 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
+import store from '@/store/index.js'
 import $config from '@/config'
 import {getToken} from '@/libs/util'
 import Message from '@/components/other/message'
@@ -63,7 +64,12 @@ service.interceptors.response.use(
     } else {
       // 使用Promise.reject 响应
       // Message.error({content: response.data.message})
-      message(response.data.msg);
+      message({
+        content: response.data.msg,
+        time: 2500,
+        type: "error",
+        hasClose: true,
+      });
       return Promise.reject(response.data)
     }
   }, error => {
@@ -75,6 +81,7 @@ service.interceptors.response.use(
           return
         case 403:
           message = error.response.data.path + ',' + error.response.data.message
+          exitLogin();
           break
         case 429:
           message = '访问太过频繁，请稍后再试!'
@@ -93,6 +100,11 @@ service.interceptors.response.use(
     }
   }
 )
+
+function exitLogin(){
+  store.commit("user/setToken","");
+  
+}
 
 //封装post json请求
 export function postJson({url, data}) { 
