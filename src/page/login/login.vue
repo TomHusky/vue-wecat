@@ -40,15 +40,21 @@ export default {
           ? false
           : true,
       form: {
-        username: localStorage.getItem("username")===null?"":localStorage.getItem("username"),
-        password: localStorage.getItem("password")===null?"":localStorage.getItem("password"),
+        username:
+          localStorage.getItem("username") === null
+            ? ""
+            : localStorage.getItem("username"),
+        password:
+          localStorage.getItem("password") === null
+            ? ""
+            : localStorage.getItem("password"),
         auto: true,
       },
     };
   },
   computed: {
     user() {
-      let user = this.$store.state.system.user;
+      let user = this.$store.state.user.info;
       user.self = true;
       return user;
     },
@@ -63,19 +69,24 @@ export default {
         localStorage.setItem("rememberPass", value);
         localStorage.setItem("password", this.form.password);
       } else {
-        localStorage.setItem("rememberPass", '');
+        localStorage.setItem("rememberPass", "");
         localStorage.removeItem("password");
       }
     },
     login() {
       let username = this.form.username;
       let password = this.form.password;
-      if (username === "" ||username===null || password === ""||password===null) {
+      if (
+        username === "" ||
+        username === null ||
+        password === "" ||
+        password === null
+      ) {
         this.$message({
-            content:'用户名密码不能为空',
-            time:2500,
-            type:'success',
-            hasClose:true,
+          content: "用户名密码不能为空",
+          time: 2500,
+          type: "warning",
+          hasClose: true,
         });
         return;
       }
@@ -92,6 +103,14 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 1s;
+}
+
 .login {
   width: 280px;
   height: 400px;

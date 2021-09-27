@@ -24,7 +24,7 @@
             class="avatar"
             width="60"
             height="60"
-            :src="selectedFriend.img"
+            :src="selectedFriend.avatar"
           />
         </div>
       </div>
@@ -36,6 +36,9 @@
           <span>地&nbsp&nbsp&nbsp区</span>{{ selectedFriend.area }}
         </div>
         <div class="wxid"><span>微信号</span>{{ selectedFriend.wxid }}</div>
+        <div class="origin">
+          <span>来&nbsp&nbsp&nbsp源</span>{{ selectedFriend.origin }}
+        </div>
       </div>
       <div class="send" @click="send">
         <span>发消息</span>
@@ -134,6 +137,7 @@ export default {
         height: 18px;
         vertical-align: top;
         margin-top: 2px;
+        margin-left: 5px
       }
 
       .gender-male {
@@ -165,7 +169,7 @@ export default {
   border-top: 1px solid #e7e7e7;
   border-bottom: 1px solid #e7e7e7;
 
-  .remark, .area, .wxid {
+  .remark, .area, .wxid,.origin {
     font-size: 14px;
     margin-top: 20px;
 

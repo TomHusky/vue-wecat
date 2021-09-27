@@ -11,15 +11,6 @@ const state = {
   },
   // 输入的搜索值
   searchText: '',
-  // 当前登录用户
-  user: {
-    signature: "码农的世界你不懂",
-    sex: 1,
-    wxid: "1677900582",
-    area: "广州",
-    nickname: 'ratel',
-    img: 'static/images/UserAvatar.jpg'
-  },
   emojis: [{
       sign: "@::tt;;@f179c32a157fc3905b3f845cdde9d786@",
       file: "100.gif",

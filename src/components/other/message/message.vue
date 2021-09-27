@@ -22,7 +22,7 @@ export default {
       content: "",
       time: 3000,
       visible: false,
-      type: "info", //'success','warning','error'
+      type: "info", //'info','warning','error'
       hasClose: false,
     };
   },
@@ -40,12 +40,37 @@ export default {
 </script>
 <style lang="stylus" scoped>
 .message {
-  padding: 5px 20px;
+  padding: 8px 40px;
   border-radius: 3px;
   color: #fff;
   z-index: 999999999;
-  background-color:rgba(0,0,0,0.4);
-  position: absolute; left: 50%; top: 20%;
-  transform: translate(-50%, -50%);    /* 50%为自身尺寸的一半 */
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  transform: translate(-50%, -50%); /* 50%为自身尺寸的一半 */
+}
+
+.info {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.warning {
+  background-color: rgba(255, 153, 0, 0.7);
+}
+
+.error {
+  background-color: rgba(243, 81, 30, 0.7);
+}
+
+.icon-info {
+  color: #fff;
+}
+
+.icon-warning {
+  color: #fff;
+}
+
+.icon-error {
+  color: #fff;
 }
 </style>

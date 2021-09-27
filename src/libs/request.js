@@ -2,7 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 import store from '@/store/index.js'
 import $config from '@/config'
-import {getToken} from '@/libs/util'
+import {getToken,removeToken} from '@/libs/util'
 import Message from '@/components/other/message'
 import {sign} from '@/libs/sign'
 
@@ -73,29 +73,39 @@ service.interceptors.response.use(
       return Promise.reject(response.data)
     }
   }, error => {
-    let message = ''
+    let msg = ''
     if (error && error.response) {
       switch (error.response.status) {
         case 401:
           location.reload()
           return
         case 403:
-          message = error.response.data.path + ',' + error.response.data.message
+          msg = error.response.data.path + ',' + error.response.data.message
           exitLogin();
           break
         case 429:
-          message = '访问太过频繁，请稍后再试!'
+          msg = '访问太过频繁，请稍后再试!'
           break
         default:
-          message = error.response.data.message ? error.response.data.message : '服务器错误'
+          msg = error.response.data.message ? error.response.data.message : '服务器错误'
           break
       }
-      // Message.error({content: message})
+      message({
+        content: msg,
+        time: 2500,
+        type: "error",
+        hasClose: true,
+      });
       // 请求错误处理
       return Promise.reject(error)
     } else {
-      message = '连接服务器失败'
-      // Message.error({content: message})
+      msg = '连接服务器失败'
+      message({
+        content: '连接服务器失败',
+        time: 2500,
+        type: "error",
+        hasClose: true,
+      });
       return Promise.reject(error)
     }
   }
@@ -103,7 +113,7 @@ service.interceptors.response.use(
 
 function exitLogin(){
   store.commit("user/setToken","");
-  
+  removeToken();
 }
 
 //封装post json请求

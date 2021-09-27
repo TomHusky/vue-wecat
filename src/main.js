@@ -6,7 +6,7 @@ import router from './router'
 import config from '@/config'
 import store from './store/index.js'
 import cdire from './libs/directive/index'
-import '@/assets/icons/iconfont.css';
+import '@/assets/icons/iconfont.css'
 
 //自定义全局组件
 import CusConfirm from '@/components/other/confirm/CusConfirm'
@@ -28,6 +28,7 @@ Vue.prototype.$message = Message.install;
 
 Vue.config.productionTip = false
 
+// 拖拽命令
 const directive = {
   'drag': cdire.drag,
 }

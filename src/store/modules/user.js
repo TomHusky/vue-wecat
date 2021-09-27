@@ -1,10 +1,30 @@
-import { setToken, getToken } from '@/libs/util'
-import { login, logout, listFriendInfo} from '@/api/account'
+import {
+  setToken,
+  getToken
+} from '@/libs/util'
+import {
+  login,
+  logout,
+  listFriendInfo
+} from '@/api/account'
 const state = {
   token: getToken(),
+  // 当前登录用户
+  info: {
+    signature: "码农的世界你不懂",
+    sex: 1,
+    wxid: "1677900582",
+    area: "广州",
+    nickname: 'ratel',
+    img: 'static/images/UserAvatar.jpg',
+    username:"1677900582",
+  },
 }
 const mutations = {
-  setToken (state, { token, auto }) {
+  setToken(state, {
+    token,
+    auto
+  }) {
     state.token = token
     setToken(token, auto)
   },
@@ -12,7 +32,13 @@ const mutations = {
 
 const actions = {
   // 登录
-  handleLogin ({ commit }, { username, password, auto }) {
+  handleLogin({
+    commit
+  }, {
+    username,
+    password,
+    auto
+  }) {
     username = username.trim()
     return new Promise((resolve, reject) => {
       login({
@@ -22,7 +48,10 @@ const actions = {
         if (res) {
           if (res.code === 0) {
             let token = res.data.token
-            commit('setToken', { token, auto })
+            commit('setToken', {
+              token,
+              auto
+            })
             resolve(res)
           }
         }
@@ -32,7 +61,10 @@ const actions = {
     })
   },
   // 退出登录
-  handleLogout ({ state, commit }) {
+  handleLogout({
+    state,
+    commit
+  }) {
     return new Promise((resolve, reject) => {
       logout().then(res => {
         commit('setToken', '')
@@ -43,7 +75,10 @@ const actions = {
     })
   },
   // 获取用户相关信息
-  listFriendInfo ({ state, commit }) {
+  listFriendInfo({
+    state,
+    commit
+  }) {
     return new Promise((resolve, reject) => {
       listFriendInfo().then(res => {
         if (res.code === 0) {

@@ -59,7 +59,7 @@ export default {
     ...mapGetters({selectedChat:"chat/selectedChat", messages:"chat/messages",selectedChatFriend:"friend/selectedChatFriend"}),
     ...mapState({emojis:(state) => state.system.emojis}),
     user(){
-      let user = this.$store.state.system.user;
+      let user = this.$store.state.user.info;
       user.self= true;
       return user;
     }

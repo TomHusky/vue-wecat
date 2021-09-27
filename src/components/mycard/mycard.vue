@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     user() {
-      return this.$store.state.system.user;
+      return this.$store.state.user.info;
     },
   },
   data() {

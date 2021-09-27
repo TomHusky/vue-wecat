@@ -60,7 +60,7 @@ export default {
       messages: "chat/messages",
     }),
     ...mapState({
-      user: (state) => state.system.user,
+      user: (state) => store.state.user.info,
       emojis: (state) => state.system.emojis,
     }),
   },

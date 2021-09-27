@@ -31,9 +31,11 @@ export const logout = () => {
 /**
  * 获取用户信息
  */
-export const listFriendInfo = () => {
+export const listFriendInfo = (username) => {
+  const params = { username: username }
   return request({
     url: '/user/listFriendInfo',
+    params,
     method: 'get'
   })
 }

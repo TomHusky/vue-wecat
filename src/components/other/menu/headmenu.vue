@@ -106,7 +106,7 @@ export default {
     }),
     user() {
       if (this.headMenu.self) {
-        return this.$store.state.system.user;
+        return this.$store.state.user.info;
       }
       return this.$store.getters["system/getHeadMenuInfo"];
     },

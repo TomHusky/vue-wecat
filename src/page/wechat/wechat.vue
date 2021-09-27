@@ -18,9 +18,9 @@
 <script>
 import HeadMenu from "@/components/other/menu/headmenu";
 import mycard from "@/components/mycard/mycard";
+import {initFriendList} from "@/page/wechat/init.js";
 import { getToken} from '@/libs/util'
 import {
-  sendMessage,
   bulidWebsocket,
   closeWebsocket,
 } from "@/libs/websocket.js";
@@ -30,10 +30,7 @@ export default {
     HeadMenu,
   },
   created() {
-    window.fullHeight = document.documentElement.clientHeight;
-    window.fullWidth = document.documentElement.clientWidth;
-    this.$store.commit("system/setWindowWidth", window.fullWidth);
-    this.$store.commit("system/setwindowHeight", window.fullHeight);
+    initFriendList();
   },
   data() {
     return {

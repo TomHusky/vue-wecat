@@ -14,26 +14,26 @@ export const forEach = (arr, fn) => {
  * @description 获取两个时间的相距多少分钟
  * @returns {Number}
  */
-export const timeDifference = function (startDate,endDate) {
-  let diff=endDate.getTime() - startDate.getTime();//时间差的毫秒数 
+export const timeDifference = function (startDate, endDate) {
+  let diff = endDate.getTime() - startDate.getTime(); //时间差的毫秒数 
   //计算出相差天数 
   // var days=Math.floor(diff/(24*3600*1000)); 
-      
+
   //计算出小时数 
-  let leave1=diff%(24*3600*1000);    //计算天数后剩余的毫秒数 
-  let hours=Math.floor(leave1/(3600*1000)); 
+  let leave1 = diff % (24 * 3600 * 1000); //计算天数后剩余的毫秒数 
+  let hours = Math.floor(leave1 / (3600 * 1000));
   //计算相差分钟数 
-  let leave2=leave1%(3600*1000);        //计算小时数后剩余的毫秒数 
-  let minutes=Math.floor(leave2/(60*1000)); 
-      
+  let leave2 = leave1 % (3600 * 1000); //计算小时数后剩余的毫秒数 
+  let minutes = Math.floor(leave2 / (60 * 1000));
+
   //计算相差秒数 
   // var leave3=leave2%(60*1000);      //计算分钟数后剩余的毫秒数 
   // var seconds=Math.round(leave3/1000); 
-  
-  if(minutes>0) { 
-    return minutes; 
-  } 
-  return 0; 
+
+  if (minutes > 0) {
+    return minutes;
+  }
+  return 0;
 }
 
 /**
@@ -70,11 +70,31 @@ export const hasOneOf = (targetarr, arr) => {
   return targetarr.some(_ => arr.indexOf(_) > -1)
 }
 
+export const getIndex = (targetarr, key, value) => {
+  for (let i = 0; i < targetarr.length; i++) {
+    if (value === targetarr[i][key]) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+export const rmByIndexs = (targetarr, indexs) => {
+  for (let i = 0; i < indexs.length; i++) {
+    targetarr.splice(indexs[i],1);
+  }
+}
+
+export const rmByIndex = (targetarr, index) => {
+  targetarr.splice(index,1);
+}
+
+
 /**
  * @param {String|Number} value 要验证的字符串或数值
  * @param {*} validList 用来验证的列表
  */
-export function oneOf (value, validList) {
+export function oneOf(value, validList) {
   for (let i = 0; i < validList.length; i++) {
     if (value === validList[i]) {
       return true

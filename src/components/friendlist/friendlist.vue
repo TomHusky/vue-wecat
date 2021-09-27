@@ -2,27 +2,32 @@
 <template>
   <div class="friendlist scrollbar">
     <ul>
+      <li class="frienditem" :class="{ noborder: !newfriend.initial }">
+        <div class="list_title" v-if="newfriend.initial">
+          {{ newfriend.initial }}
+        </div>
+        <div
+          class="friend-info"
+          :class="{ active: newfriend.wxid === selectFriendWxid }"
+          @click="selectFriend(newfriend.wxid)"
+        >
+          <img class="avatar" width="36" height="36" :src="newfriend.avatar" />
+          <div class="remark">{{ newfriend.remark }}</div>
+        </div>
+      </li>
       <li
         v-for="item in searchedFriendlist"
         class="frienditem"
-        :class="{ noborder: !item.initial}"
+        :class="{ noborder: !item.initial }"
       >
-        <div
-          class="list_title"
-          v-if="item.initial"
-        >{{item.initial}}</div>
+        <div class="list_title" v-if="item.initial">{{ item.initial }}</div>
         <div
           class="friend-info"
           :class="{ active: item.wxid === selectFriendWxid }"
           @click="selectFriend(item.wxid)"
         >
-          <img
-            class="avatar"
-            width="36"
-            height="36"
-            :src="item.img"
-          >
-          <div class="remark">{{item.remark}}</div>
+          <img class="avatar" width="36" height="36" :src="item.avatar" />
+          <div class="remark">{{ item.remark }}</div>
         </div>
       </li>
     </ul>
@@ -33,41 +38,62 @@
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   computed: {
-    ...mapState({selectFriendWxid:(state) =>state.friend.selectFriendWxid, searchText:(state) =>state.system.searchText}),
-    ...mapGetters({searchedFriendlist:"friend/searchedFriendlist"}),
+    ...mapState({
+      newfriend: (state) => state.friend.newfriend,
+      selectFriendWxid: (state) => state.friend.selectFriendWxid,
+      searchText: (state) => state.system.searchText,
+    }),
+    ...mapGetters({ searchedFriendlist: "friend/searchedFriendlist" }),
   },
   methods: {
-    ...mapActions({selectFriend:"friend/selectFriend"}),
+    ...mapActions({ selectFriend: "friend/selectFriend" }),
   },
 };
 </script>
 
 <style lang="stylus" scoped>
-.friendlist
-  height: 570px
-  .frienditem
-    border-top: 1px solid #dadada
-    &:first-child, &.noborder
-      border-top: none
-    .list_title
-      box-sizing: border-box
-      width: 100%
-      font-size: 12px
-      padding: 15px 0 3px 12px
-      color: #999
-    .friend-info
-      display: flex
-      padding: 12px
-      transition: background-color 0.1s
-      font-size: 0
-      &:hover
-        background-color: #DCDADA
-      &.active
-        background-color: #C5C5C5
-      .avatar
-        border-radius: 2px
-        margin-right: 12px
-      .remark
-        font-size: 14px
-        line-height: 36px
+.friendlist {
+  height: 570px;
+
+  .frienditem {
+    border-top: 1px solid #dadada;
+
+    &:first-child, &.noborder {
+      border-top: none;
+    }
+
+    .list_title {
+      box-sizing: border-box;
+      width: 100%;
+      font-size: 12px;
+      padding: 15px 0 3px 12px;
+      color: #999;
+    }
+
+    .friend-info {
+      display: flex;
+      padding: 12px;
+      transition: background-color 0.1s;
+      font-size: 0;
+
+      &:hover {
+        background-color: #DCDADA;
+      }
+
+      &.active {
+        background-color: #C5C5C5;
+      }
+
+      .avatar {
+        border-radius: 2px;
+        margin-right: 12px;
+      }
+
+      .remark {
+        font-size: 14px;
+        line-height: 36px;
+      }
+    }
+  }
+}
 </style>

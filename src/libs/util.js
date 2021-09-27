@@ -2,12 +2,8 @@ import config from '@/config'
 
 export const TOKEN_KEY = 'token'
 
-export const removeToken = (token, auto) => {
-  if (auto) {
-    localStorage.setItem(TOKEN_KEY, token)
-  } else {
-    localStorage.setItem(TOKEN_KEY, token)
-  }
+export const removeToken = () => {
+    localStorage.removeItem(TOKEN_KEY);
 }
 
 export const setToken = (token, auto) => {
