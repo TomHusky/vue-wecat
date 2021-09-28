@@ -77,6 +77,7 @@ service.interceptors.response.use(
     if (error && error.response) {
       switch (error.response.status) {
         case 401:
+          exitLogin();
           location.reload()
           return
         case 403:

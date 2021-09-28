@@ -201,7 +201,7 @@ export default {
       }
       let content = this.replaceEmojiToCode(text);
       this.content = content;
-      if (this.content.length <= 1) {
+      if (this.content.length < 1) {
         this.warn = true;
         this.content = "";
         setTimeout(() => {

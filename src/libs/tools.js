@@ -36,6 +36,11 @@ export const timeDifference = function (startDate, endDate) {
   return 0;
 }
 
+//从1970年开始的毫秒数然后截取10位变成 从1970年开始的秒数
+export const getTimestamp = function () {
+  return new Date().getTime();
+}
+
 /**
  * @param {Array} arr1
  * @param {Array} arr2
@@ -81,12 +86,12 @@ export const getIndex = (targetarr, key, value) => {
 
 export const rmByIndexs = (targetarr, indexs) => {
   for (let i = 0; i < indexs.length; i++) {
-    targetarr.splice(indexs[i],1);
+    targetarr.splice(indexs[i], 1);
   }
 }
 
 export const rmByIndex = (targetarr, index) => {
-  targetarr.splice(index,1);
+  targetarr.splice(index, 1);
 }
 
 

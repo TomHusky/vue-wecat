@@ -16,7 +16,7 @@
             width="40"
             height="40"
             :alt="item.info.remark===''?item.info.nickname:item.info.remark"
-            :src="item.info.img"
+            :src="item.info.avatar"
           >
         </div>
         <div class="list-right">

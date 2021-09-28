@@ -37,7 +37,7 @@
               width="36"
               height="36"
               @click.prevent="openMenu($event,item)"
-              :src="item.self ? user.img : selectedChat.info.img"
+              :src="item.self ? user.avatar : selectedChat.info.avatar"
             />
             <div class="content">
               <div
@@ -102,7 +102,6 @@ export default {
         visibleIng:true,
         wxid: this.selectedChat.wxid
       };
-      console.log(info);
       this.$store.commit("system/setHeadMenu", info);
     },
     showChatInfo() {

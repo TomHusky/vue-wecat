@@ -35,7 +35,7 @@
               class="avatar"
               width="36"
               height="36"
-              :src="item.self ? user.img : selectedChat.info.img"
+              :src="item.self ? user.avatar : selectedChat.info.avatar"
             />
             <div class="content">
               <div

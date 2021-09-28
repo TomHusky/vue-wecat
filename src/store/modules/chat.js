@@ -1,55 +1,22 @@
 import {
   timeDifference
 } from "@/libs/tools";
+import {
+  sendFriendMsg
+} from "@/api/msg";
 const now = new Date();
 // namespaced: true 的方式使其成为带命名空间的模块。保证在变量名一样的时候，添加一个父级名拼接。
 // 例： SET_NAME => user/SET_NAME
 const state = {
   // 对话好友列表
-  chatlist: [{
+  chatlist: [
+    {
       id: 1,
       type: 1,
-      wxid: 'wxid_itjz73t1ajt722',
+      wxid: 'wx001',
+      username:'99',
       info: {
-        img: 'static/images/mother.jpg',
-        nickname: "娄娄",
-        remark: "妈咪"
-      },
-      messages: [{
-          content: '么么哒，妈咪爱你', //聊天内容
-          date: now, //时间
-          showTime: true
-        },
-        {
-          content: '按回车可以发送信息，还可以给我发送表情哟',
-          date: now,
-          showTime: false
-        }
-      ],
-      index: 1 // 当前在聊天列表中的位置,从1开始
-    },
-    {
-      id: 2,
-      type: 1,
-      wxid: 'hwn0366',
-      info: {
-        img: 'static/images/father.jpg',
-        nickname: "滴答",
-        remark: "father"
-      },
-      messages: [{
-        content: 'Are you kidding me?',
-        date: now,
-        showTime: true
-      }],
-      index: 2
-    },
-    {
-      id: 3,
-      type: 1,
-      wxid: 'wx_001',
-      info: {
-        img: 'static/images/vue.jpg', //头像
+        avatar: 'static/images/vue.jpg', //头像
         nickname: "机器人", //昵称
         remark: "偷懒的机器人", //备注
       },
@@ -58,24 +25,8 @@ const state = {
         date: now,
         showTime: true
       }],
-      index: 3
+      index: 1
     },
-    {
-      id: 4,
-      type: 2,
-      wxid: 'wx_001',
-      info: {
-        img: 'static/images/vue.jpg', //头像
-        nickname: "机器人", //昵称
-        remark: "偷懒的机器人", //备注
-      },
-      messages: [{
-        content: '我会跟你聊聊天的哟',
-        date: now,
-        showTime: true
-      }],
-      index: 4
-    }
   ],
   // 得知当前选择的是哪个对话
   selectId: 1,
@@ -109,17 +60,35 @@ const mutations = {
       self: true,
       showTime: showTime
     });
-    if (result.info.name === '机器人') {
+    if (result.wxid === 'wx001') {
       setTimeout(() => {
         result.messages.push({
-          content: msg.reply,
+          content: "由于资金不足，机器人已经跑路!",
           date: now,
           self: false,
-          showTime: showTime
+          showTime: false
         });
-      }, 500)
+      }, 200)
+    }else{
+      sendFriendMsg(msg.username,msg.content);
     }
   },
+  receiveMessage(state, msg){
+    let result = state.chatlist.find(session => session.username === msg.username);
+     // 获取最后一条消息记录
+     let lastMsg = result.messages[result.messages.length - 1];
+     let interval = timeDifference(new Date(lastMsg.date), now);
+     let showTime = false;
+     if (interval > 3) {
+       showTime = true;
+     }
+     result.messages.push({
+       content: msg.msgContent,
+       date: new Date(msg.sendTime),
+       self: true,
+       showTime: showTime
+     });
+  }
 }
 const actions = {
   selectSession: ({

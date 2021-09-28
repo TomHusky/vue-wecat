@@ -16,7 +16,7 @@ const state = {
     wxid: "1677900582",
     area: "广州",
     nickname: 'ratel',
-    img: 'static/images/UserAvatar.jpg',
+    avatar: 'static/images/UserAvatar.jpg',
     username:"1677900582",
   },
 }
@@ -32,7 +32,7 @@ const mutations = {
 
 const actions = {
   // 登录
-  handleLogin({
+  handleLogin({state,
     commit
   }, {
     username,
@@ -47,11 +47,19 @@ const actions = {
       }).then(res => {
         if (res) {
           if (res.code === 0) {
-            let token = res.data.token
+            const data = res.data;
+            const token = data.token
             commit('setToken', {
               token,
               auto
             })
+            state.info.signature = data.signature;
+            state.info.sex = data.sex;
+            state.info.wxid = data.wxid;
+            state.info.area = data.area;
+            state.info.nickname = data.nickname;
+            state.info.avatar = data.avatar;
+            state.info.username = data.username;
             resolve(res)
           }
         }

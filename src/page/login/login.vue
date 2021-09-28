@@ -2,7 +2,7 @@
   <div class="login">
     <div class="label"></div>
     <div class="header">
-      <img id="headMenu" :src="user.img" class="avatar" />
+      <img id="headMenu" :src="user.avatar" class="avatar" />
     </div>
     <div class="loginInfo">
       <input class="account" v-model="form.username" />

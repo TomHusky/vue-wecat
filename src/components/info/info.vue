@@ -73,9 +73,10 @@ export default {
           id: 1,
           type: 1,
           wxid: friend.wxid,
+          username: friend.username,
           info: {
             nickname: friend.nickname,
-            img: friend.img,
+            avatar: friend.avatar,
             remark: friend.remark,
           },
           messages: [

@@ -1,11 +1,11 @@
 <!-- 消息框 -->
 <template>
   <div class="message">
-    <template v-if="selectedChat.type===1">
-        <friend-message></friend-message>
+    <template v-if="selectedChat.type === 1">
+      <friend-message></friend-message>
     </template>
-    <template v-if="selectedChat.type===2">
-        <group-message></group-message>
+    <template v-if="selectedChat.type === 2">
+      <group-message></group-message>
     </template>
   </div>
 </template>
@@ -15,14 +15,15 @@ import GroupMessage from "./groupmessage";
 import FriendMessage from "./friendmessage";
 import { mapGetters } from "vuex";
 export default {
-  components:{
-    GroupMessage,FriendMessage
+  components: {
+    GroupMessage,
+    FriendMessage,
   },
   computed: {
-    ...mapGetters({selectedChat:'chat/selectedChat'}),
+    ...mapGetters({ selectedChat: "chat/selectedChat" }),
   },
   methods: {
-     showChatInfo() {
+    showChatInfo() {
       this.$parent.showChatInfo(true);
     },
   },
@@ -42,6 +43,4 @@ export default {
 };
 </script>
 
-<style lang="stylus" scoped>
-
-</style>
+<style lang="stylus" scoped></style>

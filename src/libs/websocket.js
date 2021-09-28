@@ -8,7 +8,8 @@ let tryTime = 0
 
 // 接收ws后端返回的数据
 function websocketOnmessage(e) {
-  messageCallback(JSON.parse(e.data))
+  const data =  JSON.parse(e.data);
+  messageCallback(data.body);
 }
 
 /**

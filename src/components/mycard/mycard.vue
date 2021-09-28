@@ -8,7 +8,7 @@
       <img
         id="headMenu"
         @click.prevent="openMenu($event)"
-        :src="user.img"
+        :src="user.avatar"
         class="avatar"
       >
     </header>
