@@ -6,32 +6,60 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "24715226",
+      "name": "max",
+      "font_class": "window-max",
+      "unicode": "e501",
+      "unicode_decimal": 58625
+    },
+    {
+      "icon_id": "24715227",
+      "name": "ding",
+      "font_class": "window-ding",
+      "unicode": "e502",
+      "unicode_decimal": 58626
+    },
+    {
+      "icon_id": "24715228",
+      "name": "min",
+      "font_class": "window-min",
+      "unicode": "e503",
+      "unicode_decimal": 58627
+    },
+    {
+      "icon_id": "24710152",
+      "name": "close",
+      "font_class": "close",
+      "unicode": "e504",
+      "unicode_decimal": 58628
+    },
+    {
       "icon_id": "24462922",
       "name": "account",
       "font_class": "account",
-      "unicode": "e603",
-      "unicode_decimal": 58883
+      "unicode": "e505",
+      "unicode_decimal": 58629
     },
     {
       "icon_id": "24462928",
       "name": "password",
       "font_class": "password",
-      "unicode": "e604",
-      "unicode_decimal": 58884
+      "unicode": "e506",
+      "unicode_decimal": 58630
     },
     {
       "icon_id": "24106461",
       "name": "三",
       "font_class": "san",
-      "unicode": "e602",
-      "unicode_decimal": 58882
+      "unicode": "e507",
+      "unicode_decimal": 58631
     },
     {
       "icon_id": "24106460",
       "name": "more",
       "font_class": "more",
-      "unicode": "e601",
-      "unicode_decimal": 58881
+      "unicode": "e508",
+      "unicode_decimal": 58632
     }
   ]
 }

@@ -1,6 +1,16 @@
 <!-- 消息框 -->
 <template>
   <div class="message">
+    <div class="systemBottom">
+      <i class="icon iconfont icon-window-ding"></i>
+      <i class="icon iconfont icon-window-min"></i>
+      <i class="icon iconfont icon-window-max"></i>
+      <i
+        style="cursor: pointer"
+        @click="exit"
+        class="icon iconfont icon-close close"
+      ></i>
+    </div>
     <template v-if="selectedChat.type === 1">
       <friend-message></friend-message>
     </template>
@@ -13,6 +23,7 @@
 <script>
 import GroupMessage from "./groupmessage";
 import FriendMessage from "./friendmessage";
+import {exitLogin} from "@/libs/request";
 import { mapGetters } from "vuex";
 export default {
   components: {
@@ -23,6 +34,9 @@ export default {
     ...mapGetters({ selectedChat: "chat/selectedChat" }),
   },
   methods: {
+    exit() {
+      exitLogin();
+    },
     showChatInfo() {
       this.$parent.showChatInfo(true);
     },
@@ -43,4 +57,29 @@ export default {
 };
 </script>
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+.systemBottom {
+  position: absolute;
+  right: 0px;
+
+  i {
+    font-size: 6px !important;
+    padding: 8px 10px;
+    line-height: 30px;
+    cursor: pointer;
+    color: #7F7F7F;
+
+    &:hover {
+      background-color: #E5E5E5;
+      color: #3F3F3F;
+    }
+  }
+
+  .close {
+    &:hover {
+      background-color: #FA5151;
+      color: #fff;
+    }
+  }
+}
+</style>

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
 import store from '@/store/index.js'
+import router from '@/router/index.js'
 import $config from '@/config'
 import {getToken,removeToken} from '@/libs/util'
 import Message from '@/components/other/message'
@@ -112,9 +113,10 @@ service.interceptors.response.use(
   }
 )
 
-function exitLogin(){
+export function exitLogin(){
   store.commit("user/setToken","");
   removeToken();
+  router.push({ path: '/login' });
 }
 
 //封装post json请求

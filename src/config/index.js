@@ -23,7 +23,7 @@ module.exports = {
    */
   publicPath: {
     //  本地环境发布目录
-    dev: '/wechat/',
+    dev: '/',
     //  生产环境发布目录
     pro: '/'
   },

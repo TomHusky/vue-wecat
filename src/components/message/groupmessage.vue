@@ -1,36 +1,25 @@
 <!-- 消息框 -->
 <template>
   <div class="message">
-    <header
-      class="header selectNone"
-      v-drag
-    >
+    <header class="header selectNone" v-drag>
       <div class="friendName">
-        <span
-          style="cursor:pointer"
-          @click="showChatInfo"
-        >{{selectedChat.info.nickname}}</span>
+        <span style="cursor: pointer" @click="showChatInfo">{{
+          selectedChat.info.nickname
+        }}</span>
         <i
-          style="cursor:pointer"
+          style="cursor: pointer"
           @click="showChatInfo"
           class="icon iconfont icon-more info"
         ></i>
       </div>
     </header>
-    <div
-      class="message-wrapper"
-      ref="list"
-    >
+    <div class="message-wrapper" ref="list">
       <ul v-if="selectedChat">
-        <li
-          v-for="item in selectedChat.messages"
-          class="message-item"
-        >
-          <div class="time"><span v-if="item.showTime">{{item.date | time}}</span></div>
-          <div
-            class="main"
-            :class="{ self: item.self }"
-          >
+        <li v-for="item in selectedChat.messages" class="message-item">
+          <div class="time">
+            <span v-if="item.showTime">{{ item.date | time }}</span>
+          </div>
+          <div class="main" :class="{ self: item.self }">
             <img
               class="avatar"
               width="36"
@@ -38,10 +27,7 @@
               :src="item.self ? user.avatar : selectedChat.info.avatar"
             />
             <div class="content">
-              <div
-                class="text"
-                v-html="replaceFace(item.content)"
-              ></div>
+              <div class="text" v-html="replaceFace(item.content)"></div>
             </div>
           </div>
         </li>
@@ -127,85 +113,118 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.message
-  width: 100%
-  height: 100
-  background-color: #F5F5F5
-  .header
-    height: 60px
-    padding: 20px 0 0 30px
-    box-sizing: border-box
-    .friendName
-      font-size: 19px
-      display: flex
-      align-items: center
-      justify-content: space-between
-      .info
-        background-image: url('more.svg')
-        margin-right: 20px
-        font-size: 25px
-        float: right
-  .message-wrapper
-    min-height: 420px
-    max-height: 420px
-    padding: 0 15px 18px 15px
-    box-sizing: border-box
-    overflow-y: auto
-    border-top: 1px solid #e7e7e7
-    border-bottom: 1px solid #e7e7e7
-    .message-item
-      margin-top: 16px
-    .message
-      margin-bottom: 15px
-    .time
-      width: 100%
-      font-size: 12px
-      margin-top: 7px
-      margin-bottom: 10px
-      text-align: center
-      span
-        display: inline-block
-        padding: 4px 6px
-        color: #fff
-        border-radius: 3px
-        background-color: #dcdcdc
-    .main
-      .avatar
-        float: left
-        margin-left: 15px
-        border-radius: 3px
-      .content
-        display: inline-block
-        margin-left: 10px
-        position: relative
-        padding: 6px 10px
-        max-width: 330px
-        min-height: 36px
-        line-height: 24px
-        box-sizing: border-box
-        font-size: 14px
-        text-align: left
-        word-break: break-all
-        background-color: #FFFFFF
-        border: 1px solid #ECECEC
-        border-radius: 4px
-        &:before
-          content: ''
-          position: absolute
-          top: 12px
-          right: 100%
-          border: 6px solid transparent
-          border-right-color: #FFFFFF
-    .self
-      text-align: right
-      .avatar
-        float: right
-        margin: 0 15px
-      .content
-        background-color: #9EEA6A
-        &:before
-          right: -12px
-          vertical-align: middle
-          border-right-color: transparent
-          border-left-color: #9EEA6A
+.message {
+  width: 100%;
+  height: 100;
+  background-color: #F5F5F5;
+
+  .header {
+    height: 60px;
+    padding: 20px 0 0 30px;
+    box-sizing: border-box;
+
+    .friendName {
+      font-size: 19px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .info {
+        background-image: url('more.svg');
+        margin-right: 20px;
+        font-size: 25px;
+        float: right;
+      }
+    }
+  }
+
+  .message-wrapper {
+    min-height: 420px;
+    max-height: 420px;
+    padding: 0 15px 18px 15px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    border-top: 1px solid #e7e7e7;
+    border-bottom: 1px solid #e7e7e7;
+
+    .message-item {
+      margin-top: 16px;
+    }
+
+    .message {
+      margin-bottom: 15px;
+    }
+
+    .time {
+      width: 100%;
+      font-size: 12px;
+      margin-top: 7px;
+      margin-bottom: 10px;
+      text-align: center;
+
+      span {
+        display: inline-block;
+        padding: 4px 6px;
+        color: #fff;
+        border-radius: 3px;
+        background-color: #dcdcdc;
+      }
+    }
+
+    .main {
+      .avatar {
+        cursor: pointer;
+        float: left;
+        margin-left: 15px;
+        border-radius: 3px;
+      }
+
+      .content {
+        display: inline-block;
+        margin-left: 10px;
+        position: relative;
+        padding: 6px 10px;
+        max-width: 330px;
+        min-height: 36px;
+        line-height: 24px;
+        box-sizing: border-box;
+        font-size: 14px;
+        text-align: left;
+        word-break: break-all;
+        background-color: #FFFFFF;
+        border: 1px solid #ECECEC;
+        border-radius: 4px;
+
+        &:before {
+          content: '';
+          position: absolute;
+          top: 12px;
+          right: 100%;
+          border: 6px solid transparent;
+          border-right-color: #FFFFFF;
+        }
+      }
+    }
+
+    .self {
+      text-align: right;
+
+      .avatar {
+        float: right;
+        margin: 0 15px;
+      }
+
+      .content {
+        background-color: #9EEA6A;
+
+        &:before {
+          right: -12px;
+          vertical-align: middle;
+          border-right-color: transparent;
+          border-left-color: #9EEA6A;
+        }
+      }
+    }
+  }
+}
 </style>

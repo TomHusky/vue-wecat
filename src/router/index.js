@@ -26,6 +26,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   const token = getToken();
+  console.log(1);
   if(to.path == "/login"){
     if(token){
       next("/");
@@ -34,6 +35,9 @@ router.beforeEach((to, from, next) => {
     }
   }else{
     if(token) {
+      if(to.path===''){
+        next("/chat");
+      }
       next();
     }else{
       next("/login");

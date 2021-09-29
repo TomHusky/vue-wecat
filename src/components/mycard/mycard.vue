@@ -74,6 +74,7 @@ export default {
   width: 100%
   height: 100%
   .avatar
+    cursor: pointer
     width: 37px
     height: 37px
     margin: 25px 9px 0px 9px

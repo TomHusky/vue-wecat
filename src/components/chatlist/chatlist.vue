@@ -15,21 +15,28 @@
             class="avatar"
             width="40"
             height="40"
-            :alt="item.info.remark===''?item.info.nickname:item.info.remark"
+            :alt="
+              item.info.remark === '' ? item.info.nickname : item.info.remark
+            "
             :src="item.info.avatar"
-          >
+          />
         </div>
         <div class="list-right">
-          <p class="name">{{item.info.remark===''?item.info.nickname:item.info.remark}}</p>
-          <span class="time">{{item.messages[item.messages.length-1].date | time}}</span>
-          <p class="lastmsg">{{item.messages[item.messages.length-1].content}}</p>
+          <p class="name">
+            {{
+              item.info.remark === "" ? item.info.nickname : item.info.remark
+            }}
+          </p>
+          <span class="time">{{
+            item.messages[item.messages.length - 1].date | time
+          }}</span>
+          <p class="lastmsg">
+            {{ item.messages[item.messages.length - 1].content }}
+          </p>
         </div>
       </li>
     </ul>
-    <context-menu
-      class="right-menu"
-      :offset="menuOffset"
-    >
+    <context-menu class="right-menu" :offset="menuOffset">
       <template v-slot:menuItem>
         <ul>
           <li>置顶</li>
@@ -95,45 +102,62 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.msglist
-  width: 100%
-  height: 540px
-  overflow-y: auto
-  .sessionlist
-    cursor: default
-    display: flex
-    padding: 12px
-    transition: background-color 0.1s
-    font-size: 0
-    &:hover
-      background-color: rgb(220, 220, 220)
-    &.active
-      background-color: #c4c4c4
-    .avatar
-      border-radius: 2px
-      margin-right: 12px
-    .list-right
-      position: relative
-      flex: 1
-      margin-top: 4px
-    .name
-      display: inline-block
-      vertical-align: top
-      font-size: 14px
-    .time
-      float: right
-      color: #999
-      font-size: 10px
-      vertical-align: top
-    .lastmsg
-      position: absolute
-      font-size: 12px
-      width: 130px
-      height: 15px
-      line-height: 15px
-      color: #999
-      bottom: 0px
-      overflow: hidden
-      white-space: nowrap
-      text-overflow: ellipsis
+.msglist {
+  width: 100%;
+  height: 540px;
+  overflow-y: auto;
+
+  .sessionlist {
+    cursor: default;
+    display: flex;
+    padding: 12px;
+    transition: background-color 0.1s;
+    font-size: 0;
+
+    &:hover {
+      background-color: rgb(220, 220, 220);
+    }
+
+    &.active {
+      background-color: #c4c4c4;
+    }
+
+    .avatar {
+      border-radius: 2px;
+      margin-right: 12px;
+    }
+
+    .list-right {
+      position: relative;
+      flex: 1;
+      margin-top: 4px;
+    }
+
+    .name {
+      display: inline-block;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    .time {
+      float: right;
+      color: #999;
+      font-size: 10px;
+      vertical-align: top;
+    }
+
+    .lastmsg {
+      position: absolute;
+      font-size: 12px;
+      width: 130px;
+      height: 15px;
+      line-height: 15px;
+      color: #999;
+      bottom: 0px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+}
 </style>
