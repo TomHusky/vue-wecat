@@ -17,6 +17,7 @@ import mycard from "@/components/mycard/mycard";
 import { initFriendList } from "@/page/wechat/init.js";
 import { getToken } from "@/libs/util";
 import { bulidWebsocket, closeWebsocket } from "@/libs/websocket.js";
+import { sendNotifi } from "@/libs/notification.js";
 export default {
   components: {
     mycard,
@@ -32,6 +33,7 @@ export default {
   },
   created() {
     initFriendList();
+    this.allowNotification();
   },
   beforeDestroy() {
     // 页面销毁时关闭ws。因为有可能ws连接接收数据尚未完成，用户就跳转了页面
@@ -69,6 +71,15 @@ export default {
     };
   },
   methods: {
+    //申请浏览器通知权限，具体参见链接 https://developer.mozilla.org/en-US/docs/Web/API/Notification/Notification
+    allowNotification() {
+      let that = this;
+      if (!("Notification" in window)) {
+        alert("浏览器不支持消息通知");
+        return;
+      }
+      Notification.requestPermission(function (permission) {});
+    },
     updateAppPosition(width, height) {
       // 设置窗口位置
       let app = document.getElementById("wechat");
@@ -76,10 +87,20 @@ export default {
       app.style.top = (height - app.offsetHeight) / 2 + "px";
     },
     wsOpen() {},
-    wsMessage(url,body) {
+    wsMessage(url, body) {
       const dataJson = body;
-      if(url==='/msg/receive'){
+      if (url === "/msg/receive") {
         this.$store.dispatch("chat/receiveMessage", dataJson.data);
+        let friend = this.$store.getters['friend/selectedFriendByUsername'](
+          dataJson.data.username
+        );
+        let msg = {
+          avatar: friend.avatar,
+          nickname: friend.nickname,
+          remark: friend.remark,
+          msgContent: dataJson.data.msgContent
+        };
+        sendNotifi(this, msg);
       }
     },
     wsError() {},

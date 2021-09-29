@@ -111,8 +111,8 @@ export default {
     //  再经过v-html 渲染成真正的图片
     replaceFace(con) {
       if (con.includes("@::tt;;@")) {
-        var emojis = this.emojis;
-        for (var i = 0; i < emojis.length; i++) {
+        let emojis = this.emojis;
+        for (let i = 0; i < emojis.length; i++) {
           con = con.replace(
             emojis[i].reg,
             '<img src="static/emoji/' +
