@@ -76,11 +76,11 @@ export default {
       app.style.top = (height - app.offsetHeight) / 2 + "px";
     },
     wsOpen() {},
-    wsMessage(data) {
-      const dataJson = data;
-      console.log(dataJson);
-
-      this.$store.dispatch("chat/sendMessage", dataJson.data);
+    wsMessage(url,body) {
+      const dataJson = body;
+      if(url==='/msg/receive'){
+        this.$store.dispatch("chat/receiveMessage", dataJson.data);
+      }
     },
     wsError() {},
   },

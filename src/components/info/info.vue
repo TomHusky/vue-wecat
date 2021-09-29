@@ -62,16 +62,10 @@ export default {
     send() {
       let friend = this.selectedFriend;
       let msg = this.getChatByFriendWxid;
-      let state = this.$store.state;
       if (!msg) {
-        state.friend.selectFriendWxid = friend.wxid;
-        for (let i = 0; i < state.chat.chatlist.length; i++) {
-          state.chat.chatlist[i].id++;
-          state.chat.chatlist[i].index++;
-        }
-        state.chat.chatlist.unshift({
-          id: 1,
-          type: 1,
+        this.$store.dispatch("friend/selectFriend", friend.wxid);
+        let chat = {
+          type:1,
           wxid: friend.wxid,
           username: friend.username,
           info: {
@@ -85,11 +79,11 @@ export default {
               date: new Date(),
             },
           ],
-          index: 1,
-        });
+        };
+        this.$store.dispatch("chat/topChat",chat);
       } else {
-        state.chat.selectId = msg.id;
-        state.friend.selectFriendWxid = msg.wxid;
+        this.$store.dispatch("chat/selectSession", msg.wxid);
+        this.$store.dispatch("friend/selectFriend", msg.wxid);
       }
       this.$router.push({ path: "/chat" });
     },
@@ -100,11 +94,13 @@ export default {
 <style lang="stylus" scoped>
 .info-head {
   height: 60px;
+
   .newfriend {
     height: 100%;
     padding: 28px 0 0 30px;
     box-sizing: border-box;
     border-bottom: 1px solid #e7e7e7;
+
     .nickname {
       font-size: 18px;
     }
@@ -138,7 +134,7 @@ export default {
         height: 18px;
         vertical-align: top;
         margin-top: 2px;
-        margin-left: 5px
+        margin-left: 5px;
       }
 
       .gender-male {
@@ -170,7 +166,7 @@ export default {
   border-top: 1px solid #e7e7e7;
   border-bottom: 1px solid #e7e7e7;
 
-  .remark, .area, .wxid,.origin {
+  .remark, .area, .wxid, .origin {
     font-size: 14px;
     margin-top: 20px;
 

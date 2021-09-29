@@ -28,7 +28,7 @@
           class="avatar"
           width="60"
           height="60"
-          :src="user.img"
+          :src="user.avatar"
         >
       </div>
     </div>

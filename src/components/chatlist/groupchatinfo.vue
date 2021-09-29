@@ -15,7 +15,7 @@
             width="35"
             height="35"
             :alt="item.nickname"
-            :src="item.img"
+            :src="item.avatar"
           >
           <div
             v-if="item.remark==null"

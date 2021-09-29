@@ -8,7 +8,7 @@
             width="35"
             height="35"
             :alt="searchedFriendlist[0].nickname"
-            :src="searchedFriendlist[0].img"
+            :src="searchedFriendlist[0].avatar"
           >
           <div
             v-if="searchedFriendlist[0].remark==null"
@@ -25,7 +25,7 @@
             width="35"
             height="35"
             :alt="searchedFriendlist[1].nickname"
-            :src="searchedFriendlist[1].img"
+            :src="searchedFriendlist[1].avatar"
           >
           <div
             v-if="searchedFriendlist[1].remark==null"

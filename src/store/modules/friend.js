@@ -169,10 +169,15 @@ const getters = {
     let friend = state.friendlist.find(friend => friend.wxid === state.selectFriendWxid);
     return friend
   },
-  selectedChatFriend(state, params, rootState) {
+  selectedChatFriend(state, getters, rootState) {
     let session = rootState.chat.chatlist.find(session => session.id === rootState.chat.selectId);
     let friend = state.friendlist.find(friend => friend.wxid === session.wxid);
     return friend
+  },
+  selectedFriendByUsername(state){
+    return function (username) {
+      return state.friendlist.find(friend => friend.username ===username)
+    }
   },
 }
 

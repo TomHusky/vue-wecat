@@ -9,25 +9,23 @@ const now = new Date();
 // 例： SET_NAME => user/SET_NAME
 const state = {
   // 对话好友列表
-  chatlist: [
-    {
-      id: 1,
-      type: 1,
-      wxid: 'wx001',
-      username:'99',
-      info: {
-        avatar: 'static/images/vue.jpg', //头像
-        nickname: "机器人", //昵称
-        remark: "偷懒的机器人", //备注
-      },
-      messages: [{
-        content: '我会跟你聊聊天的哟',
-        date: now,
-        showTime: true
-      }],
-      index: 1
+  chatlist: [{
+    id: 1,
+    type: 1,
+    wxid: 'wx001',
+    username: '99',
+    info: {
+      avatar: 'static/images/vue.jpg', //头像
+      nickname: "机器人", //昵称
+      remark: "偷懒的机器人", //备注
     },
-  ],
+    messages: [{
+      content: '我会跟你聊聊天的哟',
+      date: now,
+      showTime: true
+    }],
+    index: 1
+  }, ],
   // 得知当前选择的是哪个对话
   selectId: 1,
 }
@@ -69,26 +67,62 @@ const mutations = {
           showTime: false
         });
       }, 200)
-    }else{
-      sendFriendMsg(msg.username,msg.content);
+    } else {
+      sendFriendMsg(result.username, msg.content);
     }
   },
-  receiveMessage(state, msg){
+  async ['receiveMessage'](state,{commit,msg,friend}) {
     let result = state.chatlist.find(session => session.username === msg.username);
-     // 获取最后一条消息记录
-     let lastMsg = result.messages[result.messages.length - 1];
-     let interval = timeDifference(new Date(lastMsg.date), now);
-     let showTime = false;
-     if (interval > 3) {
-       showTime = true;
-     }
-     result.messages.push({
-       content: msg.msgContent,
-       date: new Date(msg.sendTime),
-       self: true,
-       showTime: showTime
-     });
-  }
+    let showTime = true;
+    if (!result) {
+      result = {
+        type: 1,
+        wxid: friend.wxid,
+        username: friend.username,
+        info: {
+          nickname: friend.nickname,
+          avatar: friend.avatar,
+          remark: friend.remark,
+        },
+        messages: [],
+      };
+    } else {
+      // 获取最后一条消息记录
+      let lastMsg = result.messages[result.messages.length - 1];
+      let interval = timeDifference(new Date(lastMsg.date), now);
+      if (interval < 3) {
+        showTime = false;
+      }
+    }
+    result.messages.push({
+      content: msg.msgContent,
+      date: new Date(msg.sendTime),
+      self: false,
+      showTime: showTime
+    });
+    commit('topChat', result);
+  },
+  // 置顶聊天
+  topChat(state, chat) {
+    for (let i = 0; i < state.chatlist.length; i++) {
+      if(state.chatlist[i].username === chat.username){
+        state.chatlist[i].id = 1;
+        state.chatlist[i].index=1;
+        return;
+      }
+      state.chatlist[i].id++;
+      state.chatlist[i].index++;
+    }
+    state.chatlist.unshift({
+      id: 1,
+      type: chat.type,
+      wxid: chat.wxid,
+      username: chat.username,
+      info: chat.info,
+      messages: chat.messages,
+      index: 1,
+    });
+  },
 }
 const actions = {
   selectSession: ({
@@ -100,15 +134,30 @@ const actions = {
   sendMessage: ({
     commit
   }, msg) => commit('sendMessage', msg),
+  async ['receiveMessage'](store, msg) {
+    const {
+      commit,
+      dispatch,
+      state,
+      rootState,
+      rootGetters
+    } = store
+    let friend = rootGetters['friend/selectedFriendByUsername'](msg.username);
+    commit('receiveMessage', {commit,msg,friend})
+  },
+  topChat: ({
+    commit
+  }, chat) => commit('topChat', chat),
 }
+
 const getters = {
   // 筛选出含有搜索值的聊天列表
-  searchedChatlist(state,params, rootState) {
+  searchedChatlist(state, getters, rootState) {
     let sessions = state.chatlist.filter(sessions => sessions.info.remark.includes(rootState.system.searchText));
     return sessions
   },
   // 筛选出含有搜索值的聊天列表
-  getChatByFriendWxid(state,params, rootState) {
+  getChatByFriendWxid(state, getters, rootState) {
     let session = state.chatlist.find(session => session.wxid === rootState.friend.selectFriendWxid);
     return session
   },

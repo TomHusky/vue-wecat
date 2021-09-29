@@ -6,7 +6,7 @@ import {
 } from '@/libs/tools'
 
 /**
- * 获取用户信息
+ * 发送好友消息
  */
 export const sendFriendMsg = (username, msg) => {
     let time = getTimestamp();
