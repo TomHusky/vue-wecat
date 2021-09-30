@@ -1,29 +1,25 @@
 <!-- 最左边的选择框 -->
 <template>
-  <div
-    class="mycard selectNone"
-    v-drag
-  >
+  <div class="mycard selectNone" v-drag>
     <header>
       <img
         id="headMenu"
         @click.prevent="openMenu($event)"
         :src="user.avatar"
         class="avatar"
-      >
+      />
     </header>
-    <div
-      class="navbar"
-      @click="clearSearch"
-    >
-      <router-link
-        to="/chat"
-        class="icon iconfont icon-msg"
-      ></router-link>
-      <router-link
-        to="/friend"
-        class="icon iconfont icon-friend"
-      ></router-link>
+    <div class="navbar" @click="clearSearch">
+      <router-link to="/chat" class="icon iconfont icon-msg">
+        <badge
+          v-if="false"
+          :count="10"
+          :overflowCount="99"
+          :width="16"
+          :height="16"
+        ></badge>
+      </router-link>
+      <router-link to="/friend" class="icon iconfont icon-friend"></router-link>
       <router-link
         to="/game"
         class="icon iconfont icon-collection"
@@ -37,9 +33,11 @@
 
 <script>
 import HeadMenu from "@/components/other/menu/headmenu";
+import badge from "@/components/other/badge";
 export default {
   components: {
     HeadMenu,
+    badge,
   },
   computed: {
     user() {
@@ -58,8 +56,8 @@ export default {
         clientX: e.clientX,
         clientY: e.clientY,
         self: true,
-        visible:true,
-        visibleIng:true,
+        visible: true,
+        visibleIng: true,
       };
       this.$store.commit("system/setHeadMenu", info);
     },
@@ -68,39 +66,62 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-@import '../../assets/fonts/iconfont.css'
-.mycard
-  position: relative
-  width: 100%
-  height: 100%
-  .avatar
-    cursor: pointer
-    width: 37px
-    height: 37px
-    margin: 25px 9px 0px 9px
-  .navbar
-    width: 100%
-    text-align: center
-  .icon
-    display: inline-block
-    font-size: 19px
-    margin-top: 28px
-    padding: 0 18px
-    box-sizing: border-box
-    color: rgb(173, 174, 175)
-    opacity: 0.8
-    cursor: pointer
-    &.active
-      color: rgb(0, 220, 65)
-    &:hover
-      opacity: 1
-  .icon-msg, .icon-more
-    font-size: 18px
-  .icon-msg
-    padding: 0 19px
-footer
-  position: absolute
-  bottom: 20px
-  width: 100%
-  text-align: center
+@import '../../assets/fonts/iconfont.css';
+
+.mycard {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  .avatar {
+    cursor: pointer;
+    width: 37px;
+    height: 37px;
+    margin: 25px 9px 0px 9px;
+  }
+
+  .navbar {
+    width: 100%;
+    text-align: center;
+  }
+
+  .icon {
+    display: inline-block;
+    font-size: 19px;
+    margin-top: 28px;
+    padding: 0 18px;
+    box-sizing: border-box;
+    color: rgb(173, 174, 175);
+    opacity: 0.8;
+    cursor: pointer;
+
+    &.active {
+      color: rgb(0, 220, 65);
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .icon-msg, .icon-more {
+    font-size: 18px;
+  }
+
+  .icon-msg {
+    position: relative;
+    padding: 0 19px;
+  }
+
+  .badge{
+    right: 8px !important;
+  }
+}
+
+footer {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+}
 </style>

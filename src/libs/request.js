@@ -82,14 +82,14 @@ service.interceptors.response.use(
           location.reload()
           return
         case 403:
-          msg = error.response.data.path + ',' + error.response.data.message
+          msg = error.response.data.path + ',' + error.response.data.msg
           exitLogin();
           break
         case 429:
           msg = '访问太过频繁，请稍后再试!'
           break
         default:
-          msg = error.response.data.message ? error.response.data.message : '服务器错误'
+          msg = error.response.data.msg ? error.response.data.msg : '服务器错误'
           break
       }
       message({

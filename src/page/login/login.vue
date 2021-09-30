@@ -54,7 +54,8 @@ export default {
   },
   computed: {
     user() {
-      let user = this.$store.state.user.info;
+      let user = this.$store.getters['user/getUser'];
+      this.setUserInfo(user);
       user.self = true;
       return user;
     },
@@ -63,6 +64,7 @@ export default {
     ...mapActions({
       handleLogin: "user/handleLogin",
       listFriendInfo: "user/listFriendInfo",
+      setUserInfo:"user/setUserInfo"
     }),
     remember(value) {
       if (value) {

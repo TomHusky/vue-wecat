@@ -18,7 +18,9 @@ const state = {
       avatar: 'static/images/vue.jpg', //头像
       nickname: "机器人", //昵称
       remark: "偷懒的机器人", //备注
+      notDisturb: true // 免打扰
     },
+    newMgsNum: 0, //新消息条数
     messages: [{
       content: '我会跟你聊聊天的哟',
       date: now,
@@ -27,7 +29,7 @@ const state = {
     index: 1
   }, ],
   // 得知当前选择的是哪个对话
-  selectId: 1,
+  selectWxid: 'wx001',
 }
 const mutations = {
   // 从localStorage 中获取数据
@@ -39,11 +41,13 @@ const mutations = {
   },
   // 得知用户当前选择的是哪个对话。便于匹配对应的对话框
   selectSession(state, value) {
-    state.selectId = value
+    state.selectWxid = value;
+    let chat = state.chatlist.find(session => session.wxid === value);
+    chat.newMsgNum = 0;
   },
   // 发送信息
   sendMessage(state, msg) {
-    let result = state.chatlist.find(session => session.id === state.selectId);
+    let result = state.chatlist.find(session => session.wxid === state.selectWxid);
     let now = new Date();
     // 获取最后一条消息记录
     let lastMsg = result.messages[result.messages.length - 1];
@@ -71,7 +75,11 @@ const mutations = {
       sendFriendMsg(result.username, msg.content);
     }
   },
-  async ['receiveMessage'](state,{commit,msg,friend}) {
+  async ['receiveMessage'](state, {
+    commit,
+    msg,
+    friend
+  }) {
     let result = state.chatlist.find(session => session.username === msg.username);
     let showTime = true;
     if (!result) {
@@ -83,7 +91,9 @@ const mutations = {
           nickname: friend.nickname,
           avatar: friend.avatar,
           remark: friend.remark,
+          notDisturb: false,
         },
+        newMsgNum: 0,
         messages: [],
       };
     } else {
@@ -93,6 +103,9 @@ const mutations = {
       if (interval < 3) {
         showTime = false;
       }
+    }
+    if(state.selectWxid!==result.wxid){
+      result.newMsgNum = result.newMsgNum + 1;
     }
     result.messages.push({
       content: msg.msgContent,
@@ -105,9 +118,9 @@ const mutations = {
   // 置顶聊天
   topChat(state, chat) {
     for (let i = 0; i < state.chatlist.length; i++) {
-      if(state.chatlist[i].username === chat.username){
+      if (state.chatlist[i].username === chat.username) {
         state.chatlist[i].id = 1;
-        state.chatlist[i].index=1;
+        state.chatlist[i].index = 1;
         return;
       }
       state.chatlist[i].id++;
@@ -143,7 +156,11 @@ const actions = {
       rootGetters
     } = store
     let friend = rootGetters['friend/selectedFriendByUsername'](msg.username);
-    commit('receiveMessage', {commit,msg,friend})
+    commit('receiveMessage', {
+      commit,
+      msg,
+      friend
+    })
   },
   topChat: ({
     commit
@@ -163,11 +180,11 @@ const getters = {
   },
   // 通过当前选择是哪个对话匹配相应的对话
   selectedChat(state) {
-    let session = state.chatlist.find(session => session.id === state.selectId);
+    let session = state.chatlist.find(session => session.wxid === state.selectWxid);
     return session
   },
   messages(state) {
-    let session = state.chatlist.find(session => session.id === state.selectId);
+    let session = state.chatlist.find(session => session.wxid === state.selectWxid);
     return session.messages
   }
 }

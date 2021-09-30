@@ -672,7 +672,7 @@ const mutations = {
     let result = state.friendlist.find(friend => friend.id === state.selectFriendId)
     let msg = state.chatlist.find(msg => msg.info.remark === result.remark)
     if (!msg) {
-      state.selectId = 1
+      state.selectWxid = result.wxid
       for (let i = 0; i < state.chatlist.length; i++) {
         state.chatlist[i].id++;
         state.chatlist[i].index++;
@@ -690,7 +690,7 @@ const mutations = {
         index: 1
       })
     } else {
-      state.selectId = msg.index
+      state.selectWxid = msg.wxid
       router.push({
         path: '/chat'
       })

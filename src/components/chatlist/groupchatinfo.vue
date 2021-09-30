@@ -120,11 +120,11 @@ export default {
     });
   },
   computed: {
-    ...mapState({selectId:(state) => state.chat.selectId, searchText:(state) => state.system.searchText}),
+    ...mapState({selectWxid:(state) => state.chat.selectWxid, searchText:(state) => state.system.searchText}),
     ...mapGetters({searchedFriendlist:"friend/searchedFriendlist"}),
   },
   methods: {
-    ...mapActions({selectSession:"chat/selectSession"}),
+    
   },
 };
 </script>

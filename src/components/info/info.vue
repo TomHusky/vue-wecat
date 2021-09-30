@@ -72,7 +72,9 @@ export default {
             nickname: friend.nickname,
             avatar: friend.avatar,
             remark: friend.remark,
+            notDisturb: true
           },
+          newMsgNum: 0,
           messages: [
             {
               content: "已经置顶聊天，可以给我发信息啦！",

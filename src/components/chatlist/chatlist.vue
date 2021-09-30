@@ -6,9 +6,9 @@
         v-for="item in searchedChatlist"
         :key="item.id"
         class="sessionlist"
-        :class="{ active: item.id === selectId }"
+        :class="{ active: item.wxid === selectWxid }"
         @contextmenu.prevent="openMenu($event, item)"
-        @click="selectSession(item.id)"
+        @click="selectSession(item.wxid)"
       >
         <div class="list-left">
           <img
@@ -20,6 +20,14 @@
             "
             :src="item.info.avatar"
           />
+          <badge
+            v-if="item.newMsgNum >0"
+            :count="item.newMsgNum"
+            :overflowCount="99"
+            :showNum="!item.info.notDisturb"
+            :width="16"
+            :height="16"
+          ></badge>
         </div>
         <div class="list-right">
           <p class="name">
@@ -51,11 +59,13 @@
 </template>
 
 <script>
+import badge from "@/components/other/badge";
 import ContextMenu from "@/components/other/menu/cmenu";
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   components: {
     ContextMenu,
+    badge,
   },
   data() {
     return {
@@ -70,7 +80,7 @@ export default {
   },
   computed: {
     ...mapState({
-      selectId: (state) => state.chat.selectId,
+      selectWxid: (state) => state.chat.selectWxid,
       searchText: (state) => state.system.searchText,
     }),
     ...mapGetters({ searchedChatlist: "chat/searchedChatlist" }),
@@ -104,7 +114,7 @@ export default {
 <style lang="stylus" scoped>
 .msglist {
   width: 100%;
-  height: 540px;
+  height: 570px;
   overflow-y: auto;
 
   .sessionlist {
@@ -122,41 +132,45 @@ export default {
       background-color: #c4c4c4;
     }
 
-    .avatar {
-      border-radius: 2px;
+    .list-left {
+      position: relative;
       margin-right: 12px;
+
+      .avatar {
+        border-radius: 2px;
+      }
     }
 
     .list-right {
       position: relative;
       flex: 1;
       margin-top: 4px;
-    }
 
-    .name {
-      display: inline-block;
-      vertical-align: top;
-      font-size: 14px;
-    }
+      .name {
+        display: inline-block;
+        vertical-align: top;
+        font-size: 14px;
+      }
 
-    .time {
-      float: right;
-      color: #999;
-      font-size: 10px;
-      vertical-align: top;
-    }
+      .time {
+        float: right;
+        color: #999;
+        font-size: 10px;
+        vertical-align: top;
+      }
 
-    .lastmsg {
-      position: absolute;
-      font-size: 12px;
-      width: 130px;
-      height: 15px;
-      line-height: 15px;
-      color: #999;
-      bottom: 0px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      .lastmsg {
+        position: absolute;
+        font-size: 12px;
+        width: 130px;
+        height: 15px;
+        line-height: 15px;
+        color: #999;
+        bottom: 0px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
     }
   }
 }

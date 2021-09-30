@@ -64,7 +64,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({selectId:  (state) => state.chat.selectId, emojis:(state) => state.system.emojis}),
+    ...mapState({selectWxid:  (state) => state.chat.selectWxid, emojis:(state) => state.system.emojis}),
     ...mapGetters({selectedChat:"chat/selectedChat"}),
   },
   created() {
@@ -241,7 +241,7 @@ export default {
   },
   watch: {
     // 在选择其它对话的时候 聚焦输入框
-    selectId() {
+    selectWxid() {
       setTimeout(() => {
         this.$refs.text.focus();
       }, 0);

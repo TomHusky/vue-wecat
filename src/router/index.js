@@ -20,13 +20,11 @@ const router = new Router({
   routes: routes,
   mode: 'history',
   linkActiveClass: 'active',
-// 共三个页面： 聊天页面，好友页面，个人简历分别对应一下路由
 })
 // router.push({ path: '/' });
 
 router.beforeEach((to, from, next) => {
   const token = getToken();
-  console.log(1);
   if(to.path == "/login"){
     if(token){
       next("/");

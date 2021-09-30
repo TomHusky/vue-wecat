@@ -170,7 +170,7 @@ const getters = {
     return friend
   },
   selectedChatFriend(state, getters, rootState) {
-    let session = rootState.chat.chatlist.find(session => session.id === rootState.chat.selectId);
+    let session = rootState.chat.chatlist.find(session => session.wxid === rootState.chat.selectWxid);
     let friend = state.friendlist.find(friend => friend.wxid === session.wxid);
     return friend
   },

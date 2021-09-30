@@ -1,3 +1,7 @@
+import Identicon from 'identicon.js'
+import {
+  md5
+} from '@/libs/sign'
 import {
   setToken,
   getToken
@@ -11,13 +15,13 @@ const state = {
   token: getToken(),
   // 当前登录用户
   info: {
-    signature: "码农的世界你不懂",
+    signature: "",
     sex: 1,
-    wxid: "1677900582",
+    wxid: "",
     area: "广州",
-    nickname: 'ratel',
-    avatar: 'static/images/UserAvatar.jpg',
-    username:"1677900582",
+    nickname: '房东的Tom',
+    avatar: null,
+    username: "",
   },
 }
 const mutations = {
@@ -28,11 +32,18 @@ const mutations = {
     state.token = token
     setToken(token, auto)
   },
+  setUserInfo(state,info){
+    state.info = info;
+  }
 }
 
 const actions = {
+  setUserInfo: ({
+    commit
+  }, info) => commit('setUserInfo', info),
   // 登录
-  handleLogin({state,
+  handleLogin({
+    state,
     commit
   }, {
     username,
@@ -81,50 +92,21 @@ const actions = {
         reject(err)
       })
     })
-  },
-  // 获取用户相关信息
-  listFriendInfo({
-    state,
-    commit
-  }) {
-    return new Promise((resolve, reject) => {
-      listFriendInfo().then(res => {
-        if (res.code === 0) {
-          commit('setAvatar', res.data.avatar)
-          commit('setUserName', res.data.username)
-          commit('setNickName', res.data.nickName)
-          commit('setUserId', res.data.userId)
-          commit('setEmail', res.data.email)
-          commit('setMobile', res.data.mobile)
-          commit('setUserDesc', res.data.userDesc)
-          const access = []
-          if (res.data.authorities) {
-            res.data.authorities.map(item => {
-              if (item.authority) {
-                access.push(item.authority)
-              }
-            })
-          }
-          // 转换权限
-          commit('setAccess', access)
-          commit('setHasGetInfo', true)
-          getCurrentUserMenu().then(res => {
-            if (res.code === 0) {
-              commit('setUserMenus', res.data)
-              resolve(state)
-            }
-          }).catch(err => {
-            reject(err)
-          })
-        }
-      }).catch(err => {
-        reject(err)
-      })
-    })
   }
 }
 const getters = {
-
+  getUser(state, mutations, rootState) {
+    if (state.info.avatar == null || state.info.avatar === '') {
+      let options = {
+        background: [222, 225, 230],
+        margin: 0.2,
+        size: 420,
+        format: 'png'
+      };
+      state.info.avatar = 'data:image/png;base64,' + new Identicon(md5(state.info.nickname), options).toString()
+    }
+    return state.info;
+  }
 }
 
 
