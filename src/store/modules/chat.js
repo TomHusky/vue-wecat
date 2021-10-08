@@ -20,7 +20,8 @@ const state = {
       remark: "偷懒的机器人", //备注
       notDisturb: true // 免打扰
     },
-    newMgsNum: 0, //新消息条数
+    newMsgNum: 0, //新消息条数
+    isShow: true,
     messages: [{
       content: '我会跟你聊聊天的哟',
       date: now,
@@ -44,6 +45,32 @@ const mutations = {
     state.selectWxid = value;
     let chat = state.chatlist.find(session => session.wxid === value);
     chat.newMsgNum = 0;
+    chat.isShow = true;
+  },
+  // 更新聊天信息
+  updateChatInfo(state, value) {
+    let chat = state.chatlist.find(session => session.wxid === value.wxid);
+    if (value.newMsgNum != null) {
+      chat.newMsgNum = value.newMsgNum;
+    }
+    if (value.newMsgNum != null) {
+      chat.isShow = value.isShow;
+    }
+    if (value.info.notDisturb != null) {
+      chat.info.notDisturb = value.info.notDisturb;
+    }
+  },
+  deleteChatByWxid(state, value) {
+    let index = -1;
+    for (let i = 0; i < state.chatlist.length; i++) {
+      if (state.chatlist[i].wxid == value) {
+        index = i;
+      }
+    }
+    if (index > -1) {
+      state.selectWxid = state.chatlist[index + 1].wxid;
+      state.chatlist.splice(index, 1);
+    }
   },
   // 发送信息
   sendMessage(state, msg) {
@@ -93,6 +120,7 @@ const mutations = {
           remark: friend.remark,
           notDisturb: false,
         },
+        isShow: true,
         newMsgNum: 0,
         messages: [],
       };
@@ -104,7 +132,7 @@ const mutations = {
         showTime = false;
       }
     }
-    if(state.selectWxid!==result.wxid){
+    if (state.selectWxid !== result.wxid) {
       result.newMsgNum = result.newMsgNum + 1;
     }
     result.messages.push({
@@ -117,24 +145,27 @@ const mutations = {
   },
   // 置顶聊天
   topChat(state, chat) {
+    let has = false;
+    let index = -1;
     for (let i = 0; i < state.chatlist.length; i++) {
       if (state.chatlist[i].username === chat.username) {
         state.chatlist[i].id = 1;
         state.chatlist[i].index = 1;
-        return;
+        index = i;
+        has = true;
+      } else {
+        state.chatlist[i].id++;
+        state.chatlist[i].index++;
       }
-      state.chatlist[i].id++;
-      state.chatlist[i].index++;
     }
-    state.chatlist.unshift({
-      id: 1,
-      type: chat.type,
-      wxid: chat.wxid,
-      username: chat.username,
-      info: chat.info,
-      messages: chat.messages,
-      index: 1,
-    });
+    if (has) {
+      state.chatlist.unshift(state.chatlist.splice(index, 1)[0]);
+    } else {
+      chat.index = 1;
+      chat.id = 1;
+      chat.isShow = true;
+      state.chatlist.unshift(chat);
+    }
   },
 }
 const actions = {
@@ -144,6 +175,12 @@ const actions = {
   initData: ({
     commit
   }) => commit('initData'),
+  updateChatInfo: ({
+    commit
+  }, value) => commit('updateChatInfo', value),
+  deleteChatByWxid: ({
+    commit
+  }, value) => commit('deleteChatByWxid', value),
   sendMessage: ({
     commit
   }, msg) => commit('sendMessage', msg),
@@ -172,6 +209,14 @@ const getters = {
   searchedChatlist(state, getters, rootState) {
     let sessions = state.chatlist.filter(sessions => sessions.info.remark.includes(rootState.system.searchText));
     return sessions
+  },
+  getChatIndex: state => wxid => {
+    for (let i = 0; i < state.chatlist.length; i++) {
+      if (state.chatlist[i].wxid == wxid) {
+        return i;
+      }
+    }
+    return -1;
   },
   // 筛选出含有搜索值的聊天列表
   getChatByFriendWxid(state, getters, rootState) {

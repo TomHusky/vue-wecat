@@ -72,7 +72,7 @@ export default {
             nickname: friend.nickname,
             avatar: friend.avatar,
             remark: friend.remark,
-            notDisturb: true
+            notDisturb: false
           },
           newMsgNum: 0,
           messages: [
@@ -83,6 +83,7 @@ export default {
           ],
         };
         this.$store.dispatch("chat/topChat",chat);
+        this.$store.dispatch("chat/selectSession", friend.wxid);
       } else {
         this.$store.dispatch("chat/selectSession", msg.wxid);
         this.$store.dispatch("friend/selectFriend", msg.wxid);

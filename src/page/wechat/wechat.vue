@@ -8,14 +8,6 @@
     </div>
     <head-menu class="right-menu" id="friendHeadMenu" :refId="'friendHeadMenu'">
     </head-menu>
-    <audio
-      @click="play"
-      id="newMsg"
-      src="static/mp3/newMsg.mp3"
-      controls="controls"
-      autoplay
-      hidden="true"
-    ></audio>
   </div>
 </template>
 
@@ -23,7 +15,6 @@
 import HeadMenu from "@/components/other/menu/headmenu";
 import mycard from "@/components/mycard/mycard";
 import { initFriendList } from "@/page/wechat/init.js";
-import { playNewMsg } from "@/libs/audio";
 import { getToken } from "@/libs/util";
 import { bulidWebsocket, closeWebsocket } from "@/libs/websocket.js";
 import { sendNotifi } from "@/libs/notification.js";
