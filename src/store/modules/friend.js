@@ -3,6 +3,18 @@ import {
   rmByIndexs
 } from '@/libs/tools'
 const state = {
+  friendlist: [{
+    id: -1,
+    wxid: "wx001", //微信号
+    initial: 'A', //姓名首字母
+    username: "001",
+    avatar: 'static/images/vue.jpg', //头像
+    signature: "他什么也没有说", //个性签名
+    nickname: "机器人", //昵称
+    sex: 0, //性别 1为男，0为女
+    remark: "偷懒的机器人", //备注
+    area: "广东广州", //地区
+  }],
   // 好友列表
   // friendlist: [{
   //     id: 0,
@@ -125,7 +137,6 @@ const state = {
     remark: "新的朋友", //备注
     area: "", //地区
   },
-  friendlist: [],
   selectFriendWxid: ''
 }
 const mutations = {
@@ -136,12 +147,14 @@ const mutations = {
   addFriend(state, value) {
     let rmIndex = [];
     state.friendlist.filter((x, index) => {
-      if (!value.find((y) => x.username === y.username)) {
+      if (x.id != -1 && !value.find((y) => x.username === y.username)) {
         rmIndex.push(index);
       }
     });
+    if (rmIndex.lastIndexOf > 0) {
+      rmByIndexs(state.friendlist, rmIndex);
+    }
     let add = value.filter(x => !state.friendlist.find((y) => x.username === y.username));
-    rmByIndexs(state.friendlist, rmIndex);
     for (let i = 0; i < add.length; i++) {
       state.friendlist.push(add[i]);
     }
@@ -174,9 +187,9 @@ const getters = {
     let friend = state.friendlist.find(friend => friend.wxid === session.wxid);
     return friend
   },
-  selectedFriendByUsername(state){
+  selectedFriendByUsername(state) {
     return function (username) {
-      return state.friendlist.find(friend => friend.username ===username)
+      return state.friendlist.find(friend => friend.username === username)
     }
   },
 }

@@ -39,8 +39,7 @@
             <span class="time">{{
               item.messages[item.messages.length - 1].date | time
             }}</span>
-            <p class="lastmsg">
-              {{ item.messages[item.messages.length - 1].content }}
+            <p class="lastmsg" v-html="replaceFace(item.messages[item.messages.length - 1].content)">
             </p>
           </div>
         </li>
@@ -87,11 +86,14 @@ export default {
         clientX: 0,
         clientY: 0,
       },
-      currentChat: {},
+      currentChat: {
+        info: {},
+      },
     };
   },
   computed: {
     ...mapState({
+      emojis: (state) => state.system.emojis,
       selectWxid: (state) => state.chat.selectWxid,
       searchText: (state) => state.system.searchText,
     }),
@@ -107,6 +109,22 @@ export default {
       topChat: "chat/topChat",
       deleteChatByWxid: "chat/deleteChatByWxid",
     }),
+    // 将内容中属于表情的部分替换成emoji图片标签
+    replaceFace(con) {
+      if (con.includes("@::tt;;@")) {
+        let emojis = this.emojis;
+        for (let i = 0; i < emojis.length; i++) {
+          con = con.replace(
+            emojis[i].reg,
+            '<img src="static/emoji/' +
+              emojis[i].file +
+              '"  alt="" style="vertical-align: middle; width: 15px; height: 15px" />'
+          );
+        }
+        return con;
+      }
+      return con;
+    },
     openMenu(e, data) {
       this.menuOffset.offsetLeft = this.$el.getBoundingClientRect().left; // container margin left
       this.menuOffset.offsetWidth = this.$el.offsetWidth; // container width

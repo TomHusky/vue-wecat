@@ -28,7 +28,7 @@ const state = {
       showTime: true
     }],
     index: 1
-  }, ],
+  }],
   // 得知当前选择的是哪个对话
   selectWxid: 'wx001',
 }

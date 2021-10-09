@@ -18,16 +18,25 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 
 const store = new Vuex.Store({
   modules,
-  plugins: [createPersistedState()]
+  plugins: [createPersistedState({
+    reducer (val) {
+      return {
+        user: val.user,
+        friend: val.friend,
+        chat: val.chat
+      }
+    },
+    paths: ['system.headMenu']
+  })]
 });
 
 // 监听聊天列表的值， 发生变化就保存在localStorage中
-store.watch(
-  (state) => state.chat.chatlist,
-  (val) => {
-    localStorage.setItem('vue-chat', JSON.stringify(val));
-  }, {
-    deep: true
-  }
-)
+// store.watch(
+//   (state) => state.chat.chatlist,
+//   (val) => {
+//     localStorage.setItem('vue-chat', JSON.stringify(val));
+//   }, {
+//     deep: true
+//   }
+// )
 export default store;

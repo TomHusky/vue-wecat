@@ -46,31 +46,32 @@ export default {
       type: Number,
       default: 99,
     },
-    showNum:{
+    showNum: {
       type: Boolean,
-      default: true,  
+      default: true,
     },
   },
   computed: {
     getWidth() {
       if (!this.showNum) {
-        this.width = 10;
+        return 10;
       }
-      return this.width;
+      let width = this.width;
+      if (this.count > 9 && this.count < 100) {
+        width = width + 4;
+      }
+      if (this.count > 99) {
+        width = width + 8;
+      }
+      return width;
     },
     getHeight() {
       if (!this.showNum) {
-        this.height = 10;
+        return 10;
       }
       return this.height;
     },
     getShowNum() {
-      if (this.count > 9 && this.count < 100) {
-        this.width = this.width + 4;
-      }
-      if (this.count > 99) {
-        this.width = this.width + 8;
-      }
       if (this.count > this.overflowCount) {
         return this.overflowCount + "+";
       }

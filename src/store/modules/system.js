@@ -8,6 +8,8 @@ const state = {
     clienty:0,
     self: true,
     wxid: null,
+    type: 1, //类型 1 好友 2 群聊
+    chatid: null
   },
   // 输入的搜索值
   searchText: '',
