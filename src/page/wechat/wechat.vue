@@ -1,26 +1,27 @@
 <template>
   <div id="wechat">
     <div class="sidebar">
-      <mycard></mycard>
+      <MyCard></MyCard>
     </div>
     <div class="main">
       <router-view></router-view>
     </div>
-    <head-menu class="right-menu" id="friendHeadMenu" :refId="'friendHeadMenu'">
-    </head-menu>
+    <HeadMenu class="right-menu" id="friendHeadMenu" :refId="'friendHeadMenu'">
+    </HeadMenu>
   </div>
 </template>
 
 <script>
-import HeadMenu from "@/components/other/menu/headmenu";
-import mycard from "@/components/mycard/mycard";
+import HeadMenu from "@/components/other/menu/HeadMenu";
+import MyCard from "@/components/mycard/MyCard";
 import { initFriendList } from "@/page/wechat/init.js";
+import config from "@/config";
 import { getToken } from "@/libs/util";
 import { bulidWebsocket, closeWebsocket } from "@/libs/websocket.js";
 import { sendNotifi } from "@/libs/notification.js";
 export default {
   components: {
-    mycard,
+    MyCard,
     HeadMenu,
   },
   data() {

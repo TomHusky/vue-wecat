@@ -11,14 +11,34 @@
           :class="{ active: newfriend.wxid === selectFriendWxid }"
           @click="selectFriend(newfriend.wxid)"
         >
-          <img class="avatar" width="36" height="36" :src="newfriend.avatar" />
+          <img
+            class="avatar"
+            style="background-color: red"
+            width="36"
+            height="36"
+            :src="newfriend.avatar"
+          />
           <div class="remark">{{ newfriend.remark }}</div>
+        </div>
+      </li>
+      <li class="frienditem" :class="{ noborder: !groupChat.initial }">
+        <div class="list_title" v-if="groupChat.initial">
+          {{ groupChat.initial }}
+        </div>
+        <div
+          class="friend-info"
+          :class="{ active: groupChat.wxid === selectFriendWxid }"
+          @click="selectFriend(groupChat.wxid)"
+        >
+          <img class="avatar" width="36" height="36" :src="groupChat.avatar" />
+          <div class="remark">{{ groupChat.remark }}</div>
         </div>
       </li>
       <li
         v-for="item in searchedFriendlist"
         class="frienditem"
         :class="{ noborder: !item.initial }"
+        :key="item.wxid"
       >
         <div class="list_title" v-if="item.initial">{{ item.initial }}</div>
         <div
@@ -40,6 +60,7 @@ export default {
   computed: {
     ...mapState({
       newfriend: (state) => state.friend.newfriend,
+      groupChat: (state) => state.friend.groupChat,
       selectFriendWxid: (state) => state.friend.selectFriendWxid,
       searchText: (state) => state.system.searchText,
     }),

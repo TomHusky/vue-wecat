@@ -32,8 +32,8 @@ module.exports = {
    */
   apiUrl: {
     //  本地环境接口请求地址
-    dev: 'http://127.0.0.1:8088/wechat-mvc',
+    dev: 'http://127.0.0.1:8088/chat',
     //  生产环境接口请求地址
-    pro: 'http://api.openc.top'
+    pro: 'http://y2725078j3.qicp.vip/wechat-mvc'
   },
 }

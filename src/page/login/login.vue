@@ -12,7 +12,7 @@
       <span>登录</span>
     </div>
     <div class="select">
-      <checkbox
+      <CheckBox
         @change="remember"
         type="checkbox"
         :checked="rememberPass"
@@ -26,11 +26,11 @@
 </template>
 
 <script>
-import checkbox from "@/components/other/input/checkbox";
+import CheckBox from "@/components/other/input/CheckBox";
 import { mapActions } from "vuex";
 export default {
   components: {
-    checkbox,
+    CheckBox,
   },
   data() {
     return {

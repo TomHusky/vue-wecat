@@ -12,17 +12,17 @@
       ></i>
     </div>
     <template v-if="selectedChat.type === 1">
-      <friend-message></friend-message>
+      <FriendMessage></FriendMessage>
     </template>
     <template v-if="selectedChat.type === 2">
-      <group-message></group-message>
+      <GroupMessage></GroupMessage>
     </template>
   </div>
 </template>
 
 <script>
-import GroupMessage from "./groupmessage";
-import FriendMessage from "./friendmessage";
+import GroupMessage from "./GroupMessage";
+import FriendMessage from "./FriendMessage";
 import {exitLogin} from "@/libs/request";
 import { mapGetters } from "vuex";
 export default {

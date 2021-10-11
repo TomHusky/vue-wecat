@@ -46,7 +46,7 @@
         <div class="item chatSwitchItem">
           <p class="switchLable">置顶聊天</p>
           <p class="switchValue">
-            <switched @change="toppingChat" :width="40" :height="18"></switched>
+            <Switched @change="toppingChat" :width="40" :height="18"></Switched>
           </p>
         </div>
       </div>
@@ -55,11 +55,11 @@
 </template>
 
 <script>
-import switched from "@/components/other/switch";
+import Switched from "@/components/other/Switch";
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   components: {
-    switched,
+    Switched,
   },
   data() {
     return {};

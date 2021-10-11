@@ -1,39 +1,39 @@
 <template>
   <div class="content">
     <div class="msglist">
-      <search :placeholder="placeholder" v-drag></search>
-      <chatlist></chatlist>
+      <Search :placeholder="placeholder" v-drag></Search>
+      <ChatList></ChatList>
     </div>
     <div class="chatbox">
-      <message class="message"></message>
-      <v-text class="text"></v-text>
+      <MessageChat class="message"></MessageChat>
+      <VText class="text"></VText>
     </div>
     <div
       v-if="isShow"
       class="chatInfo"
     >
-      <friendchatinfo v-if="selectedChat.type==1" id="info"></friendchatinfo>
-      <groupchatinfo v-if="selectedChat.type==2" id="info"></groupchatinfo>
+      <FriendChatInfo v-if="selectedChat.type==1" id="info"></FriendChatInfo>
+      <GroupChatInfo v-if="selectedChat.type==2" id="info"></GroupChatInfo>
     </div>
   </div>
 </template>
 
 <script>
-import search from "@/components/search/search";
-import chatlist from "@/components/chatlist/chatlist";
-import friendchatinfo from "@/components/chatlist/friendchatinfo";
-import groupchatinfo from "@/components/chatlist/groupchatinfo";
-import message from "@/components/message/message";
-import vText from "@/components/text/text";
+import Search from "@/components/search/Search";
+import ChatList from "@/components/chatlist/ChatList";
+import FriendChatInfo from "@/components/chatlist/FriendChatInfo";
+import GroupChatInfo from "@/components/chatlist/GroupChatInfo";
+import MessageChat from "@/components/message/MessageChat";
+import VText from "@/components/text/Text";
 import { mapGetters } from "vuex";
 export default {
   components: {
-    search,
-    chatlist,
-    friendchatinfo,
-    groupchatinfo,
-    message,
-    vText,
+    Search,
+    ChatList,
+    FriendChatInfo,
+    GroupChatInfo,
+    VText,
+    MessageChat,
   },
   data() {
     return {

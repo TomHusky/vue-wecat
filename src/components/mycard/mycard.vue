@@ -11,13 +11,13 @@
     </header>
     <div class="navbar" @click="clearSearch">
       <router-link to="/chat" class="icon iconfont icon-msg">
-        <badge
+        <Badge
           v-if="false"
           :count="10"
           :overflowCount="99"
           :width="16"
           :height="16"
-        ></badge>
+        ></Badge>
       </router-link>
       <router-link to="/friend" class="icon iconfont icon-friend"></router-link>
       <router-link
@@ -32,12 +32,10 @@
 </template>
 
 <script>
-import HeadMenu from "@/components/other/menu/headmenu";
-import badge from "@/components/other/badge";
+import Badge from "@/components/other/Badge";
 export default {
   components: {
-    HeadMenu,
-    badge,
+    Badge,
   },
   computed: {
     user() {

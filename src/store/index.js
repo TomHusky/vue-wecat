@@ -22,11 +22,10 @@ const store = new Vuex.Store({
     reducer (val) {
       return {
         user: val.user,
-        friend: val.friend,
         chat: val.chat
       }
     },
-    paths: ['system.headMenu']
+    paths: ['system.headMenu','friend.friendlist']
   })]
 });
 

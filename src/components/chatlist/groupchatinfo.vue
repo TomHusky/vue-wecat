@@ -1,7 +1,7 @@
 <template>
   <div class="info selectNone">
     <div class="header">
-      <search :placeholder="placeholder"></search>
+      <Search :placeholder="placeholder"></Search>
     </div>
     <div class="content scrollbar">
       <div class="chatUserList">
@@ -51,37 +51,37 @@
         <div class="item chatSwitchItem">
           <p class="switchLable">显示群成员昵称</p>
           <p class="switchValue">
-            <switched
+            <Switched
               :width="40"
               :height="18"
-            ></switched>
+            ></Switched>
           </p>
         </div>
         <div class="item chatSwitchItem">
           <p class="switchLable">消息免打扰</p>
           <p class="switchValue">
-            <switched
+            <Switched
               :width="40"
               :height="18"
-            ></switched>
+            ></Switched>
           </p>
         </div>
         <div class="item chatSwitchItem">
           <p class="switchLable">置顶聊天</p>
           <p class="switchValue">
-            <switched
+            <Switched
               :width="40"
               :height="18"
-            ></switched>
+            ></Switched>
           </p>
         </div>
         <div class="item chatSwitchItem">
           <p class="switchLable">保存到通讯录</p>
           <p class="switchValue">
-            <switched
+            <Switched
               :width="40"
               :height="18"
-            ></switched>
+            ></Switched>
           </p>
         </div>
       </div>
@@ -94,13 +94,13 @@
 </template>
 
 <script>
-import search from "@/components/search/search";
-import switched from "@/components/other/switch";
+import Search from "@/components/search/Search";
+import Switched from "@/components/other/Switch";
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   components: {
-    search,
-    switched,
+    Search,
+    Switched,
   },
   data() {
     return {

@@ -1,24 +1,24 @@
 <template>
   <div class="content">
     <div class="friend-wrapper" v-drag>
-      <search></search>
-      <friendlist></friendlist>
+      <Search></Search>
+      <FriendList></FriendList>
     </div>
     <div class="friendinfo">
-      <info></info>
+      <Info></Info>
     </div>
   </div>
 </template>
 
 <script>
-import search from "@/components/search/search";
-import friendlist from "@/components/friendlist/friendlist";
-import info from "@/components/info/info";
+import Search from "@/components/search/Search";
+import FriendList from "@/components/friendlist/FriendList";
+import Info from "@/components/info/Info";
 export default {
   components: {
-    search,
-    friendlist,
-    info,
+    Search,
+    FriendList,
+    Info,
   },
 };
 </script>

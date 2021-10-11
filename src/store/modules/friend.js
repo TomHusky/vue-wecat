@@ -125,10 +125,9 @@ const state = {
   //     area: "火星", //地区
   //   }
   // ],
-  // 得知当前选择的是哪个好友
   newfriend: {
     id: 0,
-    wxid: "", //微信号
+    wxid: "1", //微信号
     initial: "新的朋友", //姓名首字母
     avatar: "static/images/newfriend.jpg", //头像
     signature: "", //个性签名
@@ -137,7 +136,19 @@ const state = {
     remark: "新的朋友", //备注
     area: "", //地区
   },
-  selectFriendWxid: ''
+  groupChat: {
+    id: 0,
+    wxid: "2", 
+    initial: "群聊",
+    avatar: "static/images/group.png",
+    signature: "",
+    nickname: "群聊",
+    sex: 0, 
+    remark: "群聊",
+    area: "",
+  },
+  // 得知当前选择的是哪个好友
+  selectFriendWxid: '1'
 }
 const mutations = {
   // 得知用户当前选择的是哪个好友。
@@ -176,8 +187,11 @@ const getters = {
   },
   // 通过当前选择是哪个好友匹配相应的好友
   selectedFriend(state) {
-    if (state.selectFriendWxid === null || state.selectFriendWxid === '') {
+    if (state.selectFriendWxid === '1') {
       return state.newfriend;
+    }
+    if (state.selectFriendWxid === '2') {
+      return state.groupChat;
     }
     let friend = state.friendlist.find(friend => friend.wxid === state.selectFriendWxid);
     return friend

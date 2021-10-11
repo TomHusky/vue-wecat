@@ -21,14 +21,14 @@
               "
               :src="item.info.avatar"
             />
-            <badge
+            <Badge
               v-if="item.newMsgNum > 0"
               :count="item.newMsgNum"
               :overflowCount="99"
               :showNum="!item.info.notDisturb"
               :width="16"
               :height="16"
-            ></badge>
+            ></Badge>
           </div>
           <div class="list-right">
             <p class="name">
@@ -70,13 +70,13 @@
 </template>
 
 <script>
-import badge from "@/components/other/badge";
-import ContextMenu from "@/components/other/menu/cmenu";
+import Badge from "@/components/other/Badge";
+import ContextMenu from "@/components/other/menu/CMenu";
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   components: {
     ContextMenu,
-    badge,
+    Badge,
   },
   data() {
     return {
