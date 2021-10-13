@@ -1,7 +1,7 @@
 <!-- 搜索框 -->
 <template>
-  <div class="search-wrapper">
-    <div class="search">
+  <div class="search-list-wrapper">
+    <div class="search-list">
       <i
         class="icon iconfont icon-search"
         v-bind:class="{ 'icon-search-color': searchIconColor }"
@@ -11,7 +11,7 @@
         class="searchInput"
         @focus="inputFocus"
         @blur="inputBlur"
-        v-model="content"
+        v-model="search"
         @keyup="change"
         :placeholder="placeholder"
       />
@@ -21,24 +21,18 @@
         @mousedown="del"
       ></div>
     </div>
-    <button class="btn" @click="search">搜索</button>
+    <div class="add" @click="$emit('add')">
+      <i class="icon iconfont icon-add"></i>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: {
-    placeholder: {
-      type: String,
-      default: "搜索",
-    },
-  },
+  props: ["placeholder"],
   methods: {
     change() {
-      this.$emit("change", this.content);
-    },
-    search(){
-      this.$emit("search", this.content);
+      this.$store.dispatch("system/search", this.search);
     },
     inputFocus(e) {
       e.target.placeholder = "";
@@ -53,13 +47,13 @@ export default {
     del(e) {
       // 即可阻止点击按钮时触发input失去焦点事件
       // e.preventDefault();
-      this.content = "";
+      this.search = "";
       this.change();
     },
   },
   data() {
     return {
-      content: "",
+      search: "",
       active: false,
       searchIconColor: false,
       showDelete: false,
@@ -79,23 +73,29 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.search-wrapper {
+.search-list-wrapper {
   padding: 22px 12px 12px 12px;
   background-color: #f7f7f7;
   display: flex;
 }
 
-.btn{
-  margin-left: 30px;
-  width: 50px;
-  background-color: #1AAD19;
-  border: none;
-  color: #fff;
-  font-size: 12px;
+.add {
+  margin-left: 10px;
+  background-color: #E2E2E2;
+  padding: 0 6px;
+  border-radius: 5px;
   cursor: pointer;
+
+  i {
+    display: inline-block;
+    font-size: 12px !important;
+    font-weight: bold;
+    line-height: 26px;
+    -webkit-transform: scale(0.8);
+  }
 }
 
-.search {
+.search-list {
   position: relative;
   display: flex;
   box-sizing: border-box;
@@ -146,5 +146,4 @@ export default {
     cursor: pointer;
   }
 }
-
 </style>

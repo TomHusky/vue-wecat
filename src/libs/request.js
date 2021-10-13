@@ -3,11 +3,16 @@ import qs from 'qs'
 import store from '@/store/index.js'
 import router from '@/router/index.js'
 import $config from '@/config'
-import {getToken,removeToken} from '@/libs/util'
+import {
+  getToken,
+  removeToken
+} from '@/libs/util'
 import Message from '@/components/other/message'
-import {sign} from '@/libs/sign'
+import {
+  sign
+} from '@/libs/sign'
 
-let baseUrl = '127.0.0.1:8088/wechat-mvc'
+let baseUrl = '127.0.0.1:8088/chat'
 let message = Message.install;
 
 switch (process.env.NODE_ENV) {
@@ -19,6 +24,11 @@ switch (process.env.NODE_ENV) {
     // 生产环境url
     baseUrl = $config.apiUrl.pro
     break
+}
+
+
+export function getBaseUrl() {
+  return baseUrl;
 }
 
 
@@ -42,17 +52,16 @@ service.apiUrl = baseUrl
  * 请求参数处理
  */
 service.interceptors.request.use((config) => {
-    // // 参数签名处理
-    // config = sign(config, $config.appId, $config.appSecret, 'SHA256')
-    // config.method === 'get'
-    //   ? config.params = {...config.params} : config.data = qs.stringify({...config.data})
-    const token = getToken()
-    if (token && !config.url.includes("login")) {
-      config.headers['Authorization'] = 'Bearer ' + token;
-    }
-    return config
+  // // 参数签名处理
+  // config = sign(config, $config.appId, $config.appSecret, 'SHA256')
+  // config.method === 'get'
+  //   ? config.params = {...config.params} : config.data = qs.stringify({...config.data})
+  const token = getToken()
+  if (token && !config.url.includes("login")) {
+    config.headers['Authorization'] = 'Bearer ' + token;
   }
-)
+  return config
+})
 /**
  * 响应结果处理
  */
@@ -113,23 +122,30 @@ service.interceptors.response.use(
   }
 )
 
-export function exitLogin(){
-  store.commit("user/setToken","");
+
+
+export function exitLogin() {
+  store.commit("user/setToken", "");
   removeToken();
-  router.push({ path: '/login' });
+  router.push({
+    path: '/login'
+  });
 }
 
 //封装post json请求
-export function postJson({url, data}) { 
+export function postJson({
+  url,
+  data
+}) {
   //默认配置 
-  let sendObject={
+  let sendObject = {
     url: url,
     method: 'post',
     headers: {
-      'Content-Type':'application/json;charset=UTF-8'       
+      'Content-Type': 'application/json;charset=UTF-8'
     }
   };
-  sendObject.data=JSON.stringify(data);
+  sendObject.data = JSON.stringify(data);
   return service(sendObject)
 }
 

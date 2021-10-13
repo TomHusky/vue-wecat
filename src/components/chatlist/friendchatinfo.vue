@@ -4,12 +4,7 @@
       <div class="chatUserList">
         <div class="userHead">
           <div class="add">
-            <img
-              width="25"
-              height="25"
-              alt="添加"
-              src="static/images/icon/add.png"
-            />
+            <img alt="添加" width="15px" src="static/images/icon/add.svg" />
           </div>
           <div class="name">添加</div>
         </div>
@@ -93,7 +88,7 @@ export default {
       topChat: "chat/topChat",
     }),
     toppingChat(value) {
-      if(value){
+      if (value) {
         this.topChat(this.selectedChat);
       }
     },

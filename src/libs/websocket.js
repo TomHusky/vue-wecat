@@ -2,7 +2,7 @@ let websock = null
 let websocketOpenOk = null
 let messageCallback = null
 let errorCallback = null
-let wsUrl = 'ws://127.0.0.1:8088/wechat-mvc/websocket'
+let wsUrl = null
 let token = null
 let tryTime = 0
 

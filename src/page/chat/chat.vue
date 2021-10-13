@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="msglist">
-      <Search :placeholder="placeholder" v-drag></Search>
+      <SearchList :placeholder="placeholder" v-drag></SearchList>
       <ChatList></ChatList>
     </div>
     <div class="chatbox">
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Search from "@/components/search/Search";
+import SearchList from "@/components/search/SearchList";
 import ChatList from "@/components/chatlist/ChatList";
 import FriendChatInfo from "@/components/chatlist/FriendChatInfo";
 import GroupChatInfo from "@/components/chatlist/GroupChatInfo";
@@ -28,7 +28,7 @@ import VText from "@/components/text/Text";
 import { mapGetters } from "vuex";
 export default {
   components: {
-    Search,
+    SearchList,
     ChatList,
     FriendChatInfo,
     GroupChatInfo,

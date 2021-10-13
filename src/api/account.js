@@ -57,3 +57,16 @@ export const updatePassword = ({ userId, password }) => {
     method: 'post'
   })
 }
+
+/**
+ * 获取用户信息
+ */
+ export const selectUser = (value) => {
+  const params = { value: value }
+  return request({
+    url: '/user/selectUser',
+    params,
+    method: 'get'
+  })
+}
+

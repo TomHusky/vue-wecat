@@ -1,51 +1,70 @@
 <template>
   <transition name="fade">
-    <div
-      class="cus-confirm-mask"
-      v-if="flag"
-      @click="cancel"
-    >
+    <div class="cus-confirm-mask" v-if="show">
       <div
         class="cus-confirm"
+        :style="{
+          '--widthStr': width + 'px',
+          '--heightStr': height + 'px',
+          '--width': width/2+'px',
+          '--height': height/2+'px',
+        }"
         @click.stop
       >
-        <div class="confirm-title">确认提示：</div>
-        <div class="confirm-body">{{title}}</div>
+        <div class="confirm-title">{{ title }}</div>
+        <div class="confirm-body">
+          <slot name="confirm"></slot>
+        </div>
         <div class="confirm-btns">
-          <button
-            v-if="noFlag"
-            class="cancel-btn"
-            @click="no"
-          >取消</button>
-          <button
-            v-if="okFlag"
-            class="ok-btn"
-            @click="sure"
-          >确认</button>
+          <button v-if="okFlag" :class="{'ok-btn-success':isActive}" class="ok-btn" @click="sure">确认</button>
+          <button v-if="noFlag" class="cancel-btn" @click="no">取消</button>
         </div>
       </div>
     </div>
   </transition>
 </template>
-
 <script>
 export default {
+  name: "CusConfirm",
+  props: {
+    flag: { type: Boolean, default: false },
+    title: { type: String, default: "提示" },
+    noFlag: { type: Boolean, default: true },
+    okFlag: { type: Boolean, default: true },
+    width: {
+      type: Number,
+      default: 480,
+    },
+    height: {
+      type: Number,
+      default: 260,
+    },
+    isActive:{
+      type: Boolean,
+      default: false,
+    }
+  },
   data() {
     return {
-      flag: false,
-      title: "",
-      noFlag: false,
-      okFlag: true,
+      show: false,
     };
+  },
+  watch: {
+    flag(value) {
+      this.show = value;
+    },
   },
   methods: {
     no() {
-      this.flag = false;
+      this.$emit("cancel");
       this.cancel();
     },
     sure() {
-      this.flag = false;
-      this.ok();
+      this.$emit("confirm");
+      this.cancel();
+    },
+    cancel() {
+      this.show = false;
     },
   },
 };
@@ -63,64 +82,82 @@ export default {
 .cus-confirm-mask {
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.3);
   position: fixed;
   top: 0;
   left: 0;
   z-index: 999;
+  list-style-type: none;
+  border-radius: 2px;
+  color: #333;
+  box-shadow: 2px 2px 10px #aaa;
+  -o-box-shadow: 2px 2px 10px #aaa;
+  -webkit-box-shadow: 2px 2px 10px #aaa;
+  -moz-box-shadow: 2px 2px 10px #aaa;
 }
 .cus-confirm {
-  width: 480px;
-  height: 260px;
+  width: var(--widthStr);
+  height: var(--heightStr);
   box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.2);
   position: absolute;
-  top: calc(50% - 130px);
-  left: calc(50% - 240px);
-  border-radius: 12px;
+  border-radius: 2px;
   padding: 15px;
   z-index: 999;
+  top: calc(50% - var(--height));
+  left: calc(50% - var(--width));
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   background: #ffffff;
 }
 .confirm-title {
-  font-size: 28px;
+  font-size: 16px;
 }
 
 .confirm-body {
+  height: 100%;
   text-align: center;
   font-size: 18px;
 }
 
 .confirm-btns {
   text-align: right;
+  bottom: 0;
 }
 .confirm-btns button {
   border: 0;
   outline: none;
   padding: 6px 18px;
-  border-radius: 6px;
   margin: 0 12px;
-  font-size: 16px;
+  font-size: 12px;
+  font-weight: 100;
   cursor: pointer;
 }
 
 .ok-btn {
-  background: #f5f5f5;
-  color: #fc9541;
+  background: #8cd58c;
+  color: #fff;
+  cursor: default;
+}
+
+.ok-btn-success{
+  background-color: #129611 !important;
+  cursor: pointer !important;
+}
+.ok-btn-success:hover{
+  cursor: pointer !important;
 }
 
 .cancel-btn {
-  background: #fc9541;
-  color: #f5f5f5;
+  background: #fff;
+  color: #000;
+  border: 1px solid #e7e7e7 !important;
 }
 
-.ok-btn:active {
-  background: #e5e5e5;
+.ok-btn:hover {
+  text-shadow: none;
+  cursor: default;
 }
 
-.cancel-btn:active {
-  background: #fb7a12;
+.cancel-btn:hover {
+  background: #efefef;
 }
 </style>

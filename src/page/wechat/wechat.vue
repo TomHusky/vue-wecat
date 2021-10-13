@@ -4,6 +4,16 @@
       <MyCard></MyCard>
     </div>
     <div class="main">
+      <div class="systemBottom">
+        <i class="icon iconfont icon-window-ding"></i>
+        <i class="icon iconfont icon-window-min"></i>
+        <i class="icon iconfont icon-window-max"></i>
+        <i
+          style="cursor: pointer"
+          @click="exit"
+          class="icon iconfont icon-close close"
+        ></i>
+      </div>
       <router-view></router-view>
     </div>
     <HeadMenu class="right-menu" id="friendHeadMenu" :refId="'friendHeadMenu'">
@@ -15,7 +25,7 @@
 import HeadMenu from "@/components/other/menu/HeadMenu";
 import MyCard from "@/components/mycard/MyCard";
 import { initFriendList } from "@/page/wechat/init.js";
-import config from "@/config";
+import { getBaseUrl, exitLogin } from "@/libs/request.js";
 import { getToken } from "@/libs/util";
 import { bulidWebsocket, closeWebsocket } from "@/libs/websocket.js";
 import { sendNotifi } from "@/libs/notification.js";
@@ -48,7 +58,7 @@ export default {
     // 防止用户多次连续点击发起请求，所以要先关闭上次的ws请求。
     closeWebsocket();
     bulidWebsocket(
-      "ws://127.0.0.1:8088/wechat-mvc/websocket",
+      "ws://" + getBaseUrl() + "/websocket",
       getToken(),
       this.wsOpen,
       this.wsMessage,
@@ -112,6 +122,9 @@ export default {
       }
     },
     wsError() {},
+    exit() {
+      exitLogin();
+    },
   },
 };
 </script>
@@ -138,6 +151,31 @@ export default {
     flex: 1;
     height: 630px;
     background: #F5F5F5;
+  }
+
+  .systemBottom {
+    position: absolute;
+    right: 0px;
+
+    i {
+      font-size: 6px !important;
+      padding: 8px 10px;
+      line-height: 30px;
+      cursor: pointer;
+      color: #7F7F7F;
+
+      &:hover {
+        background-color: #E5E5E5;
+        color: #3F3F3F;
+      }
+    }
+
+    .close {
+      &:hover {
+        background-color: #FA5151;
+        color: #fff;
+      }
+    }
   }
 }
 </style>

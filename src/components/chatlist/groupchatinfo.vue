@@ -1,7 +1,7 @@
 <template>
   <div class="info selectNone">
     <div class="header">
-      <Search :placeholder="placeholder"></Search>
+      <SearchList :placeholder="placeholder"></SearchList>
     </div>
     <div class="content scrollbar">
       <div class="chatUserList">
@@ -94,12 +94,12 @@
 </template>
 
 <script>
-import Search from "@/components/search/Search";
+import SearchList from "@/components/search/SearchList";
 import Switched from "@/components/other/Switch";
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   components: {
-    Search,
+    SearchList,
     Switched,
   },
   data() {
