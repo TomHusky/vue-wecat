@@ -26,9 +26,9 @@ import HeadMenu from "@/components/other/menu/HeadMenu";
 import MyCard from "@/components/mycard/MyCard";
 import { initFriendList } from "@/page/wechat/init.js";
 import { getBaseUrl, exitLogin } from "@/libs/request.js";
+import receive from "@/api/socket/receive.js";
 import { getToken } from "@/libs/util";
 import { bulidWebsocket, closeWebsocket } from "@/libs/websocket.js";
-import { sendNotifi } from "@/libs/notification.js";
 export default {
   components: {
     MyCard,
@@ -61,7 +61,7 @@ export default {
       "ws://" + getBaseUrl() + "/websocket",
       getToken(),
       this.wsOpen,
-      this.wsMessage,
+      receive,
       this.wsError
     );
   },
@@ -105,22 +105,6 @@ export default {
       app.style.top = (height - app.offsetHeight) / 2 + "px";
     },
     wsOpen() {},
-    wsMessage(url, body) {
-      const dataJson = body;
-      if (url === "/msg/receive") {
-        this.$store.dispatch("chat/receiveMessage", dataJson.data);
-        let friend = this.$store.getters["friend/selectedFriendByUsername"](
-          dataJson.data.username
-        );
-        let msg = {
-          avatar: friend.avatar,
-          nickname: friend.nickname,
-          remark: friend.remark,
-          msgContent: dataJson.data.msgContent,
-        };
-        sendNotifi(this, msg);
-      }
-    },
     wsError() {},
     exit() {
       exitLogin();

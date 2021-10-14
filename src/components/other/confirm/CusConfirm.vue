@@ -16,7 +16,7 @@
           <slot name="confirm"></slot>
         </div>
         <div class="confirm-btns">
-          <button v-if="okFlag" :class="{'ok-btn-success':isActive}" class="ok-btn" @click="sure">确认</button>
+          <button v-if="okFlag" :class="{'ok-btn-success':isActive}" class="ok-btn" :disabled="!isActive" @click="sure">确认</button>
           <button v-if="noFlag" class="cancel-btn" @click="no">取消</button>
         </div>
       </div>
@@ -61,7 +61,6 @@ export default {
     },
     sure() {
       this.$emit("confirm");
-      this.cancel();
     },
     cancel() {
       this.show = false;

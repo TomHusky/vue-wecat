@@ -12,7 +12,7 @@ import {
   sign
 } from '@/libs/sign'
 
-let baseUrl = '127.0.0.1:8088/chat'
+let baseUrl = 'http://127.0.0.1:8088/chat'
 let message = Message.install;
 
 switch (process.env.NODE_ENV) {
@@ -28,7 +28,7 @@ switch (process.env.NODE_ENV) {
 
 
 export function getBaseUrl() {
-  return baseUrl;
+  return baseUrl.substring(baseUrl.indexOf("//"));
 }
 
 
@@ -57,6 +57,7 @@ service.interceptors.request.use((config) => {
   // config.method === 'get'
   //   ? config.params = {...config.params} : config.data = qs.stringify({...config.data})
   const token = getToken()
+  console.log(config);
   if (token && !config.url.includes("login")) {
     config.headers['Authorization'] = 'Bearer ' + token;
   }
@@ -133,17 +134,15 @@ export function exitLogin() {
 }
 
 //封装post json请求
-export function postJson({
-  url,
-  data
-}) {
+export function postJson({url,data}) {
   //默认配置 
   let sendObject = {
     url: url,
     method: 'post',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
-    }
+    },
+    data: null,
   };
   sendObject.data = JSON.stringify(data);
   return service(sendObject)

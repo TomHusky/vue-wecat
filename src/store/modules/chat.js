@@ -3,7 +3,7 @@ import {
 } from "@/libs/tools";
 import {
   sendFriendMsg
-} from "@/api/msg";
+} from "@/api/socket/sendMsg";
 const now = new Date();
 // namespaced: true 的方式使其成为带命名空间的模块。保证在变量名一样的时候，添加一个父级名拼接。
 // 例： SET_NAME => user/SET_NAME

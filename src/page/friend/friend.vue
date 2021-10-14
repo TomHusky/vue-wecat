@@ -8,7 +8,7 @@
       <Info></Info>
     </div>
     <CusConfirm
-      :height="480"
+      :height="520"
       :width="350"
       :flag="showConfirm"
       @cancel="addUserCancel"
@@ -38,7 +38,14 @@
                     ]"
                   ></div>
                 </div>
-                <div class="signature">{{ searchUser.signature }}</div>
+                <div
+                  class="signature"
+                  v-text="
+                    searchUser.signature == null ||  searchUser.signature ===''
+                      ? '这个人什么也留下'
+                      : searchUser.signature
+                  "
+                ></div>
               </div>
             </div>
             <div class="detInfo">
@@ -49,6 +56,16 @@
               <div class="area">
                 <span>地&nbsp&nbsp&nbsp区</span>{{ searchUser.area }}
               </div>
+            </div>
+          </div>
+          <div class="editInfo" v-if="searchUser != null">
+            <div class="info">
+              <p>发送好友申请</p>
+              <input v-model="edit.info" />
+            </div>
+            <div class="remark">
+              <p>备注名</p>
+              <input v-model="edit.remark" />
             </div>
           </div>
         </div>
@@ -64,6 +81,7 @@ import Search from "@/components/search/Search";
 import FriendList from "@/components/friendlist/FriendList";
 import Info from "@/components/info/Info";
 import { selectUser } from "@/api/account.js";
+import { applyAddFriend } from "@/api/friend.js";
 export default {
   components: {
     SearchList,
@@ -76,6 +94,10 @@ export default {
     return {
       showConfirm: false,
       searchUser: null,
+      edit: {
+        remark: "",
+        info: "",
+      },
     };
   },
   methods: {
@@ -83,11 +105,26 @@ export default {
       this.showConfirm = true;
     },
     addUserConfirm() {
-      
+      let params = {
+        username: this.searchUser.username,
+        info: this.edit.remark,
+        remark: this.edit.info,
+      };
+      applyAddFriend(params).then((res) => {
+        if (res.code == 0) {
+          this.$message({
+            content: "添加成功",
+            time: 2500,
+            type: "info",
+            hasClose: true,
+          });
+          this.showConfirm = false;
+        }
+      });
     },
     addUserCancel() {
       this.showConfirm = false;
-      this.searchUser= null;
+      this.searchUser = null;
     },
     userSearch(value) {
       if (value == null || value === "") {
@@ -97,6 +134,8 @@ export default {
         .then((res) => {
           if (res.code == 0) {
             this.searchUser = res.data;
+            this.edit.remark = this.searchUser.nickname;
+            this.edit.info = "我是" + this.$store.state.user.info.nickname;
           }
         })
         .catch((err) => {
@@ -134,7 +173,7 @@ export default {
     .esInfo {
       display: flex;
       align-items: center;
-      margin-top: 40px;
+      margin-top: 20px;
 
       .left {
         flex: 1;
@@ -183,7 +222,7 @@ export default {
 
     .detInfo {
       padding: 20px 0;
-      margin-bottom: 40px;
+      margin-bottom: 20px;
 
       .area, .wxid {
         font-size: 14px;
@@ -194,6 +233,33 @@ export default {
           color: rgba(153, 153, 153, 0.8);
           margin-right: 40px;
         }
+      }
+    }
+  }
+
+  .editInfo {
+    margin: 10px auto;
+    padding: 0 50px;
+    text-align: left;
+    font-size: 14px;
+
+    p {
+      font-size: 14px;
+      color: rgba(153, 153, 153, 0.8);
+      margin-right: 40px;
+    }
+
+    input {
+      margin: 8px 0;
+      width: 100%;
+      background-color: #E2E2E2;
+      padding: 1px 10px;
+      height: 30px;
+      border-radius: 2px;
+
+      &:focus {
+        outline: none;
+        border-color: #E2E2E2;
       }
     }
   }

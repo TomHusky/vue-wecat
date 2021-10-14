@@ -28,17 +28,6 @@ export const logout = () => {
   })
 }
 
-/**
- * 获取用户信息
- */
-export const listFriendInfo = (username) => {
-  const params = { username: username }
-  return request({
-    url: '/user/listFriendInfo',
-    params,
-    method: 'get'
-  })
-}
 
 /**
  * 修改密码

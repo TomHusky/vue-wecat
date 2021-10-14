@@ -11,7 +11,7 @@ import {
 export const sendFriendMsg = (username, msg) => {
     let time = getTimestamp();
     const params = {
-        url: "/msg/send",
+        url: "/chat/send",
         body: {
             receiveId: username,
             msgContent: msg,

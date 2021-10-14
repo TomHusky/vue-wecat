@@ -5,15 +5,6 @@ let errorCallback = null
 let wsUrl = null
 let token = null
 let tryTime = 0
-
-// 接收ws后端返回的数据
-function websocketOnmessage(e) {
-  const data =  JSON.parse(e.data);
-  console.log("收到消息");
-  console.log(data);
-  messageCallback(data.url,data.body);
-}
-
 /**
  * 发起websocket连接
  *
@@ -61,6 +52,16 @@ function websocketOpen(e) {
   websocketOpenOk(e);
 }
 
+// 接收ws后端返回的数据
+function websocketOnmessage(e) {
+  const data = JSON.parse(e.data);
+  console.log("收到消息");
+  console.log(data);
+  // 获取url映射的方法
+  let method = urlToMethod(data.url);
+  messageCallback[method](data.body);
+}
+
 // 初始化weosocket
 function initWebSocket() {
   if (typeof (WebSocket) === 'undefined') {
@@ -82,6 +83,23 @@ function initWebSocket() {
   websock.onclose = function (e) {
     websocketclose(e)
   }
+}
+
+/**
+ * 将url转成方法名称
+ *
+ * @param {string} url 消息中url对应的地址
+ */
+function urlToMethod(url) {
+  return url.replace(
+    /\/[a-zA-Z]/g,
+    function (match, index, originText) {
+      if (index == 0) {
+        return match.substring(1, 2);
+      }
+      return match.substring(1, 2).toUpperCase();
+    }
+  );
 }
 
 /**
