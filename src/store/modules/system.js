@@ -1,11 +1,12 @@
 const state = {
   windowWidth: null,
   windowHeight: null,
-  headMenu:{
-    visibleIng:false,
-    visible:false,
-    clientX:0,
-    clienty:0,
+  network: true,
+  headMenu: {
+    visibleIng: false,
+    visible: false,
+    clientX: 0,
+    clienty: 0,
     self: true,
     wxid: null,
     type: 1, //类型 1 好友 2 群聊
@@ -416,6 +417,9 @@ const state = {
   ],
 }
 const mutations = {
+  setNetwork(state, value) {
+    state.network = value;
+  },
   setWindowWidth(state, value) {
     state.windowWidth = value;
   },
@@ -426,7 +430,7 @@ const mutations = {
   search(state, value) {
     state.searchText = value
   },
-  setHeadMenu(state,value){
+  setHeadMenu(state, value) {
     state.headMenu = value;
   }
 }
@@ -439,9 +443,16 @@ const actions = {
       commit('search', value)
     }, 100)
   },
+  setNetwork: ({
+    commit
+  }, value) => {
+    setTimeout(() => {
+      commit('search', value)
+    }, 100)
+  },
 }
 const getters = {
-  getHeadMenuInfo(state,params, rootState) {
+  getHeadMenuInfo(state, params, rootState) {
     let friend = rootState.friend.friendlist.find(friend => friend.wxid === state.headMenu.wxid);
     return friend;
   },

@@ -16,18 +16,7 @@ const state = {
     area: "广东广州", //地区
   }],
   // 好友请求列表
-  newFriendList: [
-    {
-      applyId:'1',
-      wxid:'12312',
-      username: "16785787",
-      avatar: 'static/images/vue.jpg', //头像
-      info: "我是来着广州的小罗", //个性签名
-      nickname: "小罗罗", //昵称
-      sex: 1, 
-      area: "广东广州", //地区
-    }
-  ],
+  newFriendList: [],
   newfriend: {
     id: 0,
     wxid: "1", //微信号
@@ -59,13 +48,19 @@ const mutations = {
     state.selectFriendWxid = value
   },
   addFriend(state, value) {
+    let friend = state.friendlist.find(friend => friend.username === value.username);
+    if (friend == null) {
+      state.friendlist.push(value);
+    }
+  },
+  addFriendList(state, value) {
     let rmIndex = [];
     state.friendlist.filter((x, index) => {
       if (x.id != -1 && !value.find((y) => x.username === y.username)) {
         rmIndex.push(index);
       }
     });
-    if (rmIndex.lastIndexOf > 0) {
+    if (rmIndex.length > 0) {
       rmByIndexs(state.friendlist, rmIndex);
     }
     let add = value.filter(x => !state.friendlist.find((y) => x.username === y.username));
@@ -74,22 +69,32 @@ const mutations = {
     }
   },
   addNewFriend(state, value) {
-    let add = value.filter(x => !state.newFriendList.find((y) => x.username === y.username));
+    let add = value.filter(x => !state.newFriendList.find((y) => x.applyId === y.applyId));
     for (let i = 0; i < add.length; i++) {
       state.newFriendList.push(add[i]);
     }
+  },
+  updateNewFriendStatus(state, value) {
+    let newFriend = state.newFriendList.find(msg => msg.applyId === value.applyId);
+    newFriend.status = value.status;
   }
 }
 const actions = {
   selectFriend: ({
     commit
   }, value) => commit('selectFriend', value),
+  addFriendList: ({
+    commit
+  }, value) => commit('addFriendList', value),
   addFriend: ({
     commit
   }, value) => commit('addFriend', value),
   addNewFriend: ({
     commit
   }, value) => commit('addNewFriend', value),
+  updateNewFriendStatus: ({
+    commit
+  }, value) => commit('updateNewFriendStatus', value),
 }
 const getters = {
   // 筛选出含有搜索值的好友列表

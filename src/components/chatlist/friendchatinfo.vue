@@ -64,7 +64,6 @@ export default {
       if (this.$refs.info == null) {
         return;
       }
-      console.log(this.$refs.info);
       if (!this.$refs.info.contains(e.target)) {
         if (this.isShow) {
           this.isShow = false;

@@ -19,13 +19,14 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 const store = new Vuex.Store({
   modules,
   plugins: [createPersistedState({
-    reducer (val) {
-      return {
-        user: val.user,
-        chat: val.chat
-      }
-    },
-    paths: ['system.headMenu','friend.friendlist']
+    // reducer (val) {
+    //   return {
+    //     user: val.user,
+    //     chat: val.chat,
+    //     friendlist: val.friend.friendlist
+    //   }
+    // },
+    paths: ['user','chat','system.headMenu','friend.friendlist',"friend.newFriendList"]
   })]
 });
 

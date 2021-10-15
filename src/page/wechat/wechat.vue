@@ -104,8 +104,12 @@ export default {
       app.style.left = (width - app.offsetWidth) / 2 + "px";
       app.style.top = (height - app.offsetHeight) / 2 + "px";
     },
-    wsOpen() {},
-    wsError() {},
+    wsOpen() {
+      this.$store.commit("system/setNetwork", true);
+    },
+    wsError() {
+      this.$store.commit("system/setNetwork", false);
+    },
     exit() {
       exitLogin();
     },

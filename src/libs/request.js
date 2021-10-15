@@ -57,7 +57,6 @@ service.interceptors.request.use((config) => {
   // config.method === 'get'
   //   ? config.params = {...config.params} : config.data = qs.stringify({...config.data})
   const token = getToken()
-  console.log(config);
   if (token && !config.url.includes("login")) {
     config.headers['Authorization'] = 'Bearer ' + token;
   }

@@ -10,7 +10,7 @@ export function initFriendList() {
     listFriendInfo(state.user.info.username)
         .then((res) => {
             if (res.code == 0) {
-                store.commit("friend/addFriend", res.data);
+                store.commit("friend/addFriendList", res.data);
             }
         }).catch(err => {
             console.log(err);

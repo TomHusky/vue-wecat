@@ -58,8 +58,11 @@ function websocketOnmessage(e) {
   console.log("收到消息");
   console.log(data);
   // 获取url映射的方法
-  let method = urlToMethod(data.url);
-  messageCallback[method](data.body);
+  if (data.type == 2) {
+    let method = urlToMethod(data.url);
+    console.log("映射方法：", method);
+    messageCallback[method](data.body);
+  }
 }
 
 // 初始化weosocket

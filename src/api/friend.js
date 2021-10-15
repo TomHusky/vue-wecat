@@ -26,3 +26,14 @@ export const applyAddFriend = (value) => {
     data: value
   })
 }
+
+
+/**
+ * 处理添加好友申请
+ */
+export const handleFriendApply = (value) => {
+  return postJson({
+    url: '/friend/handleFriendApply',
+    data: value
+  })
+}

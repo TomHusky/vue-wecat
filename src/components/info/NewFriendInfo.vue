@@ -1,6 +1,6 @@
 <!-- 好友信息 -->
 <template>
-  <div class="Info-wrapper">
+  <div class="Info-wrapper selectNone">
     <div class="info-head" v-drag>
       <div class="newfriend">
         <div class="nickname">{{ selectedFriend.nickname }}</div>
@@ -23,10 +23,29 @@
               <p class="nickname">
                 {{ item.nickname }}
               </p>
-              <p class="status">已添加</p>
+              <div class="status">
+                <span v-if="item.status == 1">已添加</span>
+                <span v-if="item.status == 2" style="color: #fa5151"
+                  >已拒绝</span
+                >
+                <button
+                  class="reject"
+                  @click="reject(item)"
+                  v-if="item.status == 0"
+                >
+                  拒绝
+                </button>
+                <button
+                  class="agree"
+                  @click="agree(item)"
+                  v-if="item.status == 0"
+                >
+                  同意
+                </button>
+              </div>
               <p class="info">{{ item.info }}</p>
             </div>
-           <div class="division"></div>
+            <div class="division"></div>
           </li>
         </template>
       </ul>
@@ -35,7 +54,8 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { handleFriendApply } from "@/api/friend.js";
+import { mapGetters, mapState, mapActions } from "vuex";
 export default {
   computed: {
     ...mapState({
@@ -45,14 +65,39 @@ export default {
       selectedFriend: "friend/selectedFriend",
     }),
   },
-  methods: {},
+  methods: {
+    ...mapActions({
+      updateNewFriendStatus: "friend/updateNewFriendStatus",
+    }),
+    reject(item) {
+      // this.handleApply(item, 2);
+      console.log(this.newFriendList);
+    },
+    agree(item) {
+      this.handleApply(item, 1);
+    },
+    handleApply(item, status) {
+      let params = {
+        applyId: item.applyId,
+        username: item.username,
+        status: status,
+      };
+      handleFriendApply(params).then((res) => {
+        if (res.code == 0) {
+          this.updateNewFriendStatus(params);
+        }
+      });
+    },
+  },
 };
 </script>
 
 <style lang="stylus" scoped>
-.division
-  width: 100%
+.division {
+  width: 100%;
   margin-top: 15px;
+}
+
 .info-head {
   height: 60px;
 
@@ -71,13 +116,14 @@ export default {
 .newFriendList {
   width: 100%;
   overflow-y: auto;
+  cursor: default;
 
   .friendlist {
-    cursor: default;
     display: flex;
     padding: 15px 90px;
     font-size: 0;
     flex-wrap: wrap;
+
     .list-left {
       position: relative;
       margin-right: 12px;
@@ -103,7 +149,24 @@ export default {
         position: absolute;
         color: #999;
         font-size: 14px;
-        right:0;
+        right: 0;
+
+        button {
+          border-radius: 2px;
+          color: #fff;
+          padding: 4px 8px;
+          font-size: 12px;
+          cursor: pointer;
+        }
+
+        .agree {
+          background-color: #1AAD19;
+        }
+
+        .reject {
+          margin-right: 15px;
+          background-color: #FA5151;
+        }
       }
 
       .info {

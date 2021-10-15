@@ -41,7 +41,7 @@
                 <div
                   class="signature"
                   v-text="
-                    searchUser.signature == null ||  searchUser.signature ===''
+                    searchUser.signature == null || searchUser.signature === ''
                       ? '这个人什么也留下'
                       : searchUser.signature
                   "
@@ -107,8 +107,8 @@ export default {
     addUserConfirm() {
       let params = {
         username: this.searchUser.username,
-        info: this.edit.remark,
-        remark: this.edit.info,
+        info: this.edit.info,
+        remark: this.edit.remark,
       };
       applyAddFriend(params).then((res) => {
         if (res.code == 0) {
