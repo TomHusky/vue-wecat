@@ -18,7 +18,7 @@ switch (process.env.NODE_ENV) {
 
 const router = new Router({
   routes: routes,
-  mode: 'history',
+  // mode: 'history',
   linkActiveClass: 'active',
 })
 // router.push({ path: '/' });
