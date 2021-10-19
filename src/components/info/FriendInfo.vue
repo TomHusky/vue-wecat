@@ -26,15 +26,15 @@
       </div>
       <div class="detInfo">
         <div class="remark">
-          <span>备&nbsp&nbsp&nbsp注</span>{{ selectedFriend.remark }}
+          <span>备&emsp;注</span>{{ selectedFriend.remark }}
         </div>
-        <div class="area">
-          <span>地&nbsp&nbsp&nbsp区</span>{{ selectedFriend.area }}
+        <div class="area" v-if="selectedFriend.area !=null && selectedFriend.area!==''">
+          <span>地&emsp;区</span>{{ selectedFriend.area }}
+        </div>
+        <div class="origin">
+          <span>来&emsp;源</span>{{ selectedFriend.origin }}
         </div>
         <div class="wxid"><span>微信号</span>{{ selectedFriend.wxid }}</div>
-        <div class="origin">
-          <span>来&nbsp&nbsp&nbsp源</span>{{ selectedFriend.origin }}
-        </div>
       </div>
       <div class="send" @click="send">
         <span>发消息</span>

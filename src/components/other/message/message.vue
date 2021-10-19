@@ -54,7 +54,7 @@ export default {
 }
 
 .info {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(65, 183, 131, 0.7);
 }
 
 .warning {

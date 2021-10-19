@@ -1,90 +1,75 @@
 <!-- 群聊信息 -->
 <template>
-  <div class="Info-wrapper">
-    <div class="info-head" v-drag></div>
-    <div class="friendInfo">
-      <div class="esInfo">
-        <div class="left">
-          <div class="people">
-            <div class="nickname">{{ selectedFriend.nickname }}</div>
-            <div
-              :class="[
-                selectedFriend.sex === 1 ? 'gender-male' : 'gender-female',
-              ]"
-            ></div>
+  <div class="Info-wrapper selectNone">
+    <div class="info-head" v-drag>
+      <div class="nickname">全部群聊</div>
+    </div>
+    <div class="group-list">
+      <div class="search">
+        <Search :showBtn="false" :placeholder="'搜索群聊'"></Search>
+      </div>
+      <div class="content scrollbar">
+        <div class="groupHead" @click="openCreateGroupChat">
+          <div class="add">
+            <img
+              alt="添加"
+              width="25px"
+              class="avatar"
+              src="static/images/icon/add.svg"
+            />
           </div>
-          <div class="signature">{{ selectedFriend.signature }}</div>
+          <div class="name">添加</div>
         </div>
-        <div class="right">
+        <div
+          class="groupHead"
+          v-for="item in searchedFriendlist"
+          :key="item.id"
+        >
           <img
             class="avatar"
-            width="60"
-            height="60"
-            :src="selectedFriend.avatar"
+            width="50"
+            height="50"
+            :alt="item.nickname"
+            :src="item.avatar"
           />
+          <div class="name">
+            {{ item.nickname }}
+          </div>
         </div>
-      </div>
-      <div class="detInfo">
-        <div class="remark">
-          <span>备&nbsp&nbsp&nbsp注</span>{{ selectedFriend.remark }}
-        </div>
-        <div class="area">
-          <span>地&nbsp&nbsp&nbsp区</span>{{ selectedFriend.area }}
-        </div>
-        <div class="wxid"><span>微信号</span>{{ selectedFriend.wxid }}</div>
-        <div class="origin">
-          <span>来&nbsp&nbsp&nbsp源</span>{{ selectedFriend.origin }}
-        </div>
-      </div>
-      <div class="send" @click="send">
-        <span>发消息</span>
       </div>
     </div>
+    <CreateGroupChat
+      @cancel="closeCreateGroupChat"
+      :showCreate="showCreate"
+    ></CreateGroupChat>
   </div>
 </template>
 
 <script>
+import CreateGroupChat from "@/components/chatlist/CreateGroupChat";
+import Search from "@/components/search/Search";
 import { mapGetters } from "vuex";
 export default {
+  components: {
+    Search,
+    CreateGroupChat,
+  },
   computed: {
     ...mapGetters({
-      selectedFriend: "friend/selectedFriend",
-      getChatByFriendWxid: "chat/getChatByFriendWxid",
+      searchedFriendlist: "friend/searchedFriendlist",
     }),
   },
+  data() {
+    return {
+      showCreate: false,
+    };
+  },
   methods: {
-    // 选择好友后，点击发送信息。判断在聊天列表中是否有该好友，有的话跳到该好友对话。没有的话
-    // 添加该好友的对话 并置顶
-    send() {
-      let friend = this.selectedFriend;
-      let msg = this.getChatByFriendWxid;
-      if (!msg) {
-        this.$store.dispatch("friend/selectFriend", friend.wxid);
-        let chat = {
-          type: 1,
-          wxid: friend.wxid,
-          username: friend.username,
-          info: {
-            nickname: friend.nickname,
-            avatar: friend.avatar,
-            remark: friend.remark,
-            notDisturb: false,
-          },
-          newMsgNum: 0,
-          messages: [
-            {
-              content: "已经置顶聊天，可以给我发信息啦！",
-              date: new Date(),
-            },
-          ],
-        };
-        this.$store.dispatch("chat/topChat", chat);
-        this.$store.dispatch("chat/selectSession", friend.wxid);
-      } else {
-        this.$store.dispatch("chat/selectSession", msg.wxid);
-        this.$store.dispatch("friend/selectFriend", msg.wxid);
-      }
-      this.$router.push({ path: "/chat" });
+    openCreateGroupChat() {
+      this.showCreate = true;
+    },
+    closeCreateGroupChat() {
+      this.showCreate = false;
     },
   },
 };
@@ -98,95 +83,65 @@ export default {
   border-bottom: 1px solid #e7e7e7;
 }
 
-.friendInfo {
-  width: 70%;
-  margin: 0 auto;
-  padding: 0 90px;
-}
-
-.esInfo {
-  display: flex;
-  align-items: center;
-  padding: 40px 0 45px 0;
-
-  .left {
-    flex: 1;
-
-    .people {
-      .nickname {
-        display: inline-block;
-        font-size: 20px;
-        margin-bottom: 16px;
-      }
-
-      .gender-male, .gender-female {
-        display: inline-block;
-        width: 18px;
-        height: 18px;
-        vertical-align: top;
-        margin-top: 2px;
-        margin-left: 5px;
-      }
-
-      .gender-male {
-        background-image: url('man.png');
-        background-size: cover;
-      }
-
-      .gender-female {
-        background-image: url('woman.png');
-        background-size: cover;
-      }
-    }
-
-    .signature {
-      font-size: 14px;
-      color: rgba(153, 153, 153, 0.8);
-    }
+.group-list {
+  .search {
+    margin: 0px 50px;
+    margin-bottom: 10px;
   }
 
-  .right {
-    .avatar {
-      border-radius: 3px;
+  .content {
+    height: 500px;
+    padding-left: 58px;
+    display: -webkit-flex; /* Safari */
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    text-align: center;
+
+    .groupHead {
+      margin: 10px 0px;
+      padding: 10px;
+      width: 65px;
+      height: 90px;
+      text-align: center;
+      cursor: pointer;
+      box-sizing: ceil;
+
+      .avatar {
+        text-align: center;
+        margin: 0 auto;
+        border-radius: 50%;
+      }
+
+      .name {
+        color: #444444;
+        width: 65px;
+        text-align: center;
+        margin: 0 auto;
+        margin-top: 10px;
+        font-size: 14px;
+        height: 15px;
+        line-height: 15px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .add {
+        width: 50px;
+        height: 50px;
+        border: 1px solid #DADADA;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+      }
+
+      &:hover {
+        background-color: #E6E6E6;
+      }
     }
-  }
-}
-
-.detInfo {
-  padding: 40px 0;
-  border-top: 1px solid #e7e7e7;
-  border-bottom: 1px solid #e7e7e7;
-
-  .remark, .area, .wxid, .origin {
-    font-size: 14px;
-    margin-top: 20px;
-
-    span {
-      font-size: 14px;
-      color: rgba(153, 153, 153, 0.8);
-      margin-right: 40px;
-    }
-  }
-
-  .remark {
-    margin-top: 0;
-  }
-}
-
-.send {
-  margin: 35px auto;
-  text-align: center;
-  width: 140px;
-  height: 36px;
-  line-height: 36px;
-  font-size: 14px;
-  color: #fff;
-  background-color: #1AAD19;
-  cursor: pointer;
-  border-radius: 2px;
-
-  &:hover {
-    background: rgb(18, 150, 17);
   }
 }
 </style>

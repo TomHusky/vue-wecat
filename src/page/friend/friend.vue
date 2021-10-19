@@ -113,7 +113,7 @@ export default {
       applyAddFriend(params).then((res) => {
         if (res.code == 0) {
           this.$message({
-            content: "添加成功",
+            content: "发送成功",
             time: 2500,
             type: "info",
             hasClose: true,

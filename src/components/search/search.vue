@@ -21,7 +21,7 @@
         @mousedown="del"
       ></div>
     </div>
-    <button class="btn" @click="search">搜索</button>
+    <button class="btn" v-if="showBtn" @click="search">搜索</button>
   </div>
 </template>
 
@@ -31,6 +31,10 @@ export default {
     placeholder: {
       type: String,
       default: "搜索",
+    },
+    showBtn: {
+      type: Boolean,
+      default: true,
     },
   },
   methods: {

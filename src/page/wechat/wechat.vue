@@ -9,7 +9,6 @@
         <i class="icon iconfont icon-window-min"></i>
         <i class="icon iconfont icon-window-max"></i>
         <i
-          style="cursor: pointer"
           @click="exit"
           class="icon iconfont icon-close close"
         ></i>

@@ -205,6 +205,15 @@ const actions = {
 }
 
 const getters = {
+  getTotalNewMsgs(state) {
+    let nums = 0;
+    for (let i = 0; i < state.chatlist.length; i++) {
+      if (!state.chatlist[i].info.notDisturb && state.chatlist[i].newMsgNum > 0) {
+        nums += state.chatlist[i].newMsgNum;
+      }
+    }
+    return nums;
+  },
   // 筛选出含有搜索值的聊天列表
   searchedChatlist(state, getters, rootState) {
     let sessions = state.chatlist.filter(sessions => sessions.info.remark.includes(rootState.system.searchText));

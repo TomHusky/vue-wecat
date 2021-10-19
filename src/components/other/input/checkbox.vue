@@ -6,7 +6,7 @@
         '--width': width + 'px',
         '--height': height + 'px',
         '--fontSize': fontSize + 'px',
-        '--color': color 
+        '--color': color,
       }"
       v-on:change="$emit('change', $event.target.checked)"
       type="checkbox"
@@ -52,6 +52,9 @@ export default {
 </script>
 
 <style scoped>
+.select {
+  display: inline-block;
+}
 .select input,
 span {
   margin-left: 3px;

@@ -141,8 +141,10 @@ export default {
         width: 35px;
         height: 35px;
         border: 1px solid #DADADA;
-        display: table-cell;
-        vertical-align: middle;
+        display: flex;
+	      align-items: center;
+        justify-content:center;
+        margin: 0 auto;
 
         &:hover {
           border-color: #CDCDCD;

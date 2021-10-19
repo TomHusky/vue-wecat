@@ -27,7 +27,7 @@
     <div class="infoItem">
       <div v-if="!headMenu.self && user.remark != null" class="item">
         <span class="lable">备&emsp;注</span>
-        <span class="value">{{ user.remark }}</span>
+        <span class="value editText" :contentEditable="!headMenu.self">{{ user.remark }}</span>
       </div>
       <div v-if="headMenu.type == 2" class="item">
         <span class="lable">群昵称</span>
@@ -39,14 +39,21 @@
       </div>
       <div v-if="!headMenu.self && user.origin != null" class="item">
         <span class="lable">来&emsp;源</span>
-        <span class="value">{{user.origin}}</span>
+        <span class="value">{{ user.origin }}</span>
       </div>
       <div v-if="user.label != null" class="item">
         <span class="lable">标&emsp;签</span>
         <span class="value">{{ user.label }}</span>
       </div>
     </div>
-    <div class="signature">{{ user.signature }}</div>
+    <div
+      class="signature"
+      :class="{editText:headMenu.self}"
+      @blur="updateSignature($event)"
+      :contentEditable="headMenu.self"
+    >
+      {{ user.signature }}
+    </div>
     <div class="button">
       <img width="85px" height="35px" src="./headIcon.png" />
     </div>
@@ -108,6 +115,9 @@ export default {
           }
         }
       }
+    },
+    updateSignature(event) {
+      console.log(event.target.innerHTML);
     },
   },
 };
@@ -194,9 +204,23 @@ export default {
 }
 
 .signature {
+  display: inline-block;
   margin-top: 20px;
   font-size: 10px;
   color: #302e2e;
+}
+
+.editText {
+  cursor: pointer;
+  outline: none;
+  padding: 2px 1px;
+  border: 1px solid transparent;
+
+  &:hover {
+    border: 1px solid #BDC9D6;
+    box-sizing: border-box;
+    border-radius: 5px;
+  }
 }
 
 .button {

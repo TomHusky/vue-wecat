@@ -66,6 +66,8 @@ export default {
 }
 .scrollbar:hover {
   overflow-y: auto;
+  /* 设置滚动条不占空间 */
+  overflow-y: overlay;
 }
 .selectNone {
   -webkit-user-select: none;

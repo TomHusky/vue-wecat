@@ -13,6 +13,7 @@ const state = {
     nickname: "机器人", //昵称
     sex: 0, //性别 1为男，0为女
     remark: "偷懒的机器人", //备注
+    origin: "官方",
     area: "广东广州", //地区
   }],
   // 好友请求列表
@@ -97,6 +98,15 @@ const actions = {
   }, value) => commit('updateNewFriendStatus', value),
 }
 const getters = {
+  getNewFriendNums(state) {
+    let nums = 0;
+    for (let i = 0; i < state.newFriendList.length; i++) {
+      if (state.newFriendList[i].status == 0) {
+        nums++;
+      }
+    }
+    return nums;
+  },
   // 筛选出含有搜索值的好友列表
   searchedFriendlist(state, params, rootState) {
     let friends = state.friendlist.filter(friends => friends.remark.includes(rootState.system.searchText));

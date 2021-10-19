@@ -11,13 +11,23 @@
           :class="{ active: newfriend.wxid === selectFriendWxid }"
           @click="selectFriend(newfriend.wxid)"
         >
-          <img
-            class="avatar"
-            style="background-color: red"
-            width="36"
-            height="36"
-            :src="newfriend.avatar"
-          />
+          <div class="info-avatar">
+            <img
+              class="avatar"
+              style="background-color: red"
+              width="36"
+              height="36"
+              :src="newfriend.avatar"
+            />
+            <Badge
+              v-if="getNewFriendNums > 0"
+              :count="1"
+              :overflowCount="9"
+              :width="16"
+              :height="16"
+            ></Badge>
+          </div>
+
           <div class="remark">{{ newfriend.remark }}</div>
         </div>
       </li>
@@ -55,8 +65,12 @@
 </template>
 
 <script>
+import Badge from "@/components/other/Badge";
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
+  components: {
+    Badge,
+  },
   computed: {
     ...mapState({
       newfriend: (state) => state.friend.newfriend,
@@ -64,7 +78,10 @@ export default {
       selectFriendWxid: (state) => state.friend.selectFriendWxid,
       searchText: (state) => state.system.searchText,
     }),
-    ...mapGetters({ searchedFriendlist: "friend/searchedFriendlist" }),
+    ...mapGetters({
+      searchedFriendlist: "friend/searchedFriendlist",
+      getNewFriendNums: "friend/getNewFriendNums",
+    }),
   },
   methods: {
     ...mapActions({ selectFriend: "friend/selectFriend" }),
@@ -105,12 +122,16 @@ export default {
         background-color: #C5C5C5;
       }
 
-      .avatar {
-        border-radius: 2px;
-        margin-right: 12px;
+      .info-avatar {
+        position: relative;
+
+        .avatar {
+          border-radius: 2px;
+        }
       }
 
       .remark {
+        margin-left: 12px;
         font-size: 14px;
         line-height: 36px;
       }

@@ -12,14 +12,22 @@
     <div class="navbar" @click="clearSearch">
       <router-link to="/chat" class="icon iconfont icon-msg">
         <Badge
-          v-if="false"
-          :count="10"
+          v-if="getTotalNewMsgs > 0"
+          :count="getTotalNewMsgs"
           :overflowCount="99"
           :width="16"
           :height="16"
         ></Badge>
       </router-link>
-      <router-link to="/friend" class="icon iconfont icon-friend"></router-link>
+      <router-link to="/friend" class="icon iconfont icon-friend">
+        <Badge
+          v-if="getNewFriendNums > 0"
+          :count="getNewFriendNums"
+          :overflowCount="99"
+          :width="16"
+          :height="16"
+        ></Badge>
+      </router-link>
       <router-link
         to="/game"
         class="icon iconfont icon-collection"
@@ -33,11 +41,16 @@
 
 <script>
 import Badge from "@/components/other/Badge";
+import { mapGetters } from "vuex";
 export default {
   components: {
     Badge,
   },
   computed: {
+    ...mapGetters({
+      getNewFriendNums: "friend/getNewFriendNums",
+      getTotalNewMsgs: "chat/getTotalNewMsgs",
+    }),
     user() {
       return this.$store.state.user.info;
     },
@@ -89,8 +102,7 @@ export default {
     margin-top: 28px;
     padding: 0 18px;
     box-sizing: border-box;
-    color: rgb(173, 174, 175);
-    opacity: 0.8;
+    color: rgb(151, 151, 151);
     cursor: pointer;
 
     &.active {
@@ -99,19 +111,20 @@ export default {
 
     &:hover {
       opacity: 1;
+      color: rgb(163, 163, 163);
     }
   }
 
-  .icon-msg, .icon-more {
+  .icon-msg, .icon-more ,.icon-friend {
     font-size: 18px;
   }
 
-  .icon-msg {
+  .icon-msg, .icon-friend {
     position: relative;
     padding: 0 19px;
   }
 
-  .badge{
+  .badge {
     right: 8px !important;
   }
 }
