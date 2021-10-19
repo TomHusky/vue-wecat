@@ -6,7 +6,11 @@
     </div>
     <div class="group-list">
       <div class="search">
-        <Search :showBtn="false" :placeholder="'搜索群聊'"></Search>
+        <Search
+          :showBtn="false"
+          @change="search"
+          :placeholder="'搜索群聊'"
+        ></Search>
       </div>
       <div class="content scrollbar">
         <div class="groupHead" @click="openCreateGroupChat">
@@ -22,18 +26,18 @@
         </div>
         <div
           class="groupHead"
-          v-for="item in searchedFriendlist"
-          :key="item.id"
+          v-for="item in searchedGroupChatList"
+          :key="item.groupNo"
         >
           <img
             class="avatar"
             width="50"
             height="50"
-            :alt="item.nickname"
-            :src="item.avatar"
+            :alt="item.groupName"
+            :src="item.groupAvatar"
           />
           <div class="name">
-            {{ item.nickname }}
+            {{ item.groupName }}
           </div>
         </div>
       </div>
@@ -48,7 +52,7 @@
 <script>
 import CreateGroupChat from "@/components/chatlist/CreateGroupChat";
 import Search from "@/components/search/Search";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
   components: {
     Search,
@@ -56,7 +60,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      searchedFriendlist: "friend/searchedFriendlist",
+      searchedGroupChatList: "groupchat/searchedGroupChatList",
     }),
   },
   data() {
@@ -65,6 +69,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions({ search: "groupchat/search" }),
     openCreateGroupChat() {
       this.showCreate = true;
     },

@@ -23,7 +23,7 @@
 <script>
 import HeadMenu from "@/components/other/menu/HeadMenu";
 import MyCard from "@/components/mycard/MyCard";
-import { initFriendList } from "@/page/wechat/init.js";
+import { initInfo } from "@/page/wechat/init.js";
 import { getBaseUrl, exitLogin } from "@/libs/request.js";
 import receive from "@/api/socket/receive.js";
 import { getToken } from "@/libs/util";
@@ -42,7 +42,7 @@ export default {
     };
   },
   created() {
-    initFriendList();
+    initInfo();
     this.allowNotification();
   },
   beforeDestroy() {

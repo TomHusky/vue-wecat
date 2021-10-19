@@ -91,6 +91,7 @@ import RoundCheckBox from "@/components/other/input/RoundCheckBox";
 import Search from "@/components/search/Search";
 import { mapState } from "vuex";
 import { getIndex } from "@/libs/tools";
+import { createChat } from "@/api/groupchat";
 export default {
   components: {
     Search,
@@ -148,15 +149,23 @@ export default {
     // 删除选中的好友
     removeFriend(item) {
       let index = getIndex(this.selectFriendList, "username", item.username);
-      console.log(index);
       if (index != -1) {
         this.selectFriendList.splice(index, 1);
       }
     },
     createGroupChat() {
-      if (this.selectFriendList.length > 0) {
-        
+      if (this.selectFriendList.length < 1) {
+        return;
       }
+      let users = this.selectFriendList.map((value) => value.username);
+      let params = {
+        usernames: users,
+      };
+      createChat(params).then((res) => {
+        if (res.code == 0) {
+          this.$emit("cancel");
+        }
+      });
     },
     createGroupCancel() {
       this.$emit("cancel");

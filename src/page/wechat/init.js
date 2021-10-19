@@ -3,9 +3,17 @@ import store from '@/store/index.js'
 import {
     listFriendInfo
 } from '@/api/friend.js'
+import {
+    listGroupChat
+} from "@/api/groupchat";
 
 
-export function initFriendList() {
+export function initInfo() {
+    initFriendList();
+    initGroupChatList();
+}
+
+function initFriendList() {
     let state = store.state;
     listFriendInfo(state.user.info.username)
         .then((res) => {
@@ -14,5 +22,14 @@ export function initFriendList() {
             }
         }).catch(err => {
             console.log(err);
+        })
+}
+
+function initGroupChatList() {
+    listGroupChat()
+        .then((res) => {
+            if (res.code == 0) {
+                store.commit("groupchat/addGroupChatList", res.data);
+            }
         })
 }
