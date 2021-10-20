@@ -27,6 +27,7 @@
         <div
           class="groupHead"
           v-for="item in searchedGroupChatList"
+          @click="toChat(item)"
           :key="item.groupNo"
         >
           <img
@@ -61,6 +62,7 @@ export default {
   computed: {
     ...mapGetters({
       searchedGroupChatList: "groupchat/searchedGroupChatList",
+      getChatByChatId: "chat/getChatByChatId",
     }),
   },
   data() {
@@ -75,6 +77,29 @@ export default {
     },
     closeCreateGroupChat() {
       this.showCreate = false;
+    },
+    toChat(item) {
+      let chat = this.getChatByChatId(item.groupNo);
+      if (!chat) {
+        chat = {
+          type: 2,
+          chatId: item.groupNo,
+          info: {
+            nickname: item.groupName,
+            avatar: item.groupAvatar,
+            remark: item.remark,
+            notDisturb: item.notDisturb,
+          },
+          lastMsgTime: new Date(),
+          newMsgNum: 0,
+          messages: [],
+        };
+        this.$store.dispatch("chat/topChat", chat);
+        this.$store.dispatch("chat/selectSession", chat.chatId);
+      } else {
+        this.$store.dispatch("chat/selectSession", chat.chatId);
+      }
+      this.$router.push({ path: "/chat" });
     },
   },
 };

@@ -7,9 +7,9 @@
           v-if="item.isShow"
           :key="item.id"
           class="sessionlist"
-          :class="{ active: item.wxid === selectWxid }"
+          :class="{ active: item.chatId === selectChatId }"
           @contextmenu.prevent="openMenu($event, item)"
-          @click="selectSession(item.wxid)"
+          @click="selectSession(item.chatId)"
         >
           <div class="list-left">
             <img
@@ -36,11 +36,17 @@
                 item.info.remark === "" ? item.info.nickname : item.info.remark
               }}
             </p>
-            <span class="time">{{
-              item.messages[item.messages.length - 1].date | time
-            }}</span>
-            <p class="lastmsg" v-html="replaceFace(item.messages[item.messages.length - 1].content)">
-            </p>
+            <span class="time" v-text="getTimes(item.lastMsgTime)"></span>
+            <p
+              class="lastmsg"
+              v-html="
+                replaceFace(
+                  item.messages.length > 0
+                    ? item.messages[item.messages.length - 1].content
+                    : ''
+                )
+              "
+            ></p>
           </div>
         </li>
       </template>
@@ -94,20 +100,35 @@ export default {
   computed: {
     ...mapState({
       emojis: (state) => state.system.emojis,
-      selectWxid: (state) => state.chat.selectWxid,
+      selectChatId: (state) => state.chat.selectChatId,
       searchText: (state) => state.system.searchText,
     }),
     ...mapGetters({
       searchedChatlist: "chat/searchedChatlist",
       getChatIndex: "chat/getChatIndex",
     }),
+    getTimes() {
+      return (date) => {
+        if (date == null || date === "") {
+          return "";
+        }
+        if (typeof date === "string") {
+          date = new Date(date);
+        }
+        if (date.getMinutes() < 10) {
+          return date.getHours() + ":0" + date.getMinutes();
+        } else {
+          return date.getHours() + ":" + date.getMinutes();
+        }
+      };
+    },
   },
   methods: {
     ...mapActions({
       selectSession: "chat/selectSession",
       updateChatInfo: "chat/updateChatInfo",
       topChat: "chat/topChat",
-      deleteChatByWxid: "chat/deleteChatByWxid",
+      deleteChatByChatId: "chat/deleteChatByChatId",
     }),
     // 将内容中属于表情的部分替换成emoji图片标签
     replaceFace(con) {
@@ -148,7 +169,7 @@ export default {
       this.updateChatInfo(this.currentChat);
     },
     closeChat() {
-      if (this.currentChat.wxid === "wx001") {
+      if (this.currentChat.chatId === "wx001") {
         this.$message({
           content: "机器人不能隐藏哦！",
           time: 2500,
@@ -160,15 +181,15 @@ export default {
       if (this.$store.state.chat.chatlist.length < 2) {
         return;
       }
-      let index = this.getChatIndex(this.currentChat.wxid);
+      let index = this.getChatIndex(this.currentChat.chatId);
       this.currentChat.isShow = false;
       this.updateChatInfo(this.currentChat);
-      if (this.currentChat.wxid === this.selectWxid) {
-        this.selectSession(this.$store.state.chat.chatlist[index].wxid);
+      if (this.currentChat.chatId === this.selectChatId) {
+        this.selectSession(this.$store.state.chat.chatlist[index].chatId);
       }
     },
     deleteChat() {
-      if (this.currentChat.wxid === "wx001") {
+      if (this.currentChat.chatId === "wx001") {
         this.$message({
           content: "机器人不能删除哦！",
           time: 2500,
@@ -177,20 +198,7 @@ export default {
         });
         return;
       }
-      this.deleteChatByWxid(this.currentChat.wxid);
-    },
-  },
-  filters: {
-    // 将日期过滤为 hour:minutes
-    time(date) {
-      if (typeof date === "string") {
-        date = new Date(date);
-      }
-      if (date.getMinutes() < 10) {
-        return date.getHours() + ":0" + date.getMinutes();
-      } else {
-        return date.getHours() + ":" + date.getMinutes();
-      }
+      this.deleteChatByChatId(this.currentChat.chatId);
     },
   },
 };

@@ -25,13 +25,13 @@
           <div class="time selectNone">
             <span v-if="item.showTime">{{ item.date | time }}</span>
           </div>
-          <div class="main" :class="{ self: item.self }">
+          <div class="main" :class="{ self: isSelf(item) }">
             <img
               class="avatar selectNone"
               width="36"
               height="36"
               @click.prevent="openMenu($event, item)"
-              :src="item.self ? user.avatar : selectedChat.info.avatar"
+              :src="isSelf(item) ? user.avatar : selectedChat.info.avatar"
             />
             <div class="content">
               <div class="text" v-html="replaceFace(item.content)"></div>
@@ -57,6 +57,11 @@ export default {
       let user = this.$store.state.user.info;
       user.self = true;
       return user;
+    },
+    isSelf() {
+      return (item) => {
+        return item.username === this.user.username;
+      };
     },
   },
   data() {
@@ -154,13 +159,14 @@ export default {
     }
 
     .info {
-      color:#7F7F7F
+      color: #7F7F7F;
       margin-right: 10px;
       font-size: 25px;
       float: right;
-      line-height: 10px
-      &:hover{
-        color:#3F3F3F
+      line-height: 10px;
+
+      &:hover {
+        color: #3F3F3F;
       }
     }
   }
@@ -200,7 +206,7 @@ export default {
 
     .main {
       .avatar {
-        cursor: pointer
+        cursor: pointer;
         float: left;
         margin-left: 15px;
         border-radius: 3px;

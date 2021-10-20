@@ -8,16 +8,16 @@ import {
 /**
  * 发送好友消息
  */
-export const sendFriendMsg = (username, msg) => {
+export const sendFriendMsg = (chatId, msg,type) => {
     let time = getTimestamp();
     const params = {
         url: "/chat/send",
         body: {
-            receiveId: username,
+            receiveId: chatId,
             msgContent: msg,
-            msgType: 1,
+            msgType: type,
             sendTime: time,
-            msgId: username + time
+            msgId: chatId + time
         }
     }
     sendMessage(params);

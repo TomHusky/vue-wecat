@@ -124,8 +124,7 @@ const getters = {
     return friend
   },
   selectedChatFriend(state, getters, rootState) {
-    let session = rootState.chat.chatlist.find(session => session.wxid === rootState.chat.selectWxid);
-    let friend = state.friendlist.find(friend => friend.wxid === session.wxid);
+    let friend = state.friendlist.find(friend => friend.wxid === rootState.chat.selectChatId);
     return friend
   },
   selectedFriendByUsername(state) {

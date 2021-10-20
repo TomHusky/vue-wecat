@@ -53,6 +53,16 @@ const getters = {
   searchedGroupChatList(state, params, rootState) {
     return state.groupChatList.filter(friends => friends.groupName.includes(state.searchText));
   },
+  // 根据群编号获取群信息
+  selectedGroupChat(state, params, rootState) {
+    console.log( rootState.chat.selectChatId);
+    return state.groupChatList.find(group => group.groupNo === rootState.chat.selectChatId);
+  },
+  selectedGroupChatByNo(state) {
+    return function (groupNo) {
+      return state.groupChatList.find(group => group.groupNo === groupNo)
+    }
+  },
 }
 
 export default {

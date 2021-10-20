@@ -13,15 +13,15 @@
             class="avatar"
             width="35"
             height="35"
-            :alt="selectedFriend.nickname"
-            :src="selectedFriend.avatar"
+            :alt="selectedChatFriend.nickname"
+            :src="selectedChatFriend.avatar"
             @click="openMenu"
           />
-          <div v-if="selectedFriend.remark == null" class="name">
-            {{ selectedFriend.nickname }}
+          <div v-if="selectedChatFriend.remark == null" class="name">
+            {{ selectedChatFriend.nickname }}
           </div>
-          <div v-if="selectedFriend.remark != null" class="name">
-            {{ selectedFriend.remark }}
+          <div v-if="selectedChatFriend.remark != null" class="name">
+            {{ selectedChatFriend.remark }}
           </div>
         </div>
       </div>
@@ -77,7 +77,7 @@ export default {
       searchText: (state) => state.system.searchText,
     }),
     ...mapGetters({
-      selectedFriend: "friend/selectedFriend",
+      selectedChatFriend: "friend/selectedChatFriend",
       selectedChat: "chat/selectedChat",
     }),
   },
@@ -103,7 +103,7 @@ export default {
         self: false,
         visible: true,
         visibleIng: true,
-        wxid: this.selectedFriend.wxid,
+        wxid: this.selectedChatFriend.wxid,
       };
       this.$store.commit("system/setHeadMenu", info);
     },

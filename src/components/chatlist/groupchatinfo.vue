@@ -1,13 +1,19 @@
 <template>
   <div class="info selectNone">
     <div class="header">
-      <SearchList :placeholder="placeholder"></SearchList>
+      <Search :placeholder="placeholder" :showBtn="false"></Search>
     </div>
     <div class="content scrollbar">
       <div class="chatUserList">
+        <div class="userHead">
+          <div class="add">
+            <img alt="添加" width="15px" src="static/images/icon/add.svg" />
+          </div>
+          <div class="name">添加</div>
+        </div>
         <div
           class="userHead"
-          v-for="item in searchedFriendlist"
+          v-for="item in selectedGroupChat.userDetails"
           :key="item.id"
         >
           <img
@@ -16,30 +22,39 @@
             height="35"
             :alt="item.nickname"
             :src="item.avatar"
-          >
-          <div
-            v-if="item.remark==null"
-            class="name"
-          >{{item.nickname}}</div>
-          <div
-            v-if="item.remark!=null"
-            class="name"
-          >{{item.remark}}</div>
+            @click="openMenu($event, item)"
+          />
+          <div v-if="item.remark == null" class="name">{{ item.nickname }}</div>
+          <div v-if="item.remark != null" class="name">{{ item.remark }}</div>
         </div>
       </div>
       <div class="division"></div>
       <div class="chatItem">
         <div class="item">
           <p class="lable">群聊名称</p>
-          <p class="value">测试群</p>
+          <p class="value">{{ selectedGroupChat.groupName }}</p>
         </div>
         <div class="item">
           <p class="lable">群公告</p>
-          <p class="value">未设置</p>
+          <p class="value">
+            {{
+              selectedGroupChat.remark == null ||
+              selectedGroupChat.remark === ""
+                ? "未设置"
+                : selectedGroupChat.remark
+            }}
+          </p>
         </div>
         <div class="item">
           <p class="lable">备注</p>
-          <p class="value">it测试群</p>
+          <p class="value">
+            {{
+              selectedGroupChat.remark == null ||
+              selectedGroupChat.remark === ""
+                ? "群聊的备注仅自己可见"
+                : selectedGroupChat.remark
+            }}
+          </p>
         </div>
         <div class="item">
           <p class="lable">我在本群的昵称</p>
@@ -51,10 +66,7 @@
         <div class="item chatSwitchItem">
           <p class="switchLable">显示群成员昵称</p>
           <p class="switchValue">
-            <Switched
-              :width="40"
-              :height="18"
-            ></Switched>
+            <Switched :width="40" :height="18"></Switched>
           </p>
         </div>
         <div class="item chatSwitchItem">
@@ -62,6 +74,7 @@
           <p class="switchValue">
             <Switched
               :width="40"
+              :checked="selectedGroupChat.notDisturb"
               :height="18"
             ></Switched>
           </p>
@@ -69,19 +82,13 @@
         <div class="item chatSwitchItem">
           <p class="switchLable">置顶聊天</p>
           <p class="switchValue">
-            <Switched
-              :width="40"
-              :height="18"
-            ></Switched>
+            <Switched :width="40" :height="18"></Switched>
           </p>
         </div>
         <div class="item chatSwitchItem">
           <p class="switchLable">保存到通讯录</p>
           <p class="switchValue">
-            <Switched
-              :width="40"
-              :height="18"
-            ></Switched>
+            <Switched :width="40" :height="18"></Switched>
           </p>
         </div>
       </div>
@@ -94,12 +101,12 @@
 </template>
 
 <script>
-import SearchList from "@/components/search/SearchList";
+import Search from "@/components/search/Search";
 import Switched from "@/components/other/Switch";
 import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   components: {
-    SearchList,
+    Search,
     Switched,
   },
   data() {
@@ -120,74 +127,133 @@ export default {
     });
   },
   computed: {
-    ...mapState({selectWxid:(state) => state.chat.selectWxid, searchText:(state) => state.system.searchText}),
-    ...mapGetters({searchedFriendlist:"friend/searchedFriendlist"}),
+    ...mapState({
+      selectWxid: (state) => state.chat.selectWxid,
+      user: (state) => state.user.info,
+      searchText: (state) => state.system.searchText,
+    }),
+    ...mapGetters({ selectedGroupChat: "groupchat/selectedGroupChat" }),
   },
   methods: {
-    
+    openMenu(e, item) {
+      let info = {
+        clientX: e.clientX,
+        clientY: e.clientY,
+        self: item.username === this.user.username,
+        visible: true,
+        visibleIng: true,
+        wxid: item.wxid,
+      };
+      this.$store.commit("system/setHeadMenu", info);
+    },
   },
 };
 </script>
 
 <style lang="stylus" scoped>
-.division
-  width: 205px
-  margin: 10px 0 10px 20px
-.info
-  .header
-    margin: 0 13px
-  .content
-    height: 570px
-  .chatUserList
-    width: 245px
-    display: -webkit-flex /* Safari */
-    display: flex
-    flex-wrap: wrap
-    text-align: center
-    margin: 5px 15px 5px 15px
-    .userHead
-      margin: 10px 4px
-      width: 47px
-      height: 50px
-      text-align: center
-      .avatar
-        text-align: center
-        margin: 0 auto
-        border-radius: 2px
-      .name
-        color: #444444
-        width: 42px
-        text-align: center
-        margin: 0 auto
-        margin-top: 4px
-        font-size: 12px
-        height: 15px
-        line-height: 15px
-        overflow: hidden
-        white-space: nowrap
-        text-overflow: ellipsis
-  .chatItem
-    width: 205px
-    margin: 10px 20px
-    .item
-      font-size: 14px
-      margin: 20px 0
-      .lable
-        margin-bottom: 10px
-      .value
-        color: #999
-    .chatSwitchItem
-      display: flex
-      align-items: center
-      justify-content: space-between
-      .switchLable
-        left: 0
-      .switchValue
-        right: 0
-  .exit
-    width: 245px
-    color: #F45471
-    text-align: center
-    margin: 20px 0px
-    font-size: 14px
+.division {
+  width: 205px;
+  margin: 10px 0 10px 20px;
+}
+
+.info {
+  .header {
+    margin: 0 13px;
+  }
+
+  .content {
+    height: 570px;
+  }
+
+  .chatUserList {
+    width: 245px;
+    display: -webkit-flex; /* Safari */
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    margin: 5px 15px 5px 15px;
+
+    .userHead {
+      margin: 10px 4px;
+      width: 47px;
+      height: 50px;
+      text-align: center;
+      cursor: pointer;
+
+      .add {
+        width: 35px;
+        height: 35px;
+        border: 1px solid #DADADA;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+
+        &:hover {
+          border-color: #CDCDCD;
+        }
+      }
+
+      .avatar {
+        text-align: center;
+        margin: 0 auto;
+        border-radius: 2px;
+      }
+
+      .name {
+        color: #444444;
+        width: 42px;
+        text-align: center;
+        margin: 0 auto;
+        margin-top: 4px;
+        font-size: 12px;
+        height: 15px;
+        line-height: 15px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  .chatItem {
+    width: 205px;
+    margin: 10px 20px;
+
+    .item {
+      font-size: 14px;
+      margin: 20px 0;
+
+      .lable {
+        margin-bottom: 10px;
+      }
+
+      .value {
+        color: #999;
+      }
+    }
+
+    .chatSwitchItem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .switchLable {
+        left: 0;
+      }
+
+      .switchValue {
+        right: 0;
+      }
+    }
+  }
+
+  .exit {
+    width: 245px;
+    color: #F45471;
+    text-align: center;
+    margin: 20px 0px;
+    font-size: 14px;
+  }
+}
 </style>

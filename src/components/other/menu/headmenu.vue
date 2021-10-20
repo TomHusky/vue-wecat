@@ -1,6 +1,9 @@
 <template>
   <div
-    :style="{ left: headMenu.clientX + 'px', top: headMenu.clientY + 'px' }"
+    :style="{
+      left: menuPosition.clientX + 'px',
+      top: menuPosition.clientY + 'px',
+    }"
     v-show="headMenu.visible"
     class="headmenu"
   >
@@ -27,7 +30,9 @@
     <div class="infoItem">
       <div v-if="!headMenu.self && user.remark != null" class="item">
         <span class="lable">备&emsp;注</span>
-        <span class="value editText" :contentEditable="!headMenu.self">{{ user.remark }}</span>
+        <span class="value editText" :contentEditable="!headMenu.self">{{
+          user.remark
+        }}</span>
       </div>
       <div v-if="headMenu.type == 2" class="item">
         <span class="lable">群昵称</span>
@@ -48,7 +53,7 @@
     </div>
     <div
       class="signature"
-      :class="{editText:headMenu.self}"
+      :class="{ editText: headMenu.self }"
       @blur="updateSignature($event)"
       :contentEditable="headMenu.self"
     >
@@ -86,6 +91,21 @@ export default {
     ...mapState({
       headMenu: (state) => state.system.headMenu,
     }),
+    menuPosition() {
+      let windowWidth = this.$store.state.system.windowWidth;
+      let windowHeight = this.$store.state.system.windowHeight;
+      let position = {
+        clientX: this.headMenu.clientX,
+        clientY: this.headMenu.clientY,
+      };
+      if (windowWidth - this.headMenu.clientX < 300) {
+        position.clientX = this.headMenu.clientX - 300;
+      }
+      if (windowHeight - this.headMenu.clientY < 500) {
+        position.clientX = this.headMenu.clientY - 500;
+      }
+      return position;
+    },
     user() {
       if (this.headMenu.self) {
         return this.$store.state.user.info;
@@ -137,11 +157,12 @@ export default {
   border-radius: 2px;
   font-weight: 400;
   color: #333;
-  width: 240px;
+  width: 300px;
   box-shadow: 2px 2px 10px #aaa;
   -o-box-shadow: 2px 2px 10px #aaa;
   -webkit-box-shadow: 2px 2px 10px #aaa;
   -moz-box-shadow: 2px 2px 10px #aaa;
+  box-sizing: border-box;
   padding: 30px;
 }
 

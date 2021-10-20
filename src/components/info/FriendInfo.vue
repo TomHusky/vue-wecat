@@ -28,7 +28,10 @@
         <div class="remark">
           <span>备&emsp;注</span>{{ selectedFriend.remark }}
         </div>
-        <div class="area" v-if="selectedFriend.area !=null && selectedFriend.area!==''">
+        <div
+          class="area"
+          v-if="selectedFriend.area != null && selectedFriend.area !== ''"
+        >
           <span>地&emsp;区</span>{{ selectedFriend.area }}
         </div>
         <div class="origin">
@@ -49,7 +52,7 @@ export default {
   computed: {
     ...mapGetters({
       selectedFriend: "friend/selectedFriend",
-      getChatByFriendWxid: "chat/getChatByFriendWxid",
+      getChatByChatId: "chat/getChatByChatId",
     }),
   },
   methods: {
@@ -57,20 +60,21 @@ export default {
     // 添加该好友的对话 并置顶
     send() {
       let friend = this.selectedFriend;
-      let msg = this.getChatByFriendWxid;
+      let msg = this.getChatByChatId(friend.wxid);
       if (!msg) {
         this.$store.dispatch("friend/selectFriend", friend.wxid);
         let chat = {
           type: 1,
-          wxid: friend.wxid,
-          username: friend.username,
+          chatId: friend.wxid,
           info: {
+            username: friend.username,
             nickname: friend.nickname,
             avatar: friend.avatar,
             remark: friend.remark,
             notDisturb: false,
           },
           newMsgNum: 0,
+          lastMsgTime: new Date(),
           messages: [
             {
               content: "已经置顶聊天，可以给我发信息啦！",

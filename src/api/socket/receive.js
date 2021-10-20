@@ -3,18 +3,30 @@ import {
   sendNotifi
 } from "@/libs/notification.js";
 /**
- * 发送好友消息
+ * 接收消息
  */
 export function chatMsg(body) {
   const dataJson = body;
   store.dispatch("chat/receiveMessage", dataJson.data);
-  let friend = store.getters["friend/selectedFriendByUsername"](
-    dataJson.data.username
-  );
+  let info = {};
+  if (dataJson.data.msgType == 1) {
+    info = store.getters['friend/selectedFriendByUsername'](dataJson.data.sendId);
+  } else {
+    let groupChat = store.getters['groupchat/selectedGroupChatByNo'](dataJson.data.sendId);
+    console.log(groupChat);
+    info.nickname = groupChat.groupName;
+    info.avatar = groupChat.groupAvatar;
+    info.remark = groupChat.remark;
+    info.notDisturb = groupChat.notDisturb;
+  }
+  // 消息免打扰模式出现弹窗提醒
+  if (info.notDisturb) {
+    return;
+  }
   let msg = {
-    avatar: friend.avatar,
-    nickname: friend.nickname,
-    remark: friend.remark == null ? friend.nickname : friend.remark,
+    avatar: info.avatar,
+    nickname: info.nickname,
+    remark: info.remark == null ? info.nickname : info.remark,
     msgContent: dataJson.data.msgContent,
   };
   sendNotifi(this, msg);

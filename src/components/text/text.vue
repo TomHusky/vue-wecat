@@ -64,7 +64,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({selectWxid:  (state) => state.chat.selectWxid, emojis:(state) => state.system.emojis}),
+    ...mapState({selectChatId:  (state) => state.chat.selectChatId, emojis:(state) => state.system.emojis}),
     ...mapGetters({selectedChat:"chat/selectedChat"}),
   },
   created() {
@@ -216,7 +216,7 @@ export default {
               if (this.content.includes("/:")) {
                 this.reply = "嘻嘻";
               }
-              var msg = {
+              let msg = {
                 content: this.content,
                 reply: this.reply,
               };
@@ -225,7 +225,7 @@ export default {
               textarea.innerHTML = "";
             });
         } else {
-          var msg = {
+          let msg = {
             content: this.content,
           };
           this.$store.dispatch("chat/sendMessage", msg);
@@ -241,7 +241,7 @@ export default {
   },
   watch: {
     // 在选择其它对话的时候 聚焦输入框
-    selectWxid() {
+    selectChatId() {
       setTimeout(() => {
         this.$refs.text.focus();
       }, 0);

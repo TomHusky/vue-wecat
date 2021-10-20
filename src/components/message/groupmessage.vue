@@ -3,31 +3,49 @@
   <div class="message">
     <header class="header selectNone" v-drag>
       <div class="friendName">
-        <span style="cursor: pointer" @click="showChatInfo">{{
-          selectedChat.info.nickname
-        }}</span>
-        <i
-          style="cursor: pointer"
-          @click="showChatInfo"
-          class="icon iconfont icon-more info"
-        ></i>
+        <span style="cursor: pointer" @click="showChatInfo"
+          >{{
+            selectedChat.info.remark == null || selectedChat.info.remark === ""
+              ? selectedChat.info.nickname
+              : selectedChat.info.remark
+          }}
+          ({{ selectedGroupChat.userDetails.length }})</span
+        >
       </div>
+      <i
+        style="cursor: pointer"
+        @click="showChatInfo"
+        class="icon iconfont icon-more info"
+      ></i>
     </header>
     <div class="message-wrapper" ref="list">
       <ul v-if="selectedChat">
-        <li v-for="item in selectedChat.messages" class="message-item">
+        <li
+          v-for="item in selectedChat.messages"
+          :key="item.id"
+          class="message-item"
+        >
           <div class="time">
             <span v-if="item.showTime">{{ item.date | time }}</span>
           </div>
-          <div class="main" :class="{ self: item.self }">
+          <div class="main" :class="{ self: isSelf(item.username) }">
             <img
               class="avatar"
               width="36"
               height="36"
-              :src="item.self ? user.avatar : selectedChat.info.avatar"
+              :src="
+                isSelf(item.username)
+                  ? user.avatar
+                  : getMsgUserInfo(item.username).avatar
+              "
             />
             <div class="content">
-              <div class="text" v-html="replaceFace(item.content)"></div>
+              <div class="nickname" v-if="!isSelf(item.username)">
+                {{ getMsgUserInfo(item.username).nickname }}
+              </div>
+              <div class="msg">
+                <div class="text" v-html="replaceFace(item.content)"></div>
+              </div>
             </div>
           </div>
         </li>
@@ -38,17 +56,35 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { md5 } from "@/libs/sign";
 export default {
   computed: {
     ...mapGetters({
       selectedChat: "chat/selectedChat",
+      selectedGroupChat: "groupchat/selectedGroupChat",
       messages: "chat/messages",
+      selectedFriendByUsername: "friend/selectedFriendByUsername",
     }),
     ...mapState({
-      user: (state) => store.state.user.info,
+      user: (state) => state.user.info,
       emojis: (state) => state.system.emojis,
     }),
+    isSelf() {
+      return (username) => {
+        return username === this.user.username;
+      };
+    },
+    getMsgUserInfo() {
+      return (username) => {
+        let user = this.selectedGroupChat.userDetails.find(
+          (user) => user.username === username
+        );
+        let friend = this.selectedFriendByUsername(username);
+        if (friend != null) {
+          return friend;
+        }
+        return user;
+      };
+    },
   },
   mounted() {
     //  在页面加载时让信息滚动到最下面
@@ -128,12 +164,17 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
+    }
 
-      .info {
-        background-image: url('more.svg');
-        margin-right: 20px;
-        font-size: 25px;
-        float: right;
+    .info {
+      color: #7F7F7F;
+      margin-right: 10px;
+      font-size: 25px;
+      float: right;
+      line-height: 10px;
+
+      &:hover {
+        color: #3F3F3F;
       }
     }
   }
@@ -183,25 +224,37 @@ export default {
         display: inline-block;
         margin-left: 10px;
         position: relative;
-        padding: 6px 10px;
-        max-width: 330px;
-        min-height: 36px;
-        line-height: 24px;
-        box-sizing: border-box;
-        font-size: 14px;
-        text-align: left;
-        word-break: break-all;
-        background-color: #FFFFFF;
-        border: 1px solid #ECECEC;
-        border-radius: 4px;
 
-        &:before {
-          content: '';
-          position: absolute;
-          top: 12px;
-          right: 100%;
-          border: 6px solid transparent;
-          border-right-color: #FFFFFF;
+        .nickname {
+          font-size: 12px;
+          color: #999;
+          margin-bottom: 6px;
+          margin-left: 2px;
+        }
+
+        .msg {
+          display: inline-block;
+          position: relative;
+          padding: 6px 10px;
+          max-width: 330px;
+          min-height: 36px;
+          line-height: 24px;
+          box-sizing: border-box;
+          font-size: 14px;
+          text-align: left;
+          word-break: break-all;
+          background-color: #FFFFFF;
+          border: 1px solid #ECECEC;
+          border-radius: 4px;
+
+          &:before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            right: 100%;
+            border: 6px solid transparent;
+            border-right-color: #FFFFFF;
+          }
         }
       }
     }
@@ -215,13 +268,15 @@ export default {
       }
 
       .content {
-        background-color: #9EEA6A;
+        .msg {
+          background-color: #9EEA6A;
 
-        &:before {
-          right: -12px;
-          vertical-align: middle;
-          border-right-color: transparent;
-          border-left-color: #9EEA6A;
+          &:before {
+            right: -12px;
+            vertical-align: middle;
+            border-right-color: transparent;
+            border-left-color: #9EEA6A;
+          }
         }
       }
     }
