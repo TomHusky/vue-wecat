@@ -2,18 +2,19 @@ import store from '@/store/index.js'
 import {
   sendNotifi
 } from "@/libs/notification.js";
+import {
+  getImgToBase64
+} from "@/libs/tools";
 /**
  * 接收消息
  */
 export function chatMsg(body) {
   const dataJson = body;
-  store.dispatch("chat/receiveMessage", dataJson.data);
   let info = {};
   if (dataJson.data.msgType == 1) {
     info = store.getters['friend/selectedFriendByUsername'](dataJson.data.sendId);
   } else {
     let groupChat = store.getters['groupchat/selectedGroupChatByNo'](dataJson.data.sendId);
-    console.log(groupChat);
     info.nickname = groupChat.groupName;
     info.avatar = groupChat.groupAvatar;
     info.remark = groupChat.remark;
@@ -29,6 +30,17 @@ export function chatMsg(body) {
     remark: info.remark == null ? info.nickname : info.remark,
     msgContent: dataJson.data.msgContent,
   };
+  if (dataJson.data.contentType == 2) {
+    msg.msgContent = "[图片]"
+    let msgContent = JSON.parse(dataJson.data.msgContent);
+    getImgToBase64(msgContent.url, (base64Str) => {
+      msgContent.url = base64Str;
+      dataJson.data.msgContent = msgContent;
+      store.dispatch("chat/receiveMessage", dataJson.data);
+    });
+  } else {
+    store.dispatch("chat/receiveMessage", dataJson.data);
+  }
   sendNotifi(this, msg);
 }
 

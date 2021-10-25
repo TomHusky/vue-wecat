@@ -33,6 +33,7 @@
               class="avatar"
               width="36"
               height="36"
+              @click.prevent="openMenu($event, item)"
               :src="
                 isSelf(item.username)
                   ? user.avatar
@@ -43,8 +44,23 @@
               <div class="nickname" v-if="!isSelf(item.username)">
                 {{ getMsgUserInfo(item.username).nickname }}
               </div>
-              <div class="msg">
-                <div class="text" v-html="replaceFace(item.content)"></div>
+              <div :class="{ msg: item.type != 2 }">
+                <img
+                  class="img-msg"
+                  @click="
+                    showImgWindow({
+                      showImgWindow: true,
+                      src: item.content,
+                    })
+                  "
+                  v-if="item.type == 2"
+                  :src="item.content.url"
+                />
+                <div
+                  class="text"
+                  v-if="item.type != 2"
+                  v-html="replaceFace(item.content)"
+                ></div>
               </div>
             </div>
           </div>
@@ -55,7 +71,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapGetters, mapState, mapActions } from "vuex";
 export default {
   computed: {
     ...mapGetters({
@@ -111,8 +127,24 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      showImgWindow: "system/showImgWindow",
+    }),
     showChatInfo() {
       this.$parent.showChatInfo();
+    },
+    openMenu(e, item) {
+      let info = {
+        clientX: e.clientX,
+        clientY: e.clientY,
+        self: this.isSelf(item.username),
+        visible: true,
+        visibleIng: true,
+        info: this.isSelf(item.username)
+          ? this.user
+          : this.getMsgUserInfo(item.username),
+      };
+      this.$store.commit("system/setHeadMenu", info);
     },
     //  在发送信息之后，将输入的内容中属于表情的部分替换成emoji图片标签
     //  再经过v-html 渲染成真正的图片
@@ -230,6 +262,13 @@ export default {
           color: #999;
           margin-bottom: 6px;
           margin-left: 2px;
+        }
+
+        .img-msg {
+          max-width: 180px;
+          max-height: 180px;
+          border-radius: 3px;
+          cursor: pointer;
         }
 
         .msg {

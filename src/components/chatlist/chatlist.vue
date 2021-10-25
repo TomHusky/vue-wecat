@@ -42,7 +42,7 @@
               v-html="
                 replaceFace(
                   item.messages.length > 0
-                    ? item.messages[item.messages.length - 1].content
+                    ? item.messages[item.messages.length - 1]
                     : ''
                 )
               "
@@ -131,7 +131,14 @@ export default {
       deleteChatByChatId: "chat/deleteChatByChatId",
     }),
     // 将内容中属于表情的部分替换成emoji图片标签
-    replaceFace(con) {
+    replaceFace(msg) {
+      if (msg === "") {
+        return "";
+      }
+      if (msg.type == 2) {
+        return "[图片]";
+      }
+      let con = msg.content;
       if (con.includes("@::tt;;@")) {
         let emojis = this.emojis;
         for (let i = 0; i < emojis.length; i++) {
@@ -189,7 +196,7 @@ export default {
       }
     },
     deleteChat() {
-      if (this.currentChat.chatId === "wx001") {
+      if (this.currentChat.chatId === "99") {
         this.$message({
           content: "机器人不能删除哦！",
           time: 2500,

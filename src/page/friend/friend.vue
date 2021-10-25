@@ -17,7 +17,7 @@
       :title="'添加好友'"
     >
       <template v-slot:confirm>
-        <div>
+        <div class="add-firend">
           <Search @search="userSearch"></Search>
           <div class="userInfo" v-if="searchUser != null">
             <div class="esInfo">
@@ -161,6 +161,11 @@ export default {
   .friendinfo {
     flex: 1;
     background-color: #F5F5F5;
+  }
+
+  .add-firend{
+    height: 520px;
+    width: 350px;
   }
 
   .userInfo {

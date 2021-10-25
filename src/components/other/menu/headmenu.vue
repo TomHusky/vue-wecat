@@ -5,6 +5,7 @@
       top: menuPosition.clientY + 'px',
     }"
     v-show="headMenu.visible"
+    v-if="user != null"
     class="headmenu"
   >
     <div class="esInfo">
@@ -101,19 +102,13 @@ export default {
       if (windowWidth - this.headMenu.clientX < 300) {
         position.clientX = this.headMenu.clientX - 300;
       }
-      if (windowHeight - this.headMenu.clientY < 500) {
-        position.clientX = this.headMenu.clientY - 500;
-      }
+      // if (windowHeight - this.headMenu.clientY < 500) {
+      //   position.clientY = this.headMenu.clientY - 500;
+      // }
       return position;
     },
     user() {
-      if (this.headMenu.self) {
-        return this.$store.state.user.info;
-      }
-      if (this.headMenu == 1) {
-        return this.$store.getters["system/getHeadMenuInfo"];
-      }
-      return this.$store.getters["system/getHeadMenuInfo"];
+      return this.headMenu.info;
     },
   },
   mounted() {

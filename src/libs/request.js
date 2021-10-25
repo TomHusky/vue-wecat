@@ -133,7 +133,10 @@ export function exitLogin() {
 }
 
 //封装post json请求
-export function postJson({url,data}) {
+export function postJson({
+  url,
+  data
+}) {
   //默认配置 
   let sendObject = {
     url: url,
@@ -144,6 +147,24 @@ export function postJson({url,data}) {
     data: null,
   };
   sendObject.data = JSON.stringify(data);
+  return service(sendObject)
+}
+
+//封装post json请求
+export function uploadFile({
+  url,
+  file
+}) {
+  let forms = new FormData()
+  forms.append('file', file)
+  let sendObject = {
+    url: url,
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    data: forms,
+  };
   return service(sendObject)
 }
 

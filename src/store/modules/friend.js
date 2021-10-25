@@ -7,7 +7,7 @@ const state = {
     id: -1,
     wxid: "wx001", //微信号
     initial: 'A', //姓名首字母
-    username: "001",
+    username: "99",
     avatar: 'static/images/vue.jpg', //头像
     signature: "他什么也没有说", //个性签名
     nickname: "机器人", //昵称
@@ -21,6 +21,7 @@ const state = {
   newfriend: {
     id: 0,
     wxid: "1", //微信号
+    username: "1",
     initial: "新的朋友", //姓名首字母
     avatar: "static/images/newfriend.jpg", //头像
     signature: "", //个性签名
@@ -32,6 +33,7 @@ const state = {
   groupChat: {
     id: 0,
     wxid: "2",
+    username: "2",
     initial: "群聊",
     avatar: "static/images/group.png",
     signature: "",
@@ -41,12 +43,12 @@ const state = {
     area: "",
   },
   // 得知当前选择的是哪个好友
-  selectFriendWxid: '1'
+  selectFriendNo: '1'
 }
 const mutations = {
   // 得知用户当前选择的是哪个好友。
   selectFriend(state, value) {
-    state.selectFriendWxid = value
+    state.selectFriendNo = value
   },
   addFriend(state, value) {
     let friend = state.friendlist.find(friend => friend.username === value.username);
@@ -114,17 +116,17 @@ const getters = {
   },
   // 通过当前选择是哪个好友匹配相应的好友
   selectedFriend(state) {
-    if (state.selectFriendWxid === '1') {
+    if (state.selectFriendNo === '1') {
       return state.newfriend;
     }
-    if (state.selectFriendWxid === '2') {
+    if (state.selectFriendNo === '2') {
       return state.groupChat;
     }
-    let friend = state.friendlist.find(friend => friend.wxid === state.selectFriendWxid);
+    let friend = state.friendlist.find(friend => friend.username === state.selectFriendNo);
     return friend
   },
   selectedChatFriend(state, getters, rootState) {
-    let friend = state.friendlist.find(friend => friend.wxid === rootState.chat.selectChatId);
+    let friend = state.friendlist.find(friend => friend.username === rootState.chat.selectChatId);
     return friend
   },
   selectedFriendByUsername(state) {

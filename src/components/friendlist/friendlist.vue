@@ -8,8 +8,8 @@
         </div>
         <div
           class="friend-info"
-          :class="{ active: newfriend.wxid === selectFriendWxid }"
-          @click="selectFriend(newfriend.wxid)"
+          :class="{ active: newfriend.username === selectFriendNo }"
+          @click="selectFriend(newfriend.username)"
         >
           <div class="info-avatar">
             <img
@@ -37,8 +37,8 @@
         </div>
         <div
           class="friend-info"
-          :class="{ active: groupChat.wxid === selectFriendWxid }"
-          @click="selectFriend(groupChat.wxid)"
+          :class="{ active: groupChat.username === selectFriendNo }"
+          @click="selectFriend(groupChat.username)"
         >
           <img class="avatar" width="36" height="36" :src="groupChat.avatar" />
           <div class="remark">{{ groupChat.remark }}</div>
@@ -48,13 +48,13 @@
         v-for="item in searchedFriendlist"
         class="frienditem"
         :class="{ noborder: !item.initial }"
-        :key="item.wxid"
+        :key="item.username"
       >
         <div class="list_title" v-if="item.initial">{{ item.initial }}</div>
         <div
           class="friend-info"
-          :class="{ active: item.wxid === selectFriendWxid }"
-          @click="selectFriend(item.wxid)"
+          :class="{ active: item.username === selectFriendNo }"
+          @click="selectFriend(item.username)"
         >
           <img class="avatar" width="36" height="36" :src="item.avatar" />
           <div class="remark">{{ item.remark }}</div>
@@ -75,7 +75,7 @@ export default {
     ...mapState({
       newfriend: (state) => state.friend.newfriend,
       groupChat: (state) => state.friend.groupChat,
-      selectFriendWxid: (state) => state.friend.selectFriendWxid,
+      selectFriendNo: (state) => state.friend.selectFriendNo,
       searchText: (state) => state.system.searchText,
     }),
     ...mapGetters({

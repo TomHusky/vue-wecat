@@ -15,10 +15,10 @@
         class="icon iconfont icon-more info"
       ></i>
     </header>
-    <div class="message-wrapper" ref="list">
+    <div class="message-wrapper scrollbar" ref="list">
       <ul v-if="selectedChat">
         <li
-          v-for="(item, index) in selectedChat.messages"
+          v-for="item in selectedChat.messages"
           class="message-item"
           :key="item.id"
         >
@@ -33,8 +33,25 @@
               @click.prevent="openMenu($event, item)"
               :src="isSelf(item) ? user.avatar : selectedChat.info.avatar"
             />
-            <div class="content">
-              <div class="text" v-html="replaceFace(item.content)"></div>
+            <div :class="{ content: item.type != 2 }">
+              <img
+                class="img-msg"
+                @click="
+                  showImgWindow({
+                    showImgWindow: true,
+                    src: item.content,
+                    width: 300,
+                    height: 300,
+                  })
+                "
+                v-if="item.type == 2"
+                :src="item.content"
+              />
+              <div
+                class="text"
+                v-if="item.type != 2"
+                v-html="replaceFace(item.content)"
+              ></div>
             </div>
           </div>
         </li>
@@ -44,7 +61,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 export default {
   computed: {
     ...mapGetters({
@@ -92,14 +109,17 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      showImgWindow: "system/showImgWindow",
+    }),
     openMenu(e, item) {
       let info = {
         clientX: e.clientX,
         clientY: e.clientY,
-        self: item.self,
+        self: this.isSelf(item),
         visible: true,
         visibleIng: true,
-        wxid: this.selectedChat.wxid,
+        info: this.isSelf(item) ? this.user : this.selectedChatFriend,
       };
       this.$store.commit("system/setHeadMenu", info);
     },
@@ -176,7 +196,6 @@ export default {
     max-height: 420px;
     padding: 0 15px 18px 15px;
     box-sizing: border-box;
-    overflow-y: auto;
     border-top: 1px solid #e7e7e7;
     border-bottom: 1px solid #e7e7e7;
 
@@ -210,6 +229,13 @@ export default {
         float: left;
         margin-left: 15px;
         border-radius: 3px;
+      }
+
+      .img-msg {
+        max-width: 180px;
+        max-height: 180px;
+        border-radius: 3px;
+        cursor: pointer;
       }
 
       .content {

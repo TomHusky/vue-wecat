@@ -1,6 +1,12 @@
 const state = {
   windowWidth: null,
   windowHeight: null,
+  imgWindow: {
+    width: 0,
+    height: 0,
+    showImgWindow: false,
+    src: null
+  },
   network: true,
   headMenu: {
     visibleIng: false,
@@ -8,9 +14,7 @@ const state = {
     clientX: 0,
     clienty: 0,
     self: true,
-    wxid: null,
     type: 1, //类型 1 好友 2 群聊
-    chatid: null
   },
   // 输入的搜索值
   searchText: '',
@@ -417,6 +421,20 @@ const state = {
   ],
 }
 const mutations = {
+  showImgWindow(state, value) {
+    state.imgWindow.showImgWindow = value.showImgWindow;
+    if (!value.showImgWindow) {
+      state.imgWindow.src = null;
+    } else {
+      state.imgWindow.src = value.src;
+      if (value.width) {
+        state.imgWindow.width = value.width;
+      }
+      if (value.height) {
+        state.imgWindow.height = value.height;
+      }
+    }
+  },
   setNetwork(state, value) {
     state.network = value;
   },
@@ -450,10 +468,15 @@ const actions = {
       commit('search', value)
     }, 100)
   },
+  showImgWindow: ({
+    commit
+  }, value) => {
+    commit('showImgWindow', value)
+  },
 }
 const getters = {
   getHeadMenuInfo(state, params, rootState) {
-    let friend = rootState.friend.friendlist.find(friend => friend.wxid === state.headMenu.wxid);
+    let friend = rootState.friend.friendlist.find(friend => friend.username === state.headMenu.username);
     return friend;
   },
 }

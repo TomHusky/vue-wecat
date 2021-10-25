@@ -60,12 +60,12 @@ export default {
     // 添加该好友的对话 并置顶
     send() {
       let friend = this.selectedFriend;
-      let msg = this.getChatByChatId(friend.wxid);
+      let msg = this.getChatByChatId(friend.username);
       if (!msg) {
-        this.$store.dispatch("friend/selectFriend", friend.wxid);
+        this.$store.dispatch("friend/selectFriend", friend.username);
         let chat = {
           type: 1,
-          chatId: friend.wxid,
+          chatId: friend.username,
           info: {
             username: friend.username,
             nickname: friend.nickname,
@@ -83,10 +83,10 @@ export default {
           ],
         };
         this.$store.dispatch("chat/topChat", chat);
-        this.$store.dispatch("chat/selectSession", friend.wxid);
+        this.$store.dispatch("chat/selectSession", friend.username);
       } else {
-        this.$store.dispatch("chat/selectSession", msg.wxid);
-        this.$store.dispatch("friend/selectFriend", msg.wxid);
+        this.$store.dispatch("chat/selectSession", msg.username);
+        this.$store.dispatch("friend/selectFriend", msg.username);
       }
       this.$router.push({ path: "/chat" });
     },

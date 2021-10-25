@@ -41,6 +41,68 @@ export const getTimestamp = function () {
   return new Date().getTime();
 }
 
+//将base64转换为文件，dataurl为base64字符串，filename为文件名（必须带后缀名，如.jpg,.png）
+export const base64ToBlob = function (urlData, type) {
+  let arr = urlData.split(',');
+  let mime = arr[0].match(/:(.*?);/)[1] || type;
+  // 去掉url的头，并转化为byte
+  let bytes = window.atob(arr[1]);
+  // 处理异常,将ascii码小于0的转换为大于0
+  let ab = new ArrayBuffer(bytes.length);
+  // 生成视图（直接针对内存）：8位无符号整数，长度1个字节
+  let ia = new Uint8Array(ab);
+  for (let i = 0; i < bytes.length; i++) {
+    ia[i] = bytes.charCodeAt(i);
+  }
+  return new Blob([ab], {
+    type: mime
+  });
+}
+
+/**
+ * 将图片转换为Base64 url 
+ *
+ * @param {url} 图片链接或者是blob对象 
+ * @param {callback} 回调函数
+ * @returns {String} base64字符串
+ */
+export const getImgToBase64 = function (url, callback) {
+  let type = url.substring(url.lastIndexOf('.') + 1, url.length)
+  let canvas = document.createElement('canvas');
+  let ctx = canvas.getContext('2d');
+  let img = new Image; //通过构造函数来创建的 img 实例，在赋予 src 值后就会立刻下载图片，相比 createElement() 创建 <img> 省去了 append()，也就避免了文档冗余和污染
+  img.crossOrigin = 'Anonymous';
+  img.src = url;
+  //要先确保图片完整获取到，这是个异步事件
+  img.onload = function () {
+    canvas.height = img.height; //确保canvas的尺寸和图片一样
+    canvas.width = img.width;
+    ctx.drawImage(img, 0, 0); //将图片绘制到canvas中
+    let dataURL = canvas.toDataURL('image/' + type); //转换图片为dataURL,传第二个参数可压缩图片,前提是图片格式jpeg或者webp格式的
+    callback(dataURL, width, height); //调用回调函数
+    canvas = null;
+  };
+}
+
+//将base64转换为文件
+export const base64toFile = function (dataurl, filename) {
+  let arr = dataurl.split(','),
+    mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]),
+    n = bstr.length,
+    u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  // 后缀
+  let suffix = "." + mime.split('/')[1];
+  return new File([u8arr], filename + suffix, {
+    type: mime
+  }); //file
+  ///return new Blob([u8arr], { type: mime });////blob
+}
+
+
 /**
  * @param {Array} arr1
  * @param {Array} arr2

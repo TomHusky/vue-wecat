@@ -1,9 +1,13 @@
 import {
-  timeDifference
+  timeDifference,
+  base64toFile
 } from "@/libs/tools";
 import {
-  sendFriendMsg
+  sendMsgObj
 } from "@/api/socket/sendMsg";
+import {
+  uploadImg
+} from "@/api/source";
 const now = new Date();
 // namespaced: true 的方式使其成为带命名空间的模块。保证在变量名一样的时候，添加一个父级名拼接。
 // 例： SET_NAME => user/SET_NAME
@@ -13,7 +17,7 @@ const state = {
     id: 1,
     type: 1,
     index: 1,
-    chatId: 'wx001',
+    chatId: '99',
     info: {
       username: '99',
       avatar: 'static/images/vue.jpg', //头像
@@ -31,7 +35,7 @@ const state = {
     }]
   }],
   // 得知当前选择的是哪个对话
-  selectChatId: 'wx001',
+  selectChatId: '99',
 }
 const mutations = {
   // 从localStorage 中获取数据
@@ -90,20 +94,32 @@ const mutations = {
     result.messages.push({
       content: msg.content,
       date: now,
+      type: msg.type,
       username: rootState.user.info.username,
       showTime: showTime
     });
-    if (result.chatId === 'wx001') {
+    if (result.chatId === '99') {
       setTimeout(() => {
         result.messages.push({
           content: "由于资金不足，机器人已经跑路!",
           date: now,
           username: "001",
+          type: 1,
           showTime: false
         });
       }, 200)
     } else {
-      sendFriendMsg(result.chatId, msg.content, result.type);
+      if (msg.type == 2) {
+        let file = base64toFile(msg.content, "file");
+        // 上传图片
+        uploadImg(file).then((res) => {
+          if (res.code == 0) {
+            sendMsgObj(result.chatId, res.data, result.type, msg.type);
+          }
+        });
+        return;
+      }
+      sendMsgObj(result.chatId, msg.content, result.type, msg.type);
     }
   },
   async ['receiveMessage'](state, {
@@ -150,7 +166,9 @@ const mutations = {
       result.newMsgNum = result.newMsgNum + 1;
     }
     result.lastMsgTime = new Date(msg.sendTime);
+    
     result.messages.push({
+      type: msg.contentType,
       username: msg.username,
       content: msg.msgContent,
       date: new Date(msg.sendTime),

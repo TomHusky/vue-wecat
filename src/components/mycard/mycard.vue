@@ -69,6 +69,7 @@ export default {
         self: true,
         visible: true,
         visibleIng: true,
+        info: this.$store.state.user.info,
       };
       this.$store.commit("system/setHeadMenu", info);
     },
@@ -115,7 +116,7 @@ export default {
     }
   }
 
-  .icon-msg, .icon-more ,.icon-friend {
+  .icon-msg, .icon-more, .icon-friend {
     font-size: 18px;
   }
 

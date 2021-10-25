@@ -246,6 +246,8 @@ export default {
 }
 
 .right {
+  float: right;
+  width: 275px;
   height: 300px;
 
   .select-nums {

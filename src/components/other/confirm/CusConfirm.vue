@@ -4,10 +4,10 @@
       <div
         class="cus-confirm"
         :style="{
-          '--widthStr': width + 'px',
-          '--heightStr': height + 'px',
+          '--widthStr': width > 1 ? width + 'px' : '100%',
+          '--heightStr': height > 1 ? height + 'px' : '100%',
           '--width': width / 2 + 'px',
-          '--height': height / 2 + 'px',
+          '--height': height + 'px',
         }"
         @click.stop
       >
@@ -105,8 +105,8 @@ export default {
   -moz-box-shadow: 2px 2px 10px #aaa;
 
   .cus-confirm {
-    width: var(--widthStr);
-    height: var(--heightStr);
+    max-width: var(--widthStr);
+    max-height: var(--heightStr);
     box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.2);
     position: absolute;
     border-radius: 2px;
@@ -146,12 +146,13 @@ export default {
     .confirm-title {
       font-size: 16px;
       margin-top: 15px;
+      margin-left: 15px;
     }
 
     .confirm-body {
       height: 100%;
-      text-align: center;
       font-size: 18px;
+      background: #ffffff;
     }
 
     .confirm-btns {
