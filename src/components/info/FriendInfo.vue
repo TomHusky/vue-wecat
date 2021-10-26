@@ -77,6 +77,7 @@ export default {
           lastMsgTime: new Date(),
           messages: [
             {
+              type: 1,
               content: "已经置顶聊天，可以给我发信息啦！",
               date: new Date(),
             },

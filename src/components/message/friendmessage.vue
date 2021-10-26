@@ -33,7 +33,7 @@
               @click.prevent="openMenu($event, item)"
               :src="isSelf(item) ? user.avatar : selectedChat.info.avatar"
             />
-            <div :class="{ content: item.type != 2 }">
+            <div :class="{ content: item.type == 1 }">
               <img
                 class="img-msg"
                 @click="
@@ -47,9 +47,17 @@
                 v-if="item.type == 2"
                 :src="item.content.src"
               />
+              <div class="file-msg" v-if="item.type == 3">
+                <p class="file-name">{{ item.content.fileName }}</p>
+                <p class="file-size">{{ item.content.fileSize }}</p>
+                <img
+                  :src="systemFileIcon[item.content.fileType]"
+                  style="width: 40px"
+                />
+              </div>
               <div
                 class="text"
-                v-if="item.type != 2"
+                v-if="item.type == 1"
                 v-html="replaceFace(item.content)"
               ></div>
             </div>
@@ -69,7 +77,10 @@ export default {
       messages: "chat/messages",
       selectedChatFriend: "friend/selectedChatFriend",
     }),
-    ...mapState({ emojis: (state) => state.system.emojis }),
+    ...mapState({
+      emojis: (state) => state.system.emojis,
+      systemFileIcon: (state) => state.system.systemFileIcon,
+    }),
     user() {
       let user = this.$store.state.user.info;
       user.self = true;
@@ -238,6 +249,55 @@ export default {
         cursor: pointer;
       }
 
+      .file-msg {
+        box-sizing: border-box;
+        border-radius: 3px;
+        height: 75px;
+        width: 200px;
+        cursor: pointer;
+        position: relative;
+
+        &:hover {
+          border: 1px solid #E7E7E7;
+        }
+
+        &:before, &:after {
+          position: absolute;
+          display: block;
+          width: 0;
+          height: 0;
+          content: '';
+          border: solid transparent;
+          border-right-color: #FFFFFF;
+        }
+
+        .file-name {
+          position: absolute;
+          top: 20px;
+          left: 15px;
+          font-size: 13px;
+          width: 132px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+
+        .file-size {
+          position: absolute;
+          left: 15px;
+          top: 40px;
+          color: #999;
+          font-size: 12px;
+        }
+
+        img {
+          position: absolute;
+          right: 12px;
+          top: 15px;
+          width: 40px;
+        }
+      }
+
       .content {
         display: inline-block;
         margin-left: 10px;
@@ -254,23 +314,62 @@ export default {
         border: 1px solid #ECECEC;
         border-radius: 4px;
 
-        &:before {
-          content: '';
+        &:hover {
+          border: 1px solid #E7E7E7;
+        }
+
+        &:before, &:after {
           position: absolute;
-          top: 12px;
-          right: 100%;
-          border: 6px solid transparent;
+          display: block;
+          width: 0;
+          height: 0;
+          content: '';
+          border: solid transparent;
           border-right-color: #FFFFFF;
+        }
+
+        &:before {
+          border-right-color: #E7E7E7;
+          border-width: 6px;
+          top: 11px;
+          right: 100%;
+        }
+
+        &:after {
+          top: 12px;
+          border-right-color: #fff;
+          border-width: 5px;
+          right: 100%;
         }
       }
     }
 
     .self {
-      text-align: right;
+      display: flex;
+      flex-direction: row-reverse;
 
       .avatar {
-        float: right;
         margin: 0 15px;
+      }
+
+      .file-msg {
+        background-color: #FFFFFF;
+        border: 1px solid #ECECEC;
+        border-radius: 4px;
+
+        &:before {
+          border-left-color: #E7E7E7;
+          border-width: 6px;
+          top: 11px;
+          left: 100%;
+        }
+
+        &:after {
+          top: 12px;
+          border-left-color: #fff;
+          border-width: 5px;
+          left: 100%;
+        }
       }
 
       .content {

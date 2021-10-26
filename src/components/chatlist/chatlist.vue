@@ -140,6 +140,9 @@ export default {
       if (msg.type == 2) {
         return "[图片]";
       }
+      if (msg.type == 3) {
+        return "[文件]";
+      }
       let con = msg.content;
       if (con.includes("@::tt;;@")) {
         let emojis = this.emojis;

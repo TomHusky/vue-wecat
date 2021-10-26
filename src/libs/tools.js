@@ -84,6 +84,16 @@ export const getImgToBase64 = function (url, callback) {
   };
 }
 
+export const getFileSizeStr = function (size) {
+  if (size < 1024) {
+    return size + "B"
+  } else if (size < 1024 * 1024) {
+    return (size / 1024).toFixed(2) + "K"
+  } else {
+    return (size / (1024 * 1024)).toFixed(2) + "M"
+  }
+}
+
 //将base64转换为文件
 export const base64toFile = function (dataurl, filename) {
   let arr = dataurl.split(','),

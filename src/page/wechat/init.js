@@ -4,6 +4,9 @@ import {
     listFriendInfo
 } from '@/api/friend.js'
 import {
+    listSystemIcon
+} from '@/api/source.js'
+import {
     listGroupChat
 } from "@/api/groupchat";
 
@@ -11,6 +14,22 @@ import {
 export function initInfo() {
     initFriendList();
     initGroupChatList();
+}
+
+export function initSystemInfo() {
+    initSystemIcon();
+}
+
+function initSystemIcon() {
+    if (store.state.system.systemFileIcon != null) {
+        return;
+    }
+    listSystemIcon().then((res) => {
+        console.log(res);
+        if (res.code == 0) {
+            store.commit("system/setSystemFileIcon", res.data);
+        }
+    })
 }
 
 function initFriendList() {

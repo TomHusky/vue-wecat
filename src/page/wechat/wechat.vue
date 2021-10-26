@@ -8,10 +8,7 @@
         <i class="icon iconfont icon-window-ding"></i>
         <i class="icon iconfont icon-window-min"></i>
         <i class="icon iconfont icon-window-max"></i>
-        <i
-          @click="exit"
-          class="icon iconfont icon-close close"
-        ></i>
+        <i @click="exit" class="icon iconfont icon-close close"></i>
       </div>
       <router-view></router-view>
     </div>
@@ -23,7 +20,7 @@
 <script>
 import HeadMenu from "@/components/other/menu/HeadMenu";
 import MyCard from "@/components/mycard/MyCard";
-import { initInfo } from "@/page/wechat/init.js";
+import { initInfo, initSystemInfo } from "@/page/wechat/init.js";
 import { getBaseUrl, exitLogin } from "@/libs/request.js";
 import receive from "@/api/socket/receive.js";
 import { getToken } from "@/libs/util";
@@ -43,6 +40,8 @@ export default {
   },
   created() {
     initInfo();
+    initSystemInfo();
+    // 允许浏览器通知
     this.allowNotification();
   },
   beforeDestroy() {

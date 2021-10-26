@@ -13,3 +13,13 @@ export const uploadImg = (file) => {
     file: file
   })
 }
+
+/**
+ * 获取系统图标资源
+ */
+export const listSystemIcon = () => {
+  return request({
+    url: '/source/listSystemIcon',
+    method: 'get'
+  })
+}

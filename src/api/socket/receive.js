@@ -33,11 +33,15 @@ export function chatMsg(body) {
   if (dataJson.data.contentType == 2) {
     msg.msgContent = "[图片]"
     let msgContent = JSON.parse(dataJson.data.msgContent);
-    getImgToBase64(msgContent.url, (base64Str,width,height) => {
+    getImgToBase64(msgContent.url, (base64Str, width, height) => {
       msgContent.src = base64Str;
       dataJson.data.msgContent = msgContent;
       store.dispatch("chat/receiveMessage", dataJson.data);
     });
+  } else if (dataJson.data.contentType == 3) {
+    let msgContent = JSON.parse(dataJson.data.msgContent);
+    dataJson.data.msgContent = msgContent;
+    store.dispatch("chat/receiveMessage", dataJson.data);
   } else {
     store.dispatch("chat/receiveMessage", dataJson.data);
   }

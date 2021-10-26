@@ -16,6 +16,8 @@ const state = {
     self: true,
     type: 1, //类型 1 好友 2 群聊
   },
+  // 系统图标
+  systemFileIcon: null,
   // 输入的搜索值
   searchText: '',
   emojis: [{
@@ -421,6 +423,9 @@ const state = {
   ],
 }
 const mutations = {
+  setSystemFileIcon(state, value) {
+    state.systemFileIcon = value;
+  },
   showImgWindow(state, value) {
     state.imgWindow.showImgWindow = value.showImgWindow;
     if (!value.showImgWindow) {
@@ -454,6 +459,11 @@ const mutations = {
 }
 
 const actions = {
+  setSystemFileIcon: ({
+    commit
+  }, value) => {
+    commit('setSystemFileIcon', value)
+  },
   search: ({
     commit
   }, value) => {

@@ -9,7 +9,7 @@
           @click="showEmojiList"
         ></i>
       </span>
-      <span class="operation-icon img-upload">
+      <span class="operation-icon file-upload">
         <a href="javascript:;" class="icon iconfont icon-img">
           <input
             type="file"
@@ -17,6 +17,11 @@
             ref="selectImg"
             accept="image/png,image/jpeg,image/gif,image/jpg"
           />
+        </a>
+      </span>
+      <span class="operation-icon file-upload">
+        <a href="javascript:;" class="icon iconfont icon-file">
+          <input type="file" @change="selectFile($event)" ref="selectFile" />
         </a>
       </span>
       <transition name="showbox">
@@ -36,9 +41,8 @@
       contenteditable="true"
       ref="text"
       @onpaste="pasteListener($event)"
-      @input="textareaInput"
       @keydown.enter="onkeydown($event)"
-      @paste="clearCss"
+      @paste="pasteListener"
     ></div>
     <div class="send" @click="send">
       <span>发送(ent)</span>
@@ -53,7 +57,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { getTimestamp } from "@/libs/tools";
+import { getTimestamp, getFileSizeStr } from "@/libs/tools";
 export default {
   data() {
     return {
@@ -65,12 +69,15 @@ export default {
         /\<img lwj=\"\" wx=\"[\s\S]*\" src=\"static\/emoji\/[\s\S]*\.gif\" style=\"vertical-align: middle; width: 24px; height: 24px\" jwl=\"\"\>/g,
       imgReg:
         /\<img cct=\"1\" style=\"max-width: 140px;max-height: 160px;\" id=\"[0-9]{13}\"/g,
+      fileReg:
+        /\<img cct=\"2\" style=\"width: 250px;border: 1px solid #D0D0D0\" id=\"[0-9]{13}\"/g,
     };
   },
   computed: {
     ...mapState({
       selectChatId: (state) => state.chat.selectChatId,
       emojis: (state) => state.system.emojis,
+      systemFileIcon: (state) => state.system.systemFileIcon,
     }),
     ...mapGetters({ selectedChat: "chat/selectedChat" }),
   },
@@ -87,25 +94,18 @@ export default {
     });
   },
   methods: {
-    clearCss(e) {
+    pasteListener(e) {
       let items = e.clipboardData && e.clipboardData.items;
-      let file = null;
       if (items && items.length) {
         // 检索剪切板items
         for (let i = 0; i < items.length; i++) {
           if (items[i].type.indexOf("image") !== -1) {
-            file = items[i].getAsFile();
+            this.showImgText(items[i].getAsFile());
             break;
+          } else {
+            this.showFileText(items[i].getAsFile());
           }
         }
-      }
-      if (file) {
-        let textarea = this.$refs.text;
-        if (textarea.innerHTML != "") {
-          textarea.innerHTML = "";
-        }
-        this.showImgText(file);
-        return;
       }
       e.stopPropagation();
       e.preventDefault();
@@ -121,13 +121,6 @@ export default {
       } else {
         document.execCommand("paste", false, text);
       }
-    },
-    textareaInput($event) {
-      // this.content = $event.target.innerHTML;
-      // 获取选定对象
-      // let selection = getSelection();
-      // 设置最后光标对象
-      // lastEditRange = selection.getRangeAt(0);
     },
     showEmojiList() {
       this.showEmoji = true;
@@ -162,69 +155,6 @@ export default {
       }
       return con;
     },
-    replaceEmojiToCode(content) {
-      if (content.includes("<img lwj")) {
-        let _this = this;
-        while (content.includes("<img lwj")) {
-          let currentId = "";
-          let emojiGif = "";
-          let sign = "";
-          content.replace(this.emojiReg, function (match, index, originText) {
-            let id = content.substring(index + 16, index + 16 + 32);
-            currentId = id;
-            _this.emojis
-              .filter((item) => item.id === id)
-              .map((emoji) => {
-                emojiGif = emoji.file;
-                sign = emoji.sign;
-              });
-          });
-          let signReg = this.getEmojiSignReg(currentId, emojiGif);
-          content = content.replace(signReg, sign);
-        }
-        // content = content.replace(reg, sign);
-        return content;
-      }
-      return content;
-    },
-    // 将图片标签替换成普通消息
-    replaceImgToMsg(content) {
-      let currentId = "";
-      content.replace(this.imgReg, function (match, index, originText) {
-        let id = content.substring(index + 61, index + 61 + 13);
-        currentId = id;
-      });
-      if (currentId !== "") {
-        let result = {};
-        let img = document.getElementById(currentId);
-        result.width = parseInt(img.getAttribute("width"));
-        result.height = parseInt(img.getAttribute("height"));
-        result.src = img.src;
-        // 将转换结果赋值给img标签
-        content = result;
-      }
-      return content;
-    },
-
-    getEmojiSignReg(id, emojiGif) {
-      let emoji = emojiGif.substring(0, emojiGif.indexOf("."));
-      return new RegExp(
-        '\\<img lwj=\\"\\" wx=\\"' +
-          id +
-          '\\" src=\\"static\\/emoji\\/' +
-          emoji +
-          '\\.gif\\" style=\\"vertical-align: middle; width: 24px; height: 24px\\" jwl=\\"\\"\\>',
-        "g"
-      );
-    },
-    emojiNumIsOut(content) {
-      let ref = /\<img lwj=\"\" wx=\"[a-z0-9]{32}\"/g;
-      let emoji = content.match(ref);
-      if (emoji && emoji.length >= 5) {
-        return true;
-      }
-      return false;
-    },
     selectImg(e) {
       let file = e.target.files[0];
       if (file.type.split("/")[0] !== "image") {
@@ -237,6 +167,77 @@ export default {
         return false;
       }
       this.showImgText(file);
+    },
+
+    // 选择文件
+    selectFile(e) {
+      let file = e.target.files[0];
+      let size = Math.floor(file.size / 1024);
+      if (size > 10 * 1024 * 1024) {
+        alert("请选择10M以内的文件！");
+        return false;
+      }
+      this.showFileText(file);
+    },
+    // 显示文件对应的图片
+    showFileText(file) {
+      if (file) {
+        let textarea = this.$refs.text;
+        // 声明js的文件流
+        let reader = new FileReader();
+        //  通过文件流将文件转换成Base64字符串
+        reader.readAsDataURL(file);
+        //   转换成功后
+        let id = getTimestamp();
+        reader.onloadend = () => {
+          this.getFileHtml(file, (dataURL, fileType, fileSize) => {
+            let content =
+              '<img cct="2" style="width: 250px;border: 1px solid #D0D0D0" id="' +
+              id +
+              '" file-type="' +
+              fileType +
+              '" file-size="' +
+              fileSize +
+              '"file-name="' +
+              file.name +
+              '" />&nbsp';
+            textarea.innerHTML = content;
+            let img = document.getElementById(id);
+            img.src = dataURL;
+          });
+        };
+      }
+    },
+    // 根据文件生成对应的图标
+    getFileHtml(file, callback) {
+      let extension = file.name.substring(
+        file.name.lastIndexOf("."),
+        file.name.length
+      );
+      let img = new Image();
+      img.crossOrigin = "Anonymous";
+      let icon = this.systemFileIcon[extension];
+      if (icon == null) {
+        img.src = "static/images/file.png";
+      } else {
+        img.src = icon;
+      }
+      let canvas = document.createElement("canvas");
+      canvas.height = 50;
+      canvas.width = 250;
+      let ctx = canvas.getContext("2d");
+      //要先确保图片完整获取到，这是个异步事件
+      img.onload = function () {
+        ctx.drawImage(img, 5, 10, 30, 30); //将图片绘制到canvas中
+        ctx.fillStyle = "#000";
+        ctx.font = "12px Arial";
+        ctx.fillText(file.name, 40, 20);
+        let fileSize = getFileSizeStr(file.size);
+        ctx.fillText(fileSize, 40, 35);
+        let dataURL = canvas.toDataURL("image/png");
+        callback(dataURL, extension, fileSize); //调用回调函数
+        canvas = null;
+      };
     },
     showImgText(file) {
       if (file) {
@@ -253,12 +254,12 @@ export default {
             let width = image.width;
             let height = image.height;
             let content = textarea.innerHTML;
-            content +=
+            content =
               '<img cct="1" style="max-width: 140px;max-height: 160px;" id="' +
               id +
-              '" width="' +
+              '" c-width="' +
               width +
-              '" height="' +
+              '" c-height="' +
               height +
               '" />';
             textarea.innerHTML = content;
@@ -290,6 +291,13 @@ export default {
         textarea.innerHTML = "";
         return;
       }
+      if (this.fileReg.test(text)) {
+        content = this.replaceFileToMsg(text);
+        this.sendMsg(content, 3);
+        textarea.innerHTML = "";
+        return;
+      }
+
       if (this.emojiNumIsOut(text)) {
         alert("表情数量不允许超过5个");
         return;
@@ -327,6 +335,87 @@ export default {
         };
         this.$store.dispatch("chat/sendMessage", msg);
       }
+    },
+    // 将表情替换成code
+    replaceEmojiToCode(content) {
+      if (content.includes("<img lwj")) {
+        let _this = this;
+        while (content.includes("<img lwj")) {
+          let currentId = "";
+          let emojiGif = "";
+          let sign = "";
+          content.replace(this.emojiReg, function (match, index, originText) {
+            let id = content.substring(index + 16, index + 16 + 32);
+            currentId = id;
+            _this.emojis
+              .filter((item) => item.id === id)
+              .map((emoji) => {
+                emojiGif = emoji.file;
+                sign = emoji.sign;
+              });
+          });
+          let signReg = this.getEmojiSignReg(currentId, emojiGif);
+          content = content.replace(signReg, sign);
+        }
+        // content = content.replace(reg, sign);
+        return content;
+      }
+      return content;
+    },
+    // 将图片替换成消息内容
+    replaceImgToMsg(content) {
+      let currentId = "";
+      content.replace(this.imgReg, function (match, index, originText) {
+        let id = content.substring(index + 61, index + 61 + 13);
+        currentId = id;
+      });
+      if (currentId !== "") {
+        let result = {};
+        let img = document.getElementById(currentId);
+        result.width = parseInt(img.getAttribute("c-width"));
+        result.height = parseInt(img.getAttribute("c-height"));
+        result.src = img.src;
+        // 将转换结果赋值给img标签
+        content = result;
+      }
+      return content;
+    },
+    // 将文件替换成消息内容
+    replaceFileToMsg(content) {
+      let currentId = "";
+      content.replace(this.fileReg, function (match, index, originText) {
+        let id = content.substring(index + 64, index + 64 + 13);
+        currentId = id;
+      });
+      if (currentId !== "") {
+        let result = {};
+        let img = document.getElementById(currentId);
+        result.fileName = img.getAttribute("file-name");
+        result.fileType = img.getAttribute("file-type");
+        result.fileSize = img.getAttribute("file-size");
+        // 将转换结果赋值给img标签
+        content = result;
+      }
+      return content;
+    },
+    getEmojiSignReg(id, emojiGif) {
+      let emoji = emojiGif.substring(0, emojiGif.indexOf("."));
+      return new RegExp(
+        '\\<img lwj=\\"\\" wx=\\"' +
+          id +
+          '\\" src=\\"static\\/emoji\\/' +
+          emoji +
+          '\\.gif\\" style=\\"vertical-align: middle; width: 24px; height: 24px\\" jwl=\\"\\"\\>',
+        "g"
+      );
+    },
+    emojiNumIsOut(content) {
+      let ref = /\<img lwj=\"\" wx=\"[a-z0-9]{32}\"/g;
+      let emoji = content.match(ref);
+      if (emoji && emoji.length >= 5) {
+        return true;
+      }
+      return false;
     },
   },
   // 在进入的时候 聚焦输入框
@@ -404,10 +493,10 @@ export default {
       }
     }
 
-    .img-upload {
+    .file-upload {
       overflow: hidden;
 
-      .icon-img {
+      .icon {
         position: relative;
         text-decoration: none;
         line-height: 20px;
