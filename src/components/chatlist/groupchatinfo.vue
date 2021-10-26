@@ -103,7 +103,7 @@
 <script>
 import Search from "@/components/search/Search";
 import Switched from "@/components/other/Switch";
-import { mapState, mapActions, mapGetters } from "vuex";
+import { mapState, mapGetters } from "vuex";
 export default {
   components: {
     Search,
@@ -128,21 +128,42 @@ export default {
   },
   computed: {
     ...mapState({
-      selectWxid: (state) => state.chat.selectWxid,
       user: (state) => state.user.info,
       searchText: (state) => state.system.searchText,
     }),
-    ...mapGetters({ selectedGroupChat: "groupchat/selectedGroupChat" }),
+    ...mapGetters({
+      selectedGroupChat: "groupchat/selectedGroupChat",
+      selectedFriendByUsername: "friend/selectedFriendByUsername",
+    }),
+    isSelf() {
+      return (username) => {
+        return username === this.user.username;
+      };
+    },
+    getMsgUserInfo() {
+      return (username) => {
+        let user = this.selectedGroupChat.userDetails.find(
+          (user) => user.username === username
+        );
+        let friend = this.selectedFriendByUsername(username);
+        if (friend != null) {
+          return friend;
+        }
+        return user;
+      };
+    },
   },
   methods: {
     openMenu(e, item) {
       let info = {
         clientX: e.clientX,
         clientY: e.clientY,
-        self: item.username === this.user.username,
+        self: this.isSelf(item.username),
         visible: true,
         visibleIng: true,
-        wxid: item.wxid,
+        info: this.isSelf(item.username)
+          ? this.user
+          : this.getMsgUserInfo(item.username),
       };
       this.$store.commit("system/setHeadMenu", info);
     },

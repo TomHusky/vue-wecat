@@ -110,7 +110,7 @@ const mutations = {
       }, 200)
     } else {
       if (msg.type == 2) {
-        let file = base64toFile(msg.content, "file");
+        let file = base64toFile(msg.content.src, "file");
         // 上传图片
         uploadImg(file).then((res) => {
           if (res.code == 0) {
@@ -166,7 +166,7 @@ const mutations = {
       result.newMsgNum = result.newMsgNum + 1;
     }
     result.lastMsgTime = new Date(msg.sendTime);
-    
+
     result.messages.push({
       type: msg.contentType,
       username: msg.username,

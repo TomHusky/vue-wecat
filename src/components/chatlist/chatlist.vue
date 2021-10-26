@@ -33,7 +33,9 @@
           <div class="list-right">
             <p class="name">
               {{
-                item.info.remark === "" ? item.info.nickname : item.info.remark
+                item.info.remark === null || item.info.remark === ""
+                  ? item.info.nickname
+                  : item.info.remark
               }}
             </p>
             <span class="time" v-text="getTimes(item.lastMsgTime)"></span>

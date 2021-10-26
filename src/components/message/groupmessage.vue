@@ -50,11 +50,13 @@
                   @click="
                     showImgWindow({
                       showImgWindow: true,
-                      src: item.content,
+                      src: item.content.src,
+                      width: item.content.width,
+                      height: item.content.height,
                     })
                   "
                   v-if="item.type == 2"
-                  :src="item.content.url"
+                  :src="item.content.src"
                 />
                 <div
                   class="text"

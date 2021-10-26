@@ -79,7 +79,7 @@ export const getImgToBase64 = function (url, callback) {
     canvas.width = img.width;
     ctx.drawImage(img, 0, 0); //将图片绘制到canvas中
     let dataURL = canvas.toDataURL('image/' + type); //转换图片为dataURL,传第二个参数可压缩图片,前提是图片格式jpeg或者webp格式的
-    callback(dataURL, width, height); //调用回调函数
+    callback(dataURL, img.width, img.height); //调用回调函数
     canvas = null;
   };
 }

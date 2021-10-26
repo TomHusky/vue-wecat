@@ -103,7 +103,7 @@ export default {
         self: false,
         visible: true,
         visibleIng: true,
-        username: this.selectedChatFriend.username,
+        info: this.selectedChatFriend,
       };
       this.$store.commit("system/setHeadMenu", info);
     },

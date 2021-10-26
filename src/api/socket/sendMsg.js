@@ -38,7 +38,7 @@ export const sendFriendMsg = (chatId, msg, contentType) => {
 }
 
 /**
- * 发送好友消息
+ * 发送群聊消息
  */
 export const sendGroupMsg = (chatId, msg, contentType) => {
     let time = getTimestamp();

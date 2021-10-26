@@ -195,9 +195,13 @@ export default {
         currentId = id;
       });
       if (currentId !== "") {
+        let result = {};
         let img = document.getElementById(currentId);
+        result.width = parseInt(img.getAttribute("width"));
+        result.height = parseInt(img.getAttribute("height"));
+        result.src = img.src;
         // 将转换结果赋值给img标签
-        content = img.src;
+        content = result;
       }
       return content;
     },
@@ -244,15 +248,26 @@ export default {
         //   转换成功后
         let id = getTimestamp();
         reader.onloadend = () => {
-          let content = textarea.innerHTML;
-          content +=
-            '<img cct="1" style=\'max-width: 140px;max-height: 160px;\' id="' +
-            id +
-            '"cct="2" />';
-          textarea.innerHTML = content;
-          let img = document.getElementById(id);
+          let image = new Image();
+          image.onload = function () {
+            let width = image.width;
+            let height = image.height;
+            let content = textarea.innerHTML;
+            content +=
+              '<img cct="1" style="max-width: 140px;max-height: 160px;" id="' +
+              id +
+              '" width="' +
+              width +
+              '" height="' +
+              height +
+              '" />';
+            textarea.innerHTML = content;
+            let img = document.getElementById(id);
+            img.src = reader.result;
+            image = null;
+          };
           // 将转换结果赋值给img标签
-          img.src = reader.result;
+          image.src = reader.result;
         };
       }
     },

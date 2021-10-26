@@ -7,7 +7,7 @@
           '--widthStr': width > 1 ? width + 'px' : '100%',
           '--heightStr': height > 1 ? height + 'px' : '100%',
           '--width': width / 2 + 'px',
-          '--height': height + 'px',
+          '--height': height/2 + 'px',
         }"
         @click.stop
       >

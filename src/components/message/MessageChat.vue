@@ -9,16 +9,32 @@
     </template>
 
     <CusConfirm
-      :height="imgWindow.height+50"
-      :width="imgWindow.width"
+      :height="getHeight(imgWindow.width, imgWindow.height)"
+      :width="getWidth(imgWindow.width, imgWindow.height)"
       :flag="imgWindow.showImgWindow"
       :okFlag="false"
       :noFlag="false"
       @cancel="cancel"
     >
       <template v-slot:confirm>
-        <div style="padding: 30px 0">
-          <img :src="imgWindow.src" :width="imgWindow.width" />
+        <div
+          style="
+            padding: 30px 0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          "
+          :style="{
+            height: getHeight(imgWindow.width, imgWindow.height) + 'px',
+            width: getWidth(imgWindow.width, imgWindow.height) + 'px',
+          }"
+        >
+          <img
+            :src="imgWindow.src"
+            :width="imgWindow.width"
+            :height="imgWindow.height"
+          />
         </div>
       </template>
     </CusConfirm>
@@ -39,6 +55,26 @@ export default {
   computed: {
     ...mapState({ imgWindow: (state) => state.system.imgWindow }),
     ...mapGetters({ selectedChat: "chat/selectedChat" }),
+    getWidth() {
+      return (width, height) => {
+        if (width < 300) {
+          width = width * 2;
+        } else if (height < 800) {
+          width = width * 2;
+        }
+        return width;
+      };
+    },
+    getHeight() {
+      return (width, height) => {
+        if (height < 300) {
+          height = height * 2;
+        } else if (height < 500 && width < 600) {
+          height = height * 2;
+        }
+        return height;
+      };
+    },
   },
   methods: {
     ...mapActions({ showImgWindow: "system/showImgWindow" }),
