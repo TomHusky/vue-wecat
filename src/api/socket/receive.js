@@ -30,8 +30,8 @@ export function chatMsg(body) {
     remark: info.remark == null ? info.nickname : info.remark,
     msgContent: dataJson.data.msgContent,
   };
+  msg.msgContent = replaceFace(dataJson.data);
   if (dataJson.data.contentType == 2) {
-    msg.msgContent = "[图片]"
     let msgContent = JSON.parse(dataJson.data.msgContent);
     getImgToBase64(msgContent.url, (base64Str, width, height) => {
       msgContent.src = base64Str;
@@ -46,6 +46,31 @@ export function chatMsg(body) {
     store.dispatch("chat/receiveMessage", dataJson.data);
   }
   sendNotifi(this, msg);
+}
+
+
+// 将内容中属于表情的部分替换成emoji图片标签
+function replaceFace(msg) {
+  if (msg === "") {
+    return "";
+  }
+  if (msg.contentType == 2) {
+    return "[图片]";
+  }
+  if (msg.contentType == 3) {
+    return "[文件]";
+  }
+  let con = msg.msgContent;
+  if (con.includes("@::tt;;@")) {
+    let emojis = store.state.system.emojis;
+    for (let i = 0; i < emojis.length; i++) {
+      con = con.replace(
+        emojis[i].reg, "["+emojis[i].title+"]"
+      );
+    }
+    return con;
+  }
+  return con;
 }
 
 

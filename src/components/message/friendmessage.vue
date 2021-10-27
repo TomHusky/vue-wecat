@@ -25,7 +25,10 @@
           <div class="time selectNone">
             <span v-if="item.showTime">{{ item.date | time }}</span>
           </div>
-          <div class="main" :class="{ self: isSelf(item) }">
+          <div
+            class="main"
+            :class="{ self: isSelf(item), other: !isSelf(item) }"
+          >
             <img
               class="avatar selectNone"
               width="36"
@@ -33,7 +36,7 @@
               @click.prevent="openMenu($event, item)"
               :src="isSelf(item) ? user.avatar : selectedChat.info.avatar"
             />
-            <div :class="{ content: item.type == 1 }">
+            <div class="content" :class="{ 'text-msg': item.type == 1 }">
               <img
                 class="img-msg"
                 @click="
@@ -47,7 +50,11 @@
                 v-if="item.type == 2"
                 :src="item.content.src"
               />
-              <div class="file-msg" v-if="item.type == 3">
+              <div
+                class="file-msg"
+                v-if="item.type == 3"
+                @click="downloadFile(item.content.src)"
+              >
                 <p class="file-name">{{ item.content.fileName }}</p>
                 <p class="file-size">{{ item.content.fileSize }}</p>
                 <img
@@ -154,6 +161,9 @@ export default {
       }
       return con;
     },
+    downloadFile(src) {
+      window.open(src);
+    },
   },
   filters: {
     // 将日期过滤为 hour:minutes
@@ -242,6 +252,34 @@ export default {
         border-radius: 3px;
       }
 
+      .text-msg {
+        padding: 6px 10px;
+        max-width: 330px;
+        min-height: 36px;
+        line-height: 24px;
+        box-sizing: border-box;
+        font-size: 14px;
+        text-align: left;
+        word-break: break-all;
+        background-color: #FFFFFF;
+        border: 1px solid #ECECEC;
+        border-radius: 4px;
+
+        &:hover {
+          border: 1px solid #E7E7E7;
+        }
+
+        &:before, &:after {
+          position: absolute;
+          display: block;
+          width: 0;
+          height: 0;
+          content: '';
+          border: solid transparent;
+          border-right-color: #FFFFFF;
+        }
+      }
+
       .img-msg {
         max-width: 180px;
         max-height: 180px;
@@ -252,6 +290,7 @@ export default {
       .file-msg {
         box-sizing: border-box;
         border-radius: 3px;
+        border: 1px solid #ECECEC;
         height: 75px;
         width: 200px;
         cursor: pointer;
@@ -302,32 +341,43 @@ export default {
         display: inline-block;
         margin-left: 10px;
         position: relative;
-        padding: 6px 10px;
-        max-width: 330px;
-        min-height: 36px;
-        line-height: 24px;
-        box-sizing: border-box;
-        font-size: 14px;
-        text-align: left;
-        word-break: break-all;
-        background-color: #FFFFFF;
-        border: 1px solid #ECECEC;
-        border-radius: 4px;
+      }
+    }
 
-        &:hover {
-          border: 1px solid #E7E7E7;
+    .other {
+      .text-msg {
+        &:before {
+          border-right-color: #E7E7E7;
+          border-width: 6px;
+          top: 11px;
+          right: 100%;
         }
 
-        &:before, &:after {
-          position: absolute;
-          display: block;
-          width: 0;
-          height: 0;
-          content: '';
-          border: solid transparent;
-          border-right-color: #FFFFFF;
+        &:after {
+          top: 12px;
+          border-right-color: #fff;
+          border-width: 5px;
+          right: 100%;
+        }
+      }
+
+      .file-msg {
+        &:before {
+          border-right-color: #E7E7E7;
+          border-width: 6px;
+          top: 11px;
+          right: 100%;
         }
 
+        &:after {
+          top: 12px;
+          border-right-color: #fff;
+          border-width: 5px;
+          right: 100%;
+        }
+      }
+
+      .content {
         &:before {
           border-right-color: #E7E7E7;
           border-width: 6px;
@@ -352,11 +402,23 @@ export default {
         margin: 0 15px;
       }
 
-      .file-msg {
-        background-color: #FFFFFF;
-        border: 1px solid #ECECEC;
-        border-radius: 4px;
+      .text-msg {
+        &:before {
+          border-left-color: #9EEA6A;
+          border-width: 6px;
+          top: 11px;
+          left: 100%;
+        }
 
+        &:after {
+          top: 12px;
+          border-left-color: #9EEA6A;
+          border-width: 5px;
+          left: 100%;
+        }
+      }
+
+      .file-msg {
         &:before {
           border-left-color: #E7E7E7;
           border-width: 6px;
@@ -372,7 +434,7 @@ export default {
         }
       }
 
-      .content {
+      .text-msg {
         background-color: #9EEA6A;
 
         &:before {

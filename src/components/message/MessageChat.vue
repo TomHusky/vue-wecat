@@ -32,8 +32,9 @@
         >
           <img
             :src="imgWindow.src"
-            :width="imgWindow.width"
-            :height="imgWindow.height"
+            :width="
+              imgWindow.width > 1024 ? imgWindow.width / 2.6 : imgWindow.width
+            "
           />
         </div>
       </template>
@@ -62,6 +63,9 @@ export default {
         } else if (height < 800) {
           width = width * 2;
         }
+        if (width > 1024) {
+          return width / 2.6;
+        }
         return width;
       };
     },
@@ -71,6 +75,9 @@ export default {
           height = height * 2;
         } else if (height < 500 && width < 600) {
           height = height * 2;
+        }
+        if (height > 1024) {
+          return height / 2.6;
         }
         return height;
       };

@@ -1,4 +1,4 @@
-export const sendNotifi = (that, msg) => {
+export const sendNotifi = (that, msg,type) => {
     if (!document.hidden) {
         return;
     }
@@ -8,6 +8,7 @@ export const sendNotifi = (that, msg) => {
         icon: msg.avatar,
         sound:'/static/mp3/newMsg.mp3'
     }
+    
     let notification = new Notification(msg.remark, options);
     notification.onclick = function () {
         // window.open(`页面链接`, '_blank');

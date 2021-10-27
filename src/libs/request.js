@@ -151,7 +151,7 @@ export function postJson({
 }
 
 //封装post json请求
-export function uploadFile({
+export function upload({
   url,
   file
 }) {

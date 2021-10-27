@@ -6,7 +6,8 @@ import {
   sendMsgObj
 } from "@/api/socket/sendMsg";
 import {
-  uploadImg
+  uploadImg,
+  uploadFile
 } from "@/api/source";
 const now = new Date();
 // namespaced: true 的方式使其成为带命名空间的模块。保证在变量名一样的时候，添加一个父级名拼接。
@@ -115,6 +116,16 @@ const mutations = {
         uploadImg(file).then((res) => {
           if (res.code == 0) {
             sendMsgObj(result.chatId, res.data, result.type, msg.type);
+          }
+        });
+        return;
+      }
+      if (msg.type == 3) {
+        // 上传文件
+        uploadFile(msg.content.src).then((res) => {
+          if (res.code == 0) {
+            msg.content.src = res.data;
+            sendMsgObj(result.chatId, msg.content, result.type, msg.type);
           }
         });
         return;

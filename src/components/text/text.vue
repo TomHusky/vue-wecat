@@ -41,6 +41,7 @@
       contenteditable="true"
       ref="text"
       @onpaste="pasteListener($event)"
+      @keydown.backspace="backspace($event)"
       @keydown.enter="onkeydown($event)"
       @paste="pasteListener"
     ></div>
@@ -65,6 +66,7 @@ export default {
       frequency: 0,
       warn: false,
       showEmoji: false,
+      file: null,
       emojiReg:
         /\<img lwj=\"\" wx=\"[\s\S]*\" src=\"static\/emoji\/[\s\S]*\.gif\" style=\"vertical-align: middle; width: 24px; height: 24px\" jwl=\"\"\>/g,
       imgReg:
@@ -155,33 +157,28 @@ export default {
       }
       return con;
     },
+    // 选中图片
     selectImg(e) {
       let file = e.target.files[0];
       if (file.type.split("/")[0] !== "image") {
         alert("请选择图片！");
         return false;
       }
-      let size = Math.floor(file.size / 1024);
-      if (size > 1 * 1024 * 1024) {
-        alert("请选择1M以内的图片！");
-        return false;
-      }
       this.showImgText(file);
     },
-
     // 选择文件
     selectFile(e) {
       let file = e.target.files[0];
-      let size = Math.floor(file.size / 1024);
-      if (size > 10 * 1024 * 1024) {
-        alert("请选择10M以内的文件！");
-        return false;
-      }
       this.showFileText(file);
     },
     // 显示文件对应的图片
     showFileText(file) {
       if (file) {
+        let size = Math.floor(file.size / 1024);
+        if (size > 10 * 1024) {
+          alert("请选择10M以内的文件！");
+          return false;
+        }
         let textarea = this.$refs.text;
         // 声明js的文件流
         let reader = new FileReader();
@@ -204,6 +201,8 @@ export default {
             textarea.innerHTML = content;
             let img = document.getElementById(id);
             img.src = dataURL;
+
+            this.file = file;
           });
         };
       }
@@ -241,6 +240,11 @@ export default {
     },
     showImgText(file) {
       if (file) {
+        let size = Math.floor(file.size / 1024);
+        if (size > 2 * 1024) {
+          alert("请选择2M以内的图片！");
+          return false;
+        }
         let textarea = this.$refs.text;
         // 声明js的文件流
         let reader = new FileReader();
@@ -270,6 +274,14 @@ export default {
           // 将转换结果赋值给img标签
           image.src = reader.result;
         };
+      }
+    },
+    // 监听回退按键
+    backspace(e) {
+      let textarea = this.$refs.text;
+      if (!this.fileReg.test(textarea.innerHTML)) {
+        this.file = null;
+        return;
       }
     },
     // 按回车发送信息
@@ -309,6 +321,7 @@ export default {
         setTimeout(() => {
           this.warn = false;
         }, 1000);
+        return;
       }
       this.sendMsg(content, 1);
       textarea.innerHTML = "";
@@ -393,6 +406,7 @@ export default {
         result.fileName = img.getAttribute("file-name");
         result.fileType = img.getAttribute("file-type");
         result.fileSize = img.getAttribute("file-size");
+        result.src = this.file;
         // 将转换结果赋值给img标签
         content = result;
       }
