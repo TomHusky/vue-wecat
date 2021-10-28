@@ -201,7 +201,6 @@ export default {
             textarea.innerHTML = content;
             let img = document.getElementById(id);
             img.src = dataURL;
-
             this.file = file;
           });
         };

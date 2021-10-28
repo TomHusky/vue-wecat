@@ -46,7 +46,7 @@ export default {
   z-index: 999999999;
   position: absolute;
   left: 50%;
-  top: 15%;
+  top: 10%;
   transform: translate(-50%, -50%); /* 50%为自身尺寸的一半 */
 }
 .btn-close{

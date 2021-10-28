@@ -25,15 +25,16 @@ module.exports = {
     //  本地环境发布目录
     dev: '/',
     //  生产环境发布目录
-    pro: '/vue-wecat'
+    pro: '/chat'
   },
   /**
    *  api请求基础路径
    */
   apiUrl: {
     //  本地环境接口请求地址
-    dev: 'http://127.0.0.1:8088/chat',
+    dev: 'http://y2725078j3.qicp.vip:32316/chat',
     //  生产环境接口请求地址
-    pro: 'http://y2725078j3.qicp.vip/wechat-mvc'
+    // pro: 'http://y2725078j3.qicp.vip/wechat-mvc'
+    pro: 'http://y2725078j3.qicp.vip:32316/chat'
   },
 }

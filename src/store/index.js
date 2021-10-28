@@ -26,7 +26,7 @@ const store = new Vuex.Store({
     //     friendlist: val.friend.friendlist
     //   }
     // },
-    paths: ['user','chat','system.headMenu','system.systemFileIcon','friend.friendlist',"friend.newFriendList","groupchat.groupChatList"]
+    paths: ['user','chat.chatlist',"chat.selectChatId",'system.headMenu','system.systemFileIcon','friend.friendlist',"friend.newFriendList","groupchat.groupChatList"]
   })]
 });
 

@@ -18,13 +18,18 @@
         class="icon iconfont icon-more info"
       ></i>
     </header>
-    <div class="message-wrapper" ref="list">
+    <div
+      class="message-wrapper"
+      ref="list"
+      @scroll="handleScroll"
+      @mousewheel="mousewheel"
+    >
+      <div class="more">
+        <Loading v-if="showLoading" :load="showLoading" :size="3"></Loading>
+        <span v-if="showMoreInfo">查看更多消息</span>
+      </div>
       <ul v-if="selectedChat">
-        <li
-          v-for="item in selectedChat.messages"
-          :key="item.id"
-          class="message-item"
-        >
+        <li v-for="item in showMessages" :key="item.id" class="message-item">
           <div class="time">
             <span v-if="item.showTime">{{ item.date | time }}</span>
           </div>
@@ -73,7 +78,11 @@
                   <p class="file-name">{{ item.content.fileName }}</p>
                   <p class="file-size">{{ item.content.fileSize }}</p>
                   <img
-                    :src="systemFileIcon[item.content.fileType]"
+                    :src="
+                      systemFileIcon[item.content.fileType] != null
+                        ? systemFileIcon[item.content.fileType]
+                        : 'static/images/file.png'
+                    "
                     style="width: 40px"
                   />
                 </div>
@@ -93,7 +102,11 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from "vuex";
+import Loading from "@/components/other/loading/Loading";
 export default {
+  components: {
+    Loading,
+  },
   computed: {
     ...mapGetters({
       selectedChat: "chat/selectedChat",
@@ -104,7 +117,7 @@ export default {
     ...mapState({
       user: (state) => state.user.info,
       emojis: (state) => state.system.emojis,
-        systemFileIcon: (state) => state.system.systemFileIcon,
+      systemFileIcon: (state) => state.system.systemFileIcon,
     }),
     isSelf() {
       return (username) => {
@@ -123,6 +136,19 @@ export default {
         return user;
       };
     },
+  },
+  data() {
+    return {
+      showMessages: [],
+      roll: 0,
+      pageIndex: -1,
+      pageSize: 10,
+      showMoreInfo: false,
+      showLoading: false,
+    };
+  },
+  beforeMount() {
+    this.loadMessage();
   },
   mounted() {
     //  在页面加载时让信息滚动到最下面
@@ -152,6 +178,56 @@ export default {
     ...mapActions({
       showImgWindow: "system/showImgWindow",
     }),
+    mousewheel() {
+      if (this.pageIndex == 0) {
+        return;
+      }
+      if (this.showMoreInfo) {
+        this.showMoreInfo = false;
+        this.showLoading = true;
+        this.loadMessage();
+      }
+    },
+    handleScroll() {
+      if (this.pageIndex == 0) {
+        return;
+      }
+      let scrollTop = this.$refs.list.scrollTop;
+      let scroll = scrollTop - this.roll;
+      if (scroll < 0) {
+        if (!this.showMoreInfo) {
+          if (this.$refs.list.scrollTop == 0) {
+            this.showMoreInfo = true;
+          }
+        }
+      }
+      this.roll = this.$refs.list.scrollTop;
+      //业务操作
+    },
+    loadMessage() {
+      setTimeout(() => {
+        this.showLoading = false;
+      }, 100);
+      if (this.pageIndex == -1) {
+        this.pageIndex = this.selectedChat.messages.length;
+      }
+      // 下一页的位置
+      let nextIndex = this.pageIndex - this.pageSize;
+      if (nextIndex < 0) {
+        nextIndex = 0;
+      }
+      let data = this.selectedChat.messages.slice(nextIndex, this.pageIndex);
+      this.pageIndex = nextIndex;
+      // 如果多次查看历史数据，则页面随着次数增加，最大一页50
+      if (this.pageSize < 50) {
+        this.pageSize += 10;
+      }
+      if (data.length > 0) {
+        for (let i = data.length - 1; i >= 0; i--) {
+          this.showMessages.unshift(data[i]);
+        }
+      }
+    },
     showChatInfo() {
       this.$parent.showChatInfo();
     },
@@ -244,6 +320,13 @@ export default {
     overflow-y: auto;
     border-top: 1px solid #e7e7e7;
     border-bottom: 1px solid #e7e7e7;
+
+    .more {
+      text-align: center;
+      color: #2C90FF;
+      margin-top: 8px;
+      font-size: 12px;
+    }
 
     .message-item {
       margin-top: 16px;

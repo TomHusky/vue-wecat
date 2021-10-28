@@ -9,8 +9,8 @@
     </template>
 
     <CusConfirm
-      :height="getHeight(imgWindow.width, imgWindow.height)"
-      :width="getWidth(imgWindow.width, imgWindow.height)"
+      :height="getWidth(imgWindow.width, imgWindow.height).height"
+      :width="getWidth(imgWindow.width, imgWindow.height).width"
       :flag="imgWindow.showImgWindow"
       :okFlag="false"
       :noFlag="false"
@@ -26,14 +26,21 @@
             align-items: center;
           "
           :style="{
-            height: getHeight(imgWindow.width, imgWindow.height) + 'px',
-            width: getWidth(imgWindow.width, imgWindow.height) + 'px',
+            height: getWidth(imgWindow.width, imgWindow.height).height + 'px',
+            width: getWidth(imgWindow.width, imgWindow.height).width + 'px',
           }"
         >
           <img
             :src="imgWindow.src"
             :width="
-              imgWindow.width > 1024 ? imgWindow.width / 2.6 : imgWindow.width
+              imgWindow.width < 600
+                ? imgWindow.width
+                : getWidth(imgWindow.width, imgWindow.height).width
+            "
+            :height="
+              imgWindow.height < 600
+                ? imgWindow.height
+                : getWidth(imgWindow.width, imgWindow.height).height
             "
           />
         </div>
@@ -58,28 +65,100 @@ export default {
     ...mapGetters({ selectedChat: "chat/selectedChat" }),
     getWidth() {
       return (width, height) => {
-        if (width < 300) {
-          width = width * 2;
-        } else if (height < 800) {
-          width = width * 2;
+        let result = {
+          width: width,
+          height: height,
+        };
+        let ratioWidth = Math.floor(width / height).toFixed(1);
+        let ratioHeight = Math.floor(height / width).toFixed(1);
+        if (width >= height) {
+          if (ratioWidth < 1.5) {
+            if (width <= 300) {
+              result.width = width * 2;
+              result.height = height * 2;
+              return result;
+            }
+            if (width > 300 && width < 600) {
+              result.width = width * 1.5;
+              result.height = height * 1.5;
+              return result;
+            }
+            if (width >= 600 && width <= 800) {
+              return result;
+            }
+            if (width > 800 && width <= 1200) {
+              result.width = width / 1.8;
+              result.height = height / 1.8;
+              return result;
+            }
+            if (width > 1200) {
+              result.width = width / 2;
+              result.height = height / 2;
+              return result;
+            }
+          }
+          if (ratioWidth >= 1.5) {
+            if (width < 600) {
+              result.width = width * 1.5;
+              return result;
+            }
+            if (width >= 600 && width <= 1200) {
+              return result;
+            }
+            if (width > 1200) {
+              result.width = width / 1.8;
+              result.height = height / 1.8;
+              return result;
+            }
+          }
+        } else {
+          if (ratioHeight < 1.5) {
+            if (height <= 300) {
+              result.width = width * 2;
+              result.height = height * 2;
+              return result;
+            }
+            if (height > 300 && height <= 600) {
+              result.width = width * 1.5;
+              result.height = height * 1.5;
+              return result;
+            }
+            if (height > 600 && height <= 800) {
+              return result;
+            }
+            if (height > 800 && height <= 1200) {
+              result.width = width / 1.8;
+              result.height = height / 1.8;
+              return result;
+            }
+            if (height > 1200) {
+              result.width = width / 2;
+              result.height = height / 2;
+              return result;
+            }
+          }
+          if (ratioHeight >= 1.5) {
+            if (height < 650) {
+              return result;
+            }
+            if (height >= 650 && height <= 900) {
+              result.width = width / 1.4;
+              result.height = height / 1.4;
+              return result;
+            }
+            if (height > 900 && height <= 1200) {
+              result.width = width / 1.6;
+              result.height = height / 1.6;
+              return result;
+            }
+            if (height > 1200) {
+              result.width = width / 2;
+              result.height = height / 2;
+              return result;
+            }
+          }
         }
-        if (width > 1024) {
-          return width / 2.6;
-        }
-        return width;
-      };
-    },
-    getHeight() {
-      return (width, height) => {
-        if (height < 300) {
-          height = height * 2;
-        } else if (height < 500 && width < 600) {
-          height = height * 2;
-        }
-        if (height > 1024) {
-          return height / 2.6;
-        }
-        return height;
+        return result;
       };
     },
   },
