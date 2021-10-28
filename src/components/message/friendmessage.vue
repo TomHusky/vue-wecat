@@ -143,6 +143,7 @@ export default {
   watch: {
     // 发送信息后,让信息滚动到最下面
     messages() {
+      this.showMessages.push(this.messages[this.messages.length - 1]);
       setTimeout(
         () => (this.$refs.list.scrollTop = this.$refs.list.scrollHeight),
         0
