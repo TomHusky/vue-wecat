@@ -52,6 +52,7 @@
 <script>
 import Switched from "@/components/other/Switch";
 import { mapState, mapActions, mapGetters } from "vuex";
+import { getFriendInfo, updateFriendInfo } from "@/api/friend.js";
 export default {
   components: {
     Switched,
@@ -83,6 +84,7 @@ export default {
   },
   methods: {
     ...mapActions({
+      updateFriend: "friend/updateFriend",
       updateChatInfo: "chat/updateChatInfo",
       topChat: "chat/topChat",
     }),
@@ -93,8 +95,22 @@ export default {
     },
     setNotDisturb(value) {
       let currentChat = this.selectedChat;
+      let params = {
+        username: currentChat.chatId,
+        notDisturb: value,
+      };
       currentChat.info.notDisturb = value;
-      this.updateChatInfo(currentChat);
+      updateFriendInfo(params).then((res) => {
+        if (res.code == 0) {
+          let friend = this.selectedChatFriend;
+          friend.notDisturb = value;
+          this.updateFriend(friend);
+          this.updateChatInfo(currentChat);
+        } else {
+          currentChat.info.notDisturb = !value;
+          this.updateChatInfo(currentChat);
+        }
+      });
     },
     openMenu(e) {
       let info = {
@@ -142,8 +158,8 @@ export default {
         height: 35px;
         border: 1px solid #DADADA;
         display: flex;
-	      align-items: center;
-        justify-content:center;
+        align-items: center;
+        justify-content: center;
         margin: 0 auto;
 
         &:hover {

@@ -56,6 +56,10 @@ const mutations = {
       state.friendlist.push(value);
     }
   },
+  updateFriend(state, value) {
+    let tmp = state.friendlist.find((i) => i.username === value.username)
+    Object.assign(tmp, value);
+  },
   addFriendList(state, value) {
     let rmIndex = [];
     state.friendlist.filter((x, index) => {
@@ -89,6 +93,9 @@ const actions = {
   addFriendList: ({
     commit
   }, value) => commit('addFriendList', value),
+  updateFriend: ({
+    commit
+  }, value) => commit('updateFriend', value),
   addFriend: ({
     commit
   }, value) => commit('addFriend', value),

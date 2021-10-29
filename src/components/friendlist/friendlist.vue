@@ -1,6 +1,6 @@
 <!-- 好友列表 -->
 <template>
-  <div class="friendlist scrollbar">
+  <div class="friendlist scrollbar selectNone">
     <ul>
       <li class="frienditem" :class="{ noborder: !newfriend.initial }">
         <div class="list_title" v-if="newfriend.initial">

@@ -1,12 +1,19 @@
 import request from '@/libs/request'
-import {postJson} from '@/libs/request'
-import { getToken } from '@/libs/util'
+import {
+  postJson
+} from '@/libs/request'
+import {
+  getToken
+} from '@/libs/util'
 /**
  * 用户登录
  * @param username
  * @param password
  */
-export const login = ({ username, password }) => {
+export const login = ({
+  username,
+  password
+}) => {
   const data = {
     username,
     password
@@ -23,7 +30,9 @@ export const login = ({ username, password }) => {
 export const logout = () => {
   return request({
     url: 'admin/logout/token',
-    data: { token: getToken() },
+    data: {
+      token: getToken()
+    },
     method: 'post'
   })
 }
@@ -35,7 +44,10 @@ export const logout = () => {
  * @param oldPassword
  * @param newPassword
  */
-export const updatePassword = ({ userId, password }) => {
+export const updatePassword = ({
+  userId,
+  password
+}) => {
   const data = {
     userId: userId,
     password: password
@@ -50,8 +62,10 @@ export const updatePassword = ({ userId, password }) => {
 /**
  * 获取用户信息
  */
- export const selectUser = (value) => {
-  const params = { value: value }
+export const selectUser = (value) => {
+  const params = {
+    value: value
+  }
   return request({
     url: '/user/selectUser',
     params,
@@ -59,3 +73,12 @@ export const updatePassword = ({ userId, password }) => {
   })
 }
 
+/**
+ * 修改个人信息
+ */
+export const updateInfo = (value) => {
+  return postJson({
+    url: '/user/updateInfo',
+    data:value
+  })
+}

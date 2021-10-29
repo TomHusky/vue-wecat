@@ -212,6 +212,7 @@ export default {
         visibleIng: true,
         info: this.isSelf(item) ? this.user : this.selectedChatFriend,
       };
+      console.log(this.selectedChatFriend);
       this.$store.commit("system/setHeadMenu", info);
     },
     showChatInfo() {

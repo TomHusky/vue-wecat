@@ -4,8 +4,7 @@
       left: menuPosition.clientX + 'px',
       top: menuPosition.clientY + 'px',
     }"
-    v-show="headMenu.visible"
-    v-if="user != null"
+    v-if="user != null && headMenu.visible"
     class="headmenu"
   >
     <div class="esInfo">
@@ -31,9 +30,14 @@
     <div class="infoItem">
       <div v-if="!headMenu.self && user.remark != null" class="item">
         <span class="lable">备&emsp;注</span>
-        <span class="value editText" :contentEditable="!headMenu.self">{{
-          user.remark
-        }}</span>
+        <span
+          class="value editText"
+          @blur="updateRemark($event)"
+          :contentEditable="
+            !headMenu.self && user.initial != null && user.initial.trim() !== ''
+          "
+          >{{ user.remark }}</span
+        >
       </div>
       <div v-if="headMenu.type == 2" class="item">
         <span class="lable">群昵称</span>
@@ -67,7 +71,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
+import { getFriendInfo, updateFriendInfo } from "@/api/friend.js";
+import { updateInfo } from "@/api/account.js";
 export default {
   name: "HeadMenu",
   props: {
@@ -92,6 +98,10 @@ export default {
     ...mapState({
       headMenu: (state) => state.system.headMenu,
     }),
+    ...mapGetters({
+      getUser: "user/getUser",
+      selectedFriendByUsername: "friend/selectedFriendByUsername",
+    }),
     menuPosition() {
       let windowWidth = this.$store.state.system.windowWidth;
       let windowHeight = this.$store.state.system.windowHeight;
@@ -111,6 +121,23 @@ export default {
       return this.headMenu.info;
     },
   },
+  watch: {
+    headMenu(value) {
+      // 更新好友信息
+      if (
+        value.visible &&
+        !value.self &&
+        value.info.initial != null &&
+        value.info.initial.trim() !== ""
+      ) {
+        getFriendInfo(value.info.username).then((res) => {
+          if (res.code == 0) {
+            this.updateFriend(res.data);
+          }
+        });
+      }
+    },
+  },
   mounted() {
     document.addEventListener("click", this.closeMenu);
   },
@@ -118,6 +145,10 @@ export default {
     document.removeEventListener("click", this.closeMenu);
   },
   methods: {
+    ...mapActions({
+      updateFriend: "friend/updateFriend",
+      setUserInfo: "user/setUserInfo",
+    }),
     closeMenu(event) {
       let headMenu = document.getElementById(this.refId);
       if (headMenu) {
@@ -131,8 +162,46 @@ export default {
         }
       }
     },
+    updateRemark(event) {
+      let remark = event.target.innerText.trim();
+      if (remark === "") {
+        event.target.innerText = this.user.remark;
+        return;
+      }
+      if (remark === this.user.remark) {
+        return;
+      }
+      let params = {
+        username: this.user.username,
+        remark: remark,
+      };
+      updateFriendInfo(params).then((res) => {
+        if (res.code == 0) {
+          let friend = this.selectedFriendByUsername(this.user.username);
+          friend.remark = remark;
+          this.updateFriend(friend);
+        }
+      });
+    },
     updateSignature(event) {
-      console.log(event.target.innerHTML);
+      let signature = event.target.innerText.trim();
+      if (signature === "") {
+        event.target.innerText = this.user.signature;
+        return;
+      }
+      if (signature === this.user.signature) {
+        return;
+      }
+      let params = {
+        signature: signature,
+      };
+      updateInfo(params).then((res) => {
+        if (res.code == 0) {
+          let user = this.getUser;
+          user.signature = signature;
+          this.setUserInfo(user);
+        }
+      });
     },
   },
 };
@@ -220,6 +289,7 @@ export default {
 }
 
 .signature {
+  border: 1px solid transparent;
   display: inline-block;
   margin-top: 20px;
   font-size: 10px;
@@ -230,11 +300,15 @@ export default {
   cursor: pointer;
   outline: none;
   padding: 2px 1px;
-  border: 1px solid transparent;
+  box-sizing: content-box;
+  white-space: nowrap; /* 强制span不换行 */
+  max-width: 100px; /* 限制宽度 */
+  overflow: hidden; /* 超出宽度部分隐藏 */
+  display: inline-block;
+  text-overflow: ellipsis; /* 超出部分以点号代替 */
 
   &:hover {
-    border: 1px solid #BDC9D6;
-    box-sizing: border-box;
+    border: 1px solid #BDC9D6 !important;
     border-radius: 5px;
   }
 }
@@ -256,12 +330,15 @@ export default {
 
     .lable {
       margin-bottom: 10px;
+      vertical-align: middle;
       color: #999;
     }
 
     .value {
       margin-left: 20px;
       color: #000000;
+      vertical-align: middle;
+      border: 1px solid transparent;
     }
   }
 }

@@ -4,7 +4,7 @@ import {
 } from '@/libs/request'
 
 /**
- * 获取用户信息
+ * 获取好友列表信息
  */
 export const listFriendInfo = (username) => {
   const params = {
@@ -18,11 +18,36 @@ export const listFriendInfo = (username) => {
 }
 
 /**
+ * 获取用户信息
+ */
+ export const getFriendInfo = (username) => {
+  const params = {
+    username: username
+  }
+  return request({
+    url: '/friend/getFriendInfo',
+    params,
+    method: 'get'
+  })
+}
+
+
+/**
  * 添加好友
  */
 export const applyAddFriend = (value) => {
   return postJson({
     url: '/friend/applyAddFriend',
+    data: value
+  })
+}
+
+/**
+ * 更新好友信息
+ */
+ export const updateFriendInfo = (value) => {
+  return postJson({
+    url: '/friend/updateFriendInfo',
     data: value
   })
 }

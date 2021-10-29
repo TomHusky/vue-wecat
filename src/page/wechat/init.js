@@ -25,7 +25,6 @@ function initSystemIcon() {
         return;
     }
     listSystemIcon().then((res) => {
-        console.log(res);
         if (res.code == 0) {
             store.commit("system/setSystemFileIcon", res.data);
         }

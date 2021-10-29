@@ -89,7 +89,7 @@
 import CusConfirm from "@/components/other/confirm/CusConfirm";
 import RoundCheckBox from "@/components/other/input/RoundCheckBox";
 import Search from "@/components/search/Search";
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 import { getIndex } from "@/libs/tools";
 import { createChat } from "@/api/groupchat";
 export default {
@@ -129,6 +129,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      addGroupChat: "groupchat/addGroupChat",
+    }),
     friendSearch(value) {
       this.searchText = value;
     },
@@ -164,6 +167,7 @@ export default {
       createChat(params).then((res) => {
         if (res.code == 0) {
           this.$emit("cancel");
+          this.addGroupChat(res.data);
         }
       });
     },
