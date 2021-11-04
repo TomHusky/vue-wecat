@@ -48,19 +48,15 @@ function websocketclose(e) {
 }
 // 建立ws连接
 function websocketOpen(e) {
-  console.log('连接成功')
   websocketOpenOk(e);
 }
 
 // 接收ws后端返回的数据
 function websocketOnmessage(e) {
   const data = JSON.parse(e.data);
-  console.log("收到消息");
-  console.log(data);
   // 获取url映射的方法
   if (data.type == 2) {
     let method = urlToMethod(data.url);
-    console.log("映射方法：", method);
     messageCallback[method](data.body);
   }
 }

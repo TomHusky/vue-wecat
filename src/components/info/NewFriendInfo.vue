@@ -70,8 +70,6 @@ export default {
       updateNewFriendStatus: "friend/updateNewFriendStatus",
     }),
     reject(item) {
-      // this.handleApply(item, 2);
-      console.log(this.newFriendList);
     },
     agree(item) {
       this.handleApply(item, 1);

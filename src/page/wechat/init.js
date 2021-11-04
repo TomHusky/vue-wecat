@@ -32,8 +32,7 @@ function initSystemIcon() {
 }
 
 function initFriendList() {
-    let state = store.state;
-    listFriendInfo(state.user.info.username)
+    listFriendInfo()
         .then((res) => {
             if (res.code == 0) {
                 store.commit("friend/addFriendList", res.data);

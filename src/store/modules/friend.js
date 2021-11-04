@@ -1,7 +1,3 @@
-import {
-  getIndex,
-  rmByIndexs
-} from '@/libs/tools'
 const state = {
   friendlist: [{
     id: -1,
@@ -61,15 +57,11 @@ const mutations = {
     Object.assign(tmp, value);
   },
   addFriendList(state, value) {
-    let rmIndex = [];
-    state.friendlist.filter((x, index) => {
-      if (x.id != -1 && !value.find((y) => x.username === y.username)) {
-        rmIndex.push(index);
+    state.friendlist = state.friendlist.filter((x, index) => {
+      if (x.id == -1 || value.find((y) => x.username === y.username)) {
+        return x;
       }
     });
-    if (rmIndex.length > 0) {
-      rmByIndexs(state.friendlist, rmIndex);
-    }
     let add = value.filter(x => !state.friendlist.find((y) => x.username === y.username));
     for (let i = 0; i < add.length; i++) {
       state.friendlist.push(add[i]);

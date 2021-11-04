@@ -128,6 +128,7 @@ export default {
     },
     userSearch(value) {
       if (value == null || value === "") {
+        this.searchUser = null;
         return;
       }
       selectUser(value)
@@ -164,7 +165,7 @@ export default {
   }
 
   .add-firend{
-    height: 520px;
+    height: 465px;
     width: 350px;
   }
 

@@ -1,5 +1,9 @@
 <template>
   <div id="app">
+    <div id="top-button" v-if="showRegister">
+      <span><a class="register" @click="register">注册</a></span>
+      <span><a>忘记密码</a></span>
+    </div>
     <router-view></router-view>
   </div>
 </template>
@@ -25,11 +29,23 @@ export default {
   },
   data() {
     return {
+      showRegister: true,
       moveDataelse: {
         x: null,
         y: null,
       },
     };
+  },
+  watch: {
+    $route: {
+      handler: function (route) {
+        if(route.path==='/login'){
+          this.showRegister = true;
+        }else{
+          this.showRegister = false;
+        }
+      },
+    },
   },
   methods: {
     //阻止F5刷新
@@ -57,18 +73,55 @@ export default {
         window.localStorage.removeItem("havePlay");
       }
     },
+    register() {
+      switch (process.env.NODE_ENV) {
+        case "development":
+          window.open("http://y2725078j3.qicp.vip/chat/register.html");
+          break;
+        case "production":
+          window.open("http://y2725078j3.qicp.vip/chat/register.html");
+          break;
+      }
+    },
   },
 };
 </script>
-<style>
+<style lang="stylus" >
+#app {
+  height: 100%;
+}
+
+#top-button {
+  position: fixed;
+  display: inline-block;
+  top: 20px;
+  right: 20px;
+
+  a {
+    font-size: 18px;
+    margin-left: 30px;
+    color: #fff;
+    padding: 5px 8px;
+    cursor: pointer;
+  }
+
+  .register {
+    background-color: #14B9F8;
+    padding: 5px 15px;
+    border-radius: 2px;
+  }
+}
+
 .scrollbar {
   overflow: hidden;
 }
+
 .scrollbar:hover {
   overflow-y: auto;
   /* 设置滚动条不占空间 */
   overflow-y: overlay;
 }
+
 .selectNone {
   -webkit-user-select: none;
   -moz-user-select: none;

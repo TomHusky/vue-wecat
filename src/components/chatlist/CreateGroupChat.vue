@@ -10,6 +10,7 @@
       :isActive="selectFriendList.length > 0"
     >
       <template v-slot:confirm>
+        <PopupLoading  v-if="loading" :load="loading" :color="'#1AAD19'"></PopupLoading>
         <div class="left">
           <div class="search-content">
             <Search
@@ -88,6 +89,7 @@
 <script>
 import CusConfirm from "@/components/other/confirm/CusConfirm";
 import RoundCheckBox from "@/components/other/input/RoundCheckBox";
+import PopupLoading from "@/components/other/loading/PopupLoading";
 import Search from "@/components/search/Search";
 import { mapActions, mapState } from "vuex";
 import { getIndex } from "@/libs/tools";
@@ -97,6 +99,7 @@ export default {
     Search,
     CusConfirm,
     RoundCheckBox,
+    PopupLoading,
   },
   props: {
     showCreate: { type: Boolean, default: false },
@@ -107,6 +110,7 @@ export default {
       searchText: "",
       showConfirm: false,
       selectFriendList: [],
+      loading: false,
     };
   },
   watch: {
@@ -164,12 +168,17 @@ export default {
       let params = {
         usernames: users,
       };
-      createChat(params).then((res) => {
-        if (res.code == 0) {
-          this.$emit("cancel");
-          this.addGroupChat(res.data);
-        }
-      });
+      this.loading = true;
+      createChat(params)
+        .then((res) => {
+          if (res.code == 0) {
+            this.$emit("cancel");
+            this.addGroupChat(res.data);
+          }
+        })
+        .catch((err) => {
+          this.loading = false;
+        });
     },
     createGroupCancel() {
       this.$emit("cancel");

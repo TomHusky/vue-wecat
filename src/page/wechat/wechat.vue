@@ -1,5 +1,10 @@
 <template>
   <div id="wechat">
+    <div class="network-bar" v-if="!network">
+      <p>
+        <i class="icon iconfont icon-warn"></i>连接失败，请检查你的网络或刷新页面
+      </p>
+    </div>
     <div class="sidebar">
       <MyCard></MyCard>
     </div>
@@ -25,6 +30,7 @@ import { getBaseUrl, exitLogin } from "@/libs/request.js";
 import receive from "@/api/socket/receive.js";
 import { getToken } from "@/libs/util";
 import { bulidWebsocket, closeWebsocket } from "@/libs/websocket.js";
+import { mapState} from "vuex";
 export default {
   components: {
     MyCard,
@@ -37,6 +43,11 @@ export default {
         y: null,
       },
     };
+  },
+  computed: {
+    ...mapState({
+      network: (state) => state.system.network,
+    }),
   },
   created() {
     initInfo();
@@ -136,6 +147,31 @@ export default {
   width: 1018px;
   height: 630px;
   background-color: #fff;
+
+  .network-bar {
+    position: absolute;
+    height: 34px;
+    width: 320px;
+    background-color: #CC5353;
+    top: -38px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    text-align: center;
+    border-radius: 3px;
+
+    p {
+      font-size: 13px;
+      font-weight: 100;
+      color: #fff;
+      line-height: 34px;
+
+      i {
+        font-size: 12px;
+        margin-right: 10px;
+      }
+    }
+  }
 
   .sidebar {
     width: 55px;

@@ -6,13 +6,9 @@ import {
 /**
  * 获取好友列表信息
  */
-export const listFriendInfo = (username) => {
-  const params = {
-    username: username
-  }
+export const listFriendInfo = () => {
   return request({
     url: '/friend/listFriendInfo',
-    params,
     method: 'get'
   })
 }
