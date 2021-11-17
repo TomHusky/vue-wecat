@@ -32,7 +32,13 @@
       <div class="chatItem">
         <div class="item">
           <p class="lable">群聊名称</p>
-          <p class="value">{{ selectedGroupChat.groupName }}</p>
+          <p
+            class="value"
+            :class="{ editText: selectedGroupChat.ownerId === user.username }"
+            :contentEditable="selectedGroupChat.ownerId === user.username"
+          >
+            {{ selectedGroupChat.groupName }}
+          </p>
         </div>
         <div class="item">
           <p class="lable">群公告</p>
@@ -47,7 +53,12 @@
         </div>
         <div class="item">
           <p class="lable">备注</p>
-          <p class="value">
+          <p
+            class="value editText"
+            @focus="focusRemark($event)"
+            @blur="updateRemark($event)"
+            contentEditable
+          >
             {{
               selectedGroupChat.remark == null ||
               selectedGroupChat.remark === ""
@@ -58,7 +69,13 @@
         </div>
         <div class="item">
           <p class="lable">我在本群的昵称</p>
-          <p class="value">只有自己可见</p>
+          <p
+            class="value editText"
+            @blur="updateNickname($event)"
+            contentEditable
+          >
+            {{ getMsgUserInfo(user.username).groupNickname }}
+          </p>
         </div>
       </div>
       <div class="division"></div>
@@ -85,16 +102,10 @@
             <Switched :width="40" :height="18"></Switched>
           </p>
         </div>
-        <div class="item chatSwitchItem">
-          <p class="switchLable">保存到通讯录</p>
-          <p class="switchValue">
-            <Switched :width="40" :height="18"></Switched>
-          </p>
-        </div>
       </div>
       <div class="division"></div>
       <div class="exit">
-        <p>删除并退出</p>
+        <span @click="exit">删除并退出</span>
       </div>
     </div>
   </div>
@@ -103,7 +114,8 @@
 <script>
 import Search from "@/components/search/Search";
 import Switched from "@/components/other/Switch";
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
+import { deleteChatUser, userUpdateGroupChat } from "@/api/groupchat.js";
 export default {
   components: {
     Search,
@@ -154,6 +166,10 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      deleteGroupChat: "groupchat/deleteGroupChat",
+      deleteChatByChatId: "chat/deleteChatByChatId",
+    }),
     openMenu(e, item) {
       let info = {
         clientX: e.clientX,
@@ -166,6 +182,64 @@ export default {
           : this.getMsgUserInfo(item.username),
       };
       this.$store.commit("system/setHeadMenu", info);
+    },
+    focusRemark(event) {
+      if (this.selectedGroupChat.remark === null) {
+        event.target.innerText = "";
+        // 解决情况之后光标消失问题
+        this.focusRange(event.target);
+      }
+    },
+    focusRange(obj) {
+      if (window.getSelection) {
+        //ie11 10 9 ff safari
+        obj.focus(); //解决ff不获取焦点无法定位问题
+        let range = window.getSelection(); //创建range
+        range.selectAllChildren(obj); //range 选择obj下所有子内容
+        range.collapseToEnd(); //光标移至最后
+      } else if (document.selection) {
+        //ie10 9 8 7 6 5
+        let range = document.selection.createRange(); //创建选择对象
+        //var range = document.body.createTextRange();
+        range.moveToElementText(obj); //range定位到obj
+        range.collapse(false); //光标移至最后
+        range.select();
+      }
+    },
+    updateRemark(event) {
+      let remark = event.target.innerText.trim();
+      if (remark === "") {
+        if (this.selectedGroupChat.remark == null) {
+          event.target.innerText = "群聊的备注仅自己可见";
+        } else {
+          event.target.innerText = this.selectedGroupChat.remark;
+        }
+        return;
+      }
+      if (remark === this.selectedGroupChat.remark) {
+        return;
+      }
+    },
+    updateNickname(event) {
+      let nickname = event.target.innerText.trim();
+      if (nickname === "") {
+        event.target.innerText = this.getMsgUserInfo(
+          this.user.username
+        ).groupNickname;
+        return;
+      }
+      if (nickname === this.getMsgUserInfo(this.user.username).groupNickname) {
+        return;
+      }
+    },
+    exit() {
+      let groupNo = this.selectedGroupChat.groupNo;
+      deleteChatUser(groupNo).then((res) => {
+        if (res.code == 0) {
+          this.deleteChatByChatId(groupNo);
+          this.deleteGroupChat(groupNo);
+        }
+      });
     },
   },
 };
@@ -246,11 +320,24 @@ export default {
       margin: 20px 0;
 
       .lable {
+        padding: 0 2px;
         margin-bottom: 10px;
       }
 
       .value {
+        padding: 0 2px;
         color: #999;
+      }
+
+      .editText {
+        cursor: pointer;
+        outline: none;
+        box-sizing: content-box;
+        white-space: nowrap; /* 强制span不换行 */
+        max-width: 200px; /* 限制宽度 */
+        overflow: hidden; /* 超出宽度部分隐藏 */
+        display: inline-block;
+        text-overflow: ellipsis; /* 超出部分以点号代替 */
       }
     }
 
@@ -275,6 +362,10 @@ export default {
     text-align: center;
     margin: 20px 0px;
     font-size: 14px;
+
+    span {
+      cursor: pointer;
+    }
   }
 }
 </style>

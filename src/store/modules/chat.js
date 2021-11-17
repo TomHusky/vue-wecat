@@ -70,7 +70,7 @@ const mutations = {
   deleteChatByChatId(state, value) {
     let index = -1;
     for (let i = 0; i < state.chatlist.length; i++) {
-      if (state.chatlist[i].chatId == value) {
+      if (state.chatlist[i].chatId === value) {
         index = i;
       }
     }

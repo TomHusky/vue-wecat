@@ -17,10 +17,22 @@ const mutations = {
       state.groupChatList.push(value);
     }
   },
+  deleteGroupChat(state, value) {
+    let index = -1;
+    for (let i = 0; i < state.groupChatList.length; i++) {
+      let x = state.groupChatList[i];
+      if (x.groupNo === value) {
+        index = i;
+      }
+    }
+    if (index != -1) {
+      state.groupChatList.splice(index, 1);
+    }
+  },
   addGroupChatList(state, value) {
     for (let i = 0; i < state.groupChatList.length; i++) {
       let x = state.groupChatList[i];
-      if (value.find((y) => x.groupNo !== y.groupNo)) {
+      if (!value.find((y) => x.groupNo === y.groupNo)) {
         x.deleted = true;
       }
     }
@@ -43,14 +55,15 @@ const actions = {
   }, value) => commit('addGroupChat', value),
   addGroupChatList: ({
     commit
-  }, value) => commit('addGroupChatList', value)
+  }, value) => commit('addGroupChatList', value),
+  deleteGroupChat: ({
+    commit
+  }, value) => commit('deleteGroupChat', value),
 }
 const getters = {
   // 筛选出含有搜索值的好友列表
   searchedGroupChatList(state, params, rootState) {
-     let a= state.groupChatList.filter(group => !group.deleted && (group.groupName.includes(state.searchText)));
-     console.log(a);
-     return a;
+    return state.groupChatList.filter(group => !group.deleted && (group.groupName.includes(state.searchText)));
   },
   // 根据群编号获取群信息
   selectedGroupChat(state, params, rootState) {

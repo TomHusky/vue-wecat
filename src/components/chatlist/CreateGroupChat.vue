@@ -10,7 +10,11 @@
       :isActive="selectFriendList.length > 0"
     >
       <template v-slot:confirm>
-        <PopupLoading  v-if="loading" :load="loading" :color="'#1AAD19'"></PopupLoading>
+        <PopupLoading
+          v-if="loading"
+          :load="loading"
+          :color="'#1AAD19'"
+        ></PopupLoading>
         <div class="left">
           <div class="search-content">
             <Search
@@ -172,6 +176,7 @@ export default {
       createChat(params)
         .then((res) => {
           if (res.code == 0) {
+            this.clear();
             this.$emit("cancel");
             this.addGroupChat(res.data);
           }
@@ -180,7 +185,15 @@ export default {
           this.loading = false;
         });
     },
+    clear() {
+      this.selectFriendWxid = "";
+      this.searchText = "";
+      this.showConfirm = false;
+      this.selectFriendList = [];
+      this.loading = false;
+    },
     createGroupCancel() {
+      this.clear();
       this.$emit("cancel");
     },
   },

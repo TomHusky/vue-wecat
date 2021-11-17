@@ -92,6 +92,10 @@ export default {
         });
         return;
       }
+      let saveUsername = localStorage.getItem("username", username);
+      if (saveUsername != null && saveUsername !== username) {
+        localStorage.removeItem("vue-wechat");
+      }
       localStorage.setItem("username", username);
       let auto = this.form.auto;
       this.handleLogin({ username, password, auto })

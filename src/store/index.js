@@ -19,6 +19,7 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 const store = new Vuex.Store({
   modules,
   plugins: [createPersistedState({
+    key: "vue-wechat",
     // reducer (val) {
     //   return {
     //     user: val.user,
@@ -29,14 +30,4 @@ const store = new Vuex.Store({
     paths: ['user','chat.chatlist',"chat.selectChatId",'system.headMenu','system.systemFileIcon','friend.friendlist',"friend.newFriendList","groupchat.groupChatList"]
   })]
 });
-
-// 监听聊天列表的值， 发生变化就保存在localStorage中
-// store.watch(
-//   (state) => state.chat.chatlist,
-//   (val) => {
-//     localStorage.setItem('vue-chat', JSON.stringify(val));
-//   }, {
-//     deep: true
-//   }
-// )
 export default store;

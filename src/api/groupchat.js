@@ -17,9 +17,35 @@ export const createChat = (value) => {
 /**
  * 获取群聊列表信息
  */
- export const listGroupChat = () => {
+export const listGroupChat = () => {
   return request({
     url: '/groupChat/listGroupChat',
     method: 'get'
+  })
+}
+
+/**
+ * 用户更新群的资料
+ */
+export const userUpdateGroupChat = (value) => {
+  return postJson({
+    url: '/groupChat/userUpdateGroupChat',
+    data: value
+  })
+}
+
+
+
+/**
+ * 退出群聊
+ */
+export const deleteChatUser = (groupNo) => {
+  const params = {
+    groupNo: groupNo
+  }
+  return request({
+    url: '/groupChat/deleteChatUser',
+    params,
+    method: 'post'
   })
 }
