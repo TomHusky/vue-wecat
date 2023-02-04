@@ -19,7 +19,7 @@ Vue.prototype.$message = Message.install;
 /**
  * @description 全局注册应用配置
  */
- Vue.prototype.$config = config
+Vue.prototype.$config = config
 
 // /*引入资源请求插件*/
 // import VueResource from 'vue-resource'
@@ -31,6 +31,7 @@ Vue.config.productionTip = false
 // 拖拽命令
 const directive = {
   'drag': cdire.drag,
+  'tooltip': cdire.tooltip
 }
 
 Object.keys(directive).forEach(key => {

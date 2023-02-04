@@ -8,10 +8,15 @@
       <MessageChat class="message" :key="selectChatId"></MessageChat>
       <VText class="text"></VText>
     </div>
-    <div v-if="isShow" class="chatInfo">
-      <FriendChatInfo v-if="selectedChat.type == 1" id="info"></FriendChatInfo>
-      <GroupChatInfo v-if="selectedChat.type == 2" id="info"></GroupChatInfo>
-    </div>
+    <transition name="moveL">
+      <div v-if="isShow" class="chatInfo">
+        <FriendChatInfo
+          v-if="selectedChat.type == 1"
+          id="info"
+        ></FriendChatInfo>
+        <GroupChatInfo v-if="selectedChat.type == 2" id="info"></GroupChatInfo>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -22,7 +27,7 @@ import FriendChatInfo from "@/components/chatlist/FriendChatInfo";
 import GroupChatInfo from "@/components/chatlist/GroupChatInfo";
 import MessageChat from "@/components/message/MessageChat";
 import VText from "@/components/text/Text";
-import { mapGetters,mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
   components: {
     SearchList,
@@ -100,5 +105,29 @@ export default {
     background-color: #F5F5F5;
     border-left: 1px solid #ECECEC;
   }
+}
+
+.moveL-enter-active {
+  transition: all 0.3s linear;
+  transform: translateX(0%);
+  z-index: -9999;
+}
+
+.moveL-leave-active {
+  transition: all 0.2s linear;
+  transform: translateX(0%);
+  z-index: -9999;
+}
+
+.moveL-enter {
+  transform: translateX(-100%);
+}
+
+.moveL-leave {
+  transform: translateX(-100%);
+}
+
+.moveL-leave-to {
+  transform: translateX(-100%);
 }
 </style>

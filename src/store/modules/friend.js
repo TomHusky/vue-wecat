@@ -108,6 +108,9 @@ const getters = {
     }
     return nums;
   },
+  getFriendlist(state, params, rootState) {
+    return state.friendlist;
+  },
   // 筛选出含有搜索值的好友列表
   searchedFriendlist(state, params, rootState) {
     let friends = state.friendlist.filter(friends => friends.remark.includes(rootState.system.searchText));

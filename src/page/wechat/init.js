@@ -4,9 +4,6 @@ import {
     listFriendInfo
 } from '@/api/friend.js'
 import {
-    listSystemIcon
-} from '@/api/source.js'
-import {
     listGroupChat
 } from "@/api/groupchat";
 
@@ -16,22 +13,7 @@ export function initInfo() {
     initGroupChatList();
 }
 
-export function initSystemInfo() {
-    initSystemIcon();
-}
-
-function initSystemIcon() {
-    if (store.state.system.systemFileIcon != null) {
-        return;
-    }
-    listSystemIcon().then((res) => {
-        if (res.code == 0) {
-            store.commit("system/setSystemFileIcon", res.data);
-        }
-    })
-}
-
-function initFriendList() {
+export function initFriendList() {
     listFriendInfo()
         .then((res) => {
             if (res.code == 0) {
@@ -42,11 +24,11 @@ function initFriendList() {
         })
 }
 
-function initGroupChatList() {
+export function initGroupChatList() {
     listGroupChat()
         .then((res) => {
             if (res.code == 0) {
-                store.commit("groupchat/addGroupChatList", res.data);
+                store.dispatch("groupchat/addGroupChatList", res.data);
             }
         })
 }

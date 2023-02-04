@@ -14,9 +14,6 @@
           <div class="info-avatar">
             <img
               class="avatar"
-              style="background-color: red"
-              width="36"
-              height="36"
               :src="newfriend.avatar"
             />
             <Badge
@@ -40,7 +37,7 @@
           :class="{ active: groupChat.username === selectFriendNo }"
           @click="selectFriend(groupChat.username)"
         >
-          <img class="avatar" width="36" height="36" :src="groupChat.avatar" />
+          <img class="avatar" :src="groupChat.avatar" />
           <div class="remark">{{ groupChat.remark }}</div>
         </div>
       </li>
@@ -56,7 +53,7 @@
           :class="{ active: item.username === selectFriendNo }"
           @click="selectFriend(item.username)"
         >
-          <img class="avatar" width="36" height="36" :src="item.avatar" />
+          <img class="avatar" :src="item.avatar" />
           <div class="remark">{{ item.remark }}</div>
         </div>
       </li>
@@ -122,18 +119,28 @@ export default {
         background-color: #C5C5C5;
       }
 
+      .avatar {
+        border-radius: 2px;
+        background-color: #e6e6e6;
+        width: 34px;
+        height: 34px;
+      }
+
       .info-avatar {
         position: relative;
 
         .avatar {
+          width: 34px;
+          height: 34px;
           border-radius: 2px;
+          background-color: #e6e6e6;
         }
       }
 
       .remark {
         margin-left: 12px;
         font-size: 14px;
-        line-height: 36px;
+        line-height: 34px;
       }
     }
   }

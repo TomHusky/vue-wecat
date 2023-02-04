@@ -1,7 +1,7 @@
 <!-- 搜索框 -->
 <template>
-  <div class="search-wrapper">
-    <div class="search">
+  <div class="search-wrapper" :style="{'background':bgColor}">
+    <div class="search" :style="{'width':width}" v-bind:class="{ 'icon-search-color': searchIconColor }">
       <i
         class="icon iconfont icon-search"
         v-bind:class="{ 'icon-search-color': searchIconColor }"
@@ -36,12 +36,20 @@ export default {
       type: Boolean,
       default: true,
     },
+    bgColor: {
+      type: String,
+      default: "#f7f7f7",
+    },
+    width:{
+      type: String,
+      default: "100%"
+    }
   },
   methods: {
     change() {
       this.$emit("change", this.content);
     },
-    search(){
+    search() {
       this.$emit("search", this.content);
     },
     inputFocus(e) {
@@ -85,12 +93,12 @@ export default {
 <style lang="stylus" scoped>
 .search-wrapper {
   padding: 22px 12px 12px 12px;
-  background-color: #f7f7f7;
+  background-color: #fff;
   display: flex;
 }
 
-.btn{
-  margin-left: 30px;
+.btn {
+  margin-left: 20px;
   width: 50px;
   background-color: #1AAD19;
   border: none;
@@ -99,25 +107,30 @@ export default {
   cursor: pointer;
 }
 
+.icon-search-color {
+  background-color: #f7f7f7 !important;
+}
+
 .search {
   position: relative;
+  margin: 0 auto;
   display: flex;
   box-sizing: border-box;
   height: 26px;
   width: 100%;
-  background-color: #E2E2E2;
-  border: 1px solid #E2E2E2;
+  background-color: #E8E8E8;
+  border: 1px solid #E8E8E8;
   border-radius: 5px;
 
   .searchInput {
     flex: 1;
     font-size: 12px;
     padding: 6px;
-    background-color: #E2E2E2;
+    background-color: #E8E8E8;
     outline: none;
 
     &:focus {
-      background-color: #f7f7f7;
+      background-color: #F8F8F8;
     }
   }
 
@@ -129,10 +142,6 @@ export default {
     line-height: 24px;
     text-align: center;
     transform: rotateY(180deg);
-  }
-
-  .icon-search-color {
-    background-color: #f7f7f7;
   }
 
   .searchInput-delete {
@@ -150,5 +159,4 @@ export default {
     cursor: pointer;
   }
 }
-
 </style>

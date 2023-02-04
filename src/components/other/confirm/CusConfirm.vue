@@ -7,7 +7,7 @@
           '--widthStr': width > 1 ? width + 'px' : '100%',
           '--heightStr': height > 1 ? height + 'px' : '100%',
           '--width': width / 2 + 'px',
-          '--height': height/2 + 'px',
+          '--height': height / 2 + 'px',
         }"
         @click.stop
       >
@@ -15,7 +15,7 @@
           <i @click="no" class="icon iconfont icon-close close"></i>
         </div>
         <div class="confirm-title" v-if="title != null">{{ title }}</div>
-        <div class="confirm-body">
+        <div class="confirm-body" :style="{ height: height - 30 + 'px' }">
           <slot name="confirm"></slot>
         </div>
         <div class="confirm-btns">
@@ -44,7 +44,7 @@ export default {
     okFlag: { type: Boolean, default: true },
     width: {
       type: Number,
-      default: 480,
+      default: 470,
     },
     height: {
       type: Number,
@@ -64,6 +64,9 @@ export default {
     flag(value) {
       this.show = value;
     },
+  },
+  mounted(){
+    this.show = this.flag;
   },
   methods: {
     no() {
@@ -125,7 +128,7 @@ export default {
       i {
         font-size: 6px !important;
         padding: 8px 10px;
-        line-height: 30px;
+        line-height: 29px;
         cursor: pointer;
         color: #7F7F7F;
 
@@ -150,13 +153,12 @@ export default {
     }
 
     .confirm-body {
-      height: 100%;
       font-size: 18px;
       background: #ffffff;
     }
 
     .confirm-btns {
-      text-align: right;
+      text-align: center;
       bottom: 0;
     }
 
@@ -171,7 +173,7 @@ export default {
     }
 
     .ok-btn {
-      background: #8cd58c;
+      background: #07C160;
       color: #fff;
       cursor: default;
     }
@@ -186,7 +188,7 @@ export default {
     }
 
     .cancel-btn {
-      background: #fff;
+      background: #F3F3F3;
       color: #000;
       border: 1px solid #e7e7e7 !important;
     }
@@ -197,7 +199,7 @@ export default {
     }
 
     .cancel-btn:hover {
-      background: #efefef;
+      background: #DBDBDB;
     }
   }
 }

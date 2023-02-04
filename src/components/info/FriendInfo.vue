@@ -77,6 +77,7 @@ export default {
           lastMsgTime: new Date(),
           messages: [
             {
+              username: friend.username,
               type: 1,
               content: "已经置顶聊天，可以给我发信息啦！",
               date: new Date(),
@@ -86,8 +87,8 @@ export default {
         this.$store.dispatch("chat/topChat", chat);
         this.$store.dispatch("chat/selectSession", friend.username);
       } else {
-        this.$store.dispatch("chat/selectSession", msg.username);
-        this.$store.dispatch("friend/selectFriend", msg.username);
+        this.$store.dispatch("chat/selectSession", msg.info.username);
+        this.$store.dispatch("friend/selectFriend", msg.info.username);
       }
       this.$router.push({ path: "/chat" });
     },

@@ -19,7 +19,7 @@
       ></i>
     </header>
     <div
-      class="message-wrapper"
+      class="message-wrapper scrollbar"
       ref="list"
       @scroll="handleScroll"
       @mousewheel="mousewheel"
@@ -30,10 +30,9 @@
       </div>
       <ul v-if="selectedChat">
         <li v-for="item in showMessages" :key="item.id" class="message-item">
-          <div class="time">
+          <div class="time selectNone">
             <span v-if="item.showTime">{{ item.date | time }}</span>
           </div>
-
           <div
             class="main"
             :class="{
@@ -54,7 +53,11 @@
             />
             <div class="content">
               <div class="nickname" v-if="!isSelf(item.username)">
-                {{ getMsgUserInfo(item.username).nickname }}
+                {{
+                  getMsgUserInfo(item.username).remark != null
+                    ? getMsgUserInfo(item.username).remark
+                    : getMsgUserInfo(item.username).nickname
+                }}
               </div>
               <div class="msg" :class="{ 'text-msg': item.type == 1 }">
                 <img
@@ -83,7 +86,6 @@
                         ? systemFileIcon[item.content.fileType]
                         : 'static/images/file.png'
                     "
-                    style="width: 40px"
                   />
                 </div>
                 <div
@@ -285,7 +287,7 @@ export default {
 <style lang="stylus" scoped>
 .message {
   width: 100%;
-  height: 100;
+  height: 100%;
   background-color: #F5F5F5;
 
   .header {
@@ -316,9 +318,8 @@ export default {
   .message-wrapper {
     min-height: 420px;
     max-height: 420px;
-    padding: 0 30px 18px 30px;
+    padding: 0 15px 18px 15px;
     box-sizing: border-box;
-    overflow-y: auto;
     border-top: 1px solid #e7e7e7;
     border-bottom: 1px solid #e7e7e7;
 
@@ -357,14 +358,14 @@ export default {
       .avatar {
         cursor: pointer;
         float: left;
-        margin-left: 0px;
+        margin-left: 15px;
         border-radius: 3px;
       }
 
       .content {
         display: inline-block;
         position: relative;
-        margin: 0 10px;
+        margin-left: 10px;
 
         .nickname {
           font-size: 12px;
@@ -397,7 +398,6 @@ export default {
             height: 0;
             content: '';
             border: solid transparent;
-            border-right-color: #FFFFFF;
           }
         }
 
@@ -416,6 +416,7 @@ export default {
           width: 200px;
           cursor: pointer;
           position: relative;
+          background-color: #fff;
 
           &:hover {
             border: 1px solid #E7E7E7;
@@ -428,7 +429,6 @@ export default {
             height: 0;
             content: '';
             border: solid transparent;
-            border-right-color: #FFFFFF;
           }
 
           .file-name {
@@ -467,10 +467,6 @@ export default {
     }
 
     .other {
-      .avatar {
-        margin-top: 4px;
-      }
-
       .text-msg {
         &:before {
           border-right-color: #E7E7E7;
@@ -525,6 +521,10 @@ export default {
     .self {
       display: flex;
       flex-direction: row-reverse;
+
+      .avatar {
+        margin: 0 15px;
+      }
 
       .content {
         .text-msg {

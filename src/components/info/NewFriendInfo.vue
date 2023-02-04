@@ -70,6 +70,7 @@ export default {
       updateNewFriendStatus: "friend/updateNewFriendStatus",
     }),
     reject(item) {
+      this.handleApply(item, 2);
     },
     agree(item) {
       this.handleApply(item, 1);
@@ -170,6 +171,7 @@ export default {
       .info {
         position: absolute;
         font-size: 14px;
+        max-width: 350px;
         width: 100%;
         height: 15px;
         line-height: 15px;

@@ -10,6 +10,7 @@ import {
  */
 export function chatMsg(body) {
   const dataJson = body;
+  console.log(dataJson);
   let info = {};
   if (dataJson.data.msgType == 1) {
     info = store.getters['friend/selectedFriendByUsername'](dataJson.data.sendId);

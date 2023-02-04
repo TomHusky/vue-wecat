@@ -6,7 +6,7 @@
     <div class="content scrollbar">
       <div class="chatUserList">
         <div class="userHead">
-          <div class="add">
+          <div class="add" @click="addUser">
             <img alt="添加" width="15px" src="static/images/icon/add.svg" />
           </div>
           <div class="name">添加</div>
@@ -44,10 +44,10 @@
           <p class="lable">群公告</p>
           <p class="value">
             {{
-              selectedGroupChat.remark == null ||
-              selectedGroupChat.remark === ""
+              selectedGroupChat.notice == null ||
+              selectedGroupChat.notice === ""
                 ? "未设置"
-                : selectedGroupChat.remark
+                : selectedGroupChat.notice
             }}
           </p>
         </div>
@@ -108,22 +108,30 @@
         <span @click="exit">删除并退出</span>
       </div>
     </div>
+    <CreateGroupChat
+      @cancel="closeCreateGroupChat"
+      :showCreate="showCreate"
+      :groupInfo="selectedGroupChat"
+    ></CreateGroupChat>
   </div>
 </template>
 
 <script>
 import Search from "@/components/search/Search";
 import Switched from "@/components/other/Switch";
+import CreateGroupChat from "@/components/chatlist/CreateGroupChat";
 import { mapState, mapGetters, mapActions } from "vuex";
 import { deleteChatUser, userUpdateGroupChat } from "@/api/groupchat.js";
 export default {
   components: {
     Search,
     Switched,
+    CreateGroupChat,
   },
   data() {
     return {
       placeholder: "搜索群好友",
+      showCreate: false,
     };
   },
   created() {
@@ -240,6 +248,12 @@ export default {
           this.deleteGroupChat(groupNo);
         }
       });
+    },
+    addUser() {
+      this.showCreate = true;
+    },
+    closeCreateGroupChat() {
+      this.showCreate = false;
     },
   },
 };

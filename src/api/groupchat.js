@@ -15,6 +15,17 @@ export const createChat = (value) => {
 }
 
 /**
+ * 邀请人加入群聊
+ */
+ export const inviteUser = (value) => {
+  return postJson({
+    url: '/groupChat/inviteUser',
+    data: value
+  })
+}
+
+
+/**
  * 获取群聊列表信息
  */
 export const listGroupChat = () => {

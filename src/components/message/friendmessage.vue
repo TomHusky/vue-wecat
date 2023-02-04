@@ -32,14 +32,19 @@
           </div>
           <div
             class="main"
-            :class="{ self: isSelf(item), other: !isSelf(item) }"
+            :class="{
+              self: isSelf(item.username),
+              other: !isSelf(item.username),
+            }"
           >
             <img
               class="avatar selectNone"
               width="36"
               height="36"
               @click.prevent="openMenu($event, item)"
-              :src="isSelf(item) ? user.avatar : selectedChat.info.avatar"
+              :src="
+                isSelf(item.username) ? user.avatar : selectedChat.info.avatar
+              "
             />
             <div class="content" :class="{ 'text-msg': item.type == 1 }">
               <img
@@ -68,7 +73,6 @@
                       ? systemFileIcon[item.content.fileType]
                       : 'static/images/file.png'
                   "
-                  style="width: 40px"
                 />
               </div>
               <div
@@ -98,17 +102,13 @@ export default {
       selectedChatFriend: "friend/selectedChatFriend",
     }),
     ...mapState({
+      user: (state) => state.user.info,
       emojis: (state) => state.system.emojis,
       systemFileIcon: (state) => state.system.systemFileIcon,
     }),
-    user() {
-      let user = this.$store.state.user.info;
-      user.self = true;
-      return user;
-    },
     isSelf() {
       return (item) => {
-        return item.username === this.user.username;
+        return item === this.user.username;
       };
     },
   },
@@ -207,10 +207,10 @@ export default {
       let info = {
         clientX: e.clientX,
         clientY: e.clientY,
-        self: this.isSelf(item),
+        self: this.isSelf(item.username),
         visible: true,
         visibleIng: true,
-        info: this.isSelf(item) ? this.user : this.selectedChatFriend,
+        info: this.isSelf(item.username) ? this.user : this.selectedChatFriend,
       };
       this.$store.commit("system/setHeadMenu", info);
     },
@@ -254,10 +254,11 @@ export default {
 };
 </script>
 
+
 <style lang="stylus" scoped>
 .message {
   width: 100%;
-  height: 100;
+  height: 100%;
   background-color: #F5F5F5;
 
   .header {
@@ -356,7 +357,6 @@ export default {
           height: 0;
           content: '';
           border: solid transparent;
-          border-right-color: #FFFFFF;
         }
       }
 
@@ -375,6 +375,7 @@ export default {
         width: 200px;
         cursor: pointer;
         position: relative;
+        background-color: #fff;
 
         &:hover {
           border: 1px solid #E7E7E7;
@@ -387,7 +388,6 @@ export default {
           height: 0;
           content: '';
           border: solid transparent;
-          border-right-color: #FFFFFF;
         }
 
         .file-name {

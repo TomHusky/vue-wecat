@@ -2,7 +2,8 @@
   <div id="wechat">
     <div class="network-bar" v-if="!network">
       <p>
-        <i class="icon iconfont icon-warn"></i>连接失败，请检查你的网络或刷新页面
+        <i class="icon iconfont icon-warn"></i
+        >连接失败，请检查你的网络或刷新页面
       </p>
     </div>
     <div class="sidebar">
@@ -19,22 +20,26 @@
     </div>
     <HeadMenu class="right-menu" id="friendHeadMenu" :refId="'friendHeadMenu'">
     </HeadMenu>
+    <AddFriend v-if="addFriend.visible"></AddFriend>
+    <span id="v-tooltip">聊天记录</span>
   </div>
 </template>
 
 <script>
 import HeadMenu from "@/components/other/menu/HeadMenu";
+import AddFriend from "@/components/friendlist/AddFriend";
 import MyCard from "@/components/mycard/MyCard";
-import { initInfo, initSystemInfo } from "@/page/wechat/init.js";
+import { initInfo } from "@/page/wechat/init.js";
 import { getBaseUrl, exitLogin } from "@/libs/request.js";
 import receive from "@/api/socket/receive.js";
 import { getToken } from "@/libs/util";
 import { bulidWebsocket, closeWebsocket } from "@/libs/websocket.js";
-import { mapState} from "vuex";
+import { mapState } from "vuex";
 export default {
   components: {
     MyCard,
     HeadMenu,
+    AddFriend,
   },
   data() {
     return {
@@ -47,11 +52,11 @@ export default {
   computed: {
     ...mapState({
       network: (state) => state.system.network,
+      addFriend: (state) => state.system.addFriend,
     }),
   },
   created() {
     initInfo();
-    initSystemInfo();
     // 允许浏览器通知
     this.allowNotification();
   },
@@ -208,6 +213,19 @@ export default {
         color: #fff;
       }
     }
+  }
+
+  #v-tooltip {
+    position: fixed;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    font-size: 12px;
+    background-color: #F9F9F9;
+    border: 1px solid #ECECEC;
+    border-radius: 2px;
+    padding: 3px 5px;
+    box-shadow: 2px 2px 2px #C4C4C4;
   }
 }
 </style>

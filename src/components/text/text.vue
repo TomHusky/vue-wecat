@@ -7,10 +7,11 @@
           class="icon iconfont icon-emoji"
           ref="emoji"
           @click="showEmojiList"
+          v-tooltip="'表情'"
         ></i>
       </span>
       <span class="operation-icon file-upload">
-        <a href="javascript:;" class="icon iconfont icon-img">
+        <a href="javascript:;" class="icon iconfont icon-img"  v-tooltip="'发送图片'">
           <input
             type="file"
             @change="selectImg($event)"
@@ -20,9 +21,12 @@
         </a>
       </span>
       <span class="operation-icon file-upload">
-        <a href="javascript:;" class="icon iconfont icon-file">
+        <a href="javascript:;" class="icon iconfont icon-file" v-tooltip="'发送文件'">
           <input type="file" @change="selectFile($event)" ref="selectFile" />
         </a>
+      </span>
+      <span class="operation-icon">
+        <i class="icon iconfont icon-xiaoxi" v-tooltip="'聊天记录'"></i>
       </span>
       <transition name="showbox">
         <div class="emojiBox" v-show="showEmoji">
@@ -45,7 +49,7 @@
       @keydown.enter="onkeydown($event)"
       @paste="pasteListener"
     ></div>
-    <div class="send" @click="send">
+    <div class="send" @click="send" v-tooltip="'回车发送'">
       <span>发送(ent)</span>
     </div>
     <transition name="appear">
@@ -477,7 +481,7 @@ export default {
 
 .text {
   position: relative;
-  background: #fff;
+  background: #F5F5F5;
 
   .operation {
     width: 100%;
@@ -491,11 +495,15 @@ export default {
       line-height: 40px;
 
       .icon-emoji {
-        font-size: 18px;
+        font-size: 20px;
+      }
+
+      .icon-xiaoxi {
+        font-size: 21px !important;
       }
 
       .icon {
-        font-size: 18px;
+        font-size: 20px;
         color: #4C4C4C;
         cursor: pointer !important;
         margin-right: 15px;
@@ -513,7 +521,7 @@ export default {
         position: relative;
         text-decoration: none;
         line-height: 20px;
-        font-size: 19px;
+        font-size: 20px;
         cursor: pointer;
         overflow: hidden;
 
@@ -562,22 +570,21 @@ export default {
   .send {
     position: absolute;
     cursor: pointer;
-    bottom: 10px;
+    bottom: 15px;
     right: 30px;
-    width: 75px;
-    height: 28px;
+    width: 100px;
+    height: 30px;
     line-height: 28px;
     box-sizing: border-box;
     text-align: center;
     border: 1px solid #e5e5e5;
-    border-radius: 3px;
-    background: #f5f5f5;
+    border-radius: 5px;
+    background: #E9E9E9;
     font-size: 14px;
-    color: #7c7c7c;
+    color: #06AE57;
 
     &:hover {
-      background: rgb(18, 150, 17);
-      color: #fff;
+      background: rgb(210, 210, 210);
     }
   }
 

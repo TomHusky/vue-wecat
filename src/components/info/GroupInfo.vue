@@ -53,6 +53,7 @@
 <script>
 import CreateGroupChat from "@/components/chatlist/CreateGroupChat";
 import Search from "@/components/search/Search";
+import { initGroupChatList } from "@/page/wechat/init.js";
 import { mapGetters, mapActions } from "vuex";
 export default {
   components: {
@@ -69,6 +70,9 @@ export default {
     return {
       showCreate: false,
     };
+  },
+  mounted(){
+    initGroupChatList();
   },
   methods: {
     ...mapActions({ search: "groupchat/search" }),

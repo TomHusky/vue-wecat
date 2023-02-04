@@ -2,7 +2,7 @@
 <template>
   <div class="create-group-wrapper selectNone">
     <CusConfirm
-      :height="480"
+      :height="470"
       :width="550"
       :flag="showConfirm"
       @cancel="createGroupCancel"
@@ -20,6 +20,7 @@
             <Search
               class="friend-search"
               :showBtn="false"
+              :bgColor="'#fff'"
               :placeholder="'搜索'"
               @change="friendSearch"
             ></Search>
@@ -51,6 +52,7 @@
                     class="round-checkbox"
                     :value="item"
                     :checked="isSelect(item)"
+                    :disabled="item.disabled"
                     :width="20"
                     :height="20"
                   >
@@ -62,7 +64,12 @@
         </div>
         <div class="right">
           <div class="select-nums">
-            已选择了{{ selectFriendList.length }}个联系人
+            <template v-if="selectFriendList.length < 1">
+              请勾选需要添加的联系人
+            </template>
+            <template v-else>
+              已选择了{{ selectFriendList.length }}个联系人
+            </template>
           </div>
           <div class="friendlist scrollbar">
             <ul>
@@ -95,9 +102,9 @@ import CusConfirm from "@/components/other/confirm/CusConfirm";
 import RoundCheckBox from "@/components/other/input/RoundCheckBox";
 import PopupLoading from "@/components/other/loading/PopupLoading";
 import Search from "@/components/search/Search";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import { getIndex } from "@/libs/tools";
-import { createChat } from "@/api/groupchat";
+import { createChat, inviteUser } from "@/api/groupchat";
 export default {
   components: {
     Search,
@@ -107,6 +114,7 @@ export default {
   },
   props: {
     showCreate: { type: Boolean, default: false },
+    groupInfo: { type: Object, default: null },
   },
   data() {
     return {
@@ -122,18 +130,33 @@ export default {
       this.showConfirm = value;
     },
   },
+  created() {
+    if (this.groupInfo != null) {
+      for (let friend of this.getFriendlist) {
+        for (let user of this.groupInfo.userDetails) {
+          if (user.username === friend.username) {
+            friend["disabled"] = true;
+          }
+        }
+      }
+    }
+  },
   computed: {
-    ...mapState({
-      friendlist: (state) => state.friend.friendlist,
+    ...mapGetters({
+      getFriendlist: "friend/getFriendlist",
+      getNewFriendNums: "friend/getNewFriendNums",
     }),
     friendListSearch() {
+      let friendlist = this.getFriendlist;
       if (this.searchText != null && this.searchText !== "") {
-        let friends = this.friendlist.filter((friends) =>
+        let friends = friendlist.filter((friends) =>
           friends.remark.includes(this.searchText)
         );
         return friends;
+      } else {
+        let friends = friendlist.filter((friends) => friends.id != -1);
+        return friends;
       }
-      return this.friendlist;
     },
   },
   methods: {
@@ -149,6 +172,9 @@ export default {
     },
     // 选择好友
     selectFriend(item) {
+      if (item.disabled) {
+        return;
+      }
       this.selectFriendWxid = item.wxid;
       let index = getIndex(this.selectFriendList, "username", item.username);
       if (index == -1) {
@@ -168,22 +194,46 @@ export default {
       if (this.selectFriendList.length < 1) {
         return;
       }
-      let users = this.selectFriendList.map((value) => value.username);
-      let params = {
-        usernames: users,
-      };
       this.loading = true;
-      createChat(params)
-        .then((res) => {
-          if (res.code == 0) {
-            this.clear();
-            this.$emit("cancel");
-            this.addGroupChat(res.data);
-          }
-        })
-        .catch((err) => {
-          this.loading = false;
-        });
+      let users = this.selectFriendList.map((value) => value.username);
+      if (this.groupInfo == null) {
+        let params = {
+          usernames: users,
+        };
+        createChat(params)
+          .then((res) => {
+            if (res.code == 0) {
+              this.clear();
+              this.$emit("cancel");
+              this.addGroupChat(res.data);
+            }
+          })
+          .catch((err) => {
+            this.loading = false;
+          });
+      } else {
+        let params = {
+          users: users,
+          groupNo: this.groupInfo.groupNo,
+        };
+        inviteUser(params)
+          .then((res) => {
+            if (res.code == 0) {
+              this.clear();
+              this.$emit("cancel");
+            } else {
+              this.$message({
+                content: res.msg,
+                time: 2500,
+                type: "warning",
+                hasClose: true,
+              });
+            }
+          })
+          .catch((err) => {
+            this.loading = false;
+          });
+      }
     },
     clear() {
       this.selectFriendWxid = "";
@@ -210,13 +260,14 @@ export default {
 
   .search-content {
     .friend-search {
+      background: #fff;
       width: 215px;
       margin: 0 auto;
     }
   }
 
   .friendlist {
-    height: 400px;
+    height: 410px;
     width: 275px;
 
     .frienditem {
@@ -277,6 +328,7 @@ export default {
   height: 300px;
 
   .select-nums {
+    font-size: 14px;
     margin: 30px 30px;
   }
 

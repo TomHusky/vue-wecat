@@ -1,7 +1,3 @@
-import {
-  getIndex,
-  rmByIndexs
-} from '@/libs/tools'
 const state = {
   groupChatList: [],
   searchText: ""
@@ -29,7 +25,12 @@ const mutations = {
       state.groupChatList.splice(index, 1);
     }
   },
-  addGroupChatList(state, value) {
+  async ['addGroupChatList'](state, {
+    commit,
+    dispatch,
+    value,
+    rootState
+  }) {
     for (let i = 0; i < state.groupChatList.length; i++) {
       let x = state.groupChatList[i];
       if (!value.find((y) => x.groupNo === y.groupNo)) {
@@ -37,9 +38,29 @@ const mutations = {
       }
     }
     let add = value.filter(x => !state.groupChatList.find((y) => x.groupNo === y.groupNo));
+
     for (let i = 0; i < add.length; i++) {
       state.groupChatList.push(add[i]);
     }
+
+    for (let i = 0; i < state.groupChatList.length; i++) {
+      for (let j = 0; j < value.length; j++) {
+        let v = value[j];
+        if (state.groupChatList[i].groupNo === v.groupNo) {
+          state.groupChatList[i] = v;
+          let chat = rootState.chat.chatlist.find((item) => item.chatId === v.groupNo);
+          if (chat) {
+            chat.info.nickname = v.groupName;
+            chat.info.remark = v.remark;
+            chat.info.notDisturb = v.notDisturb;
+            chat.info.avatar = v.groupAvatar;
+            dispatch('chat/updateChatInfo', chat,{root: true});
+          }
+          break;
+        }
+      }
+    }
+
   }
 }
 const actions = {
@@ -53,9 +74,21 @@ const actions = {
   addGroupChat: ({
     commit
   }, value) => commit('addGroupChat', value),
-  addGroupChatList: ({
-    commit
-  }, value) => commit('addGroupChatList', value),
+  async ['addGroupChatList'](store, value) {
+    const {
+      commit,
+      dispatch,
+      state,
+      rootState,
+      rootGetters
+    } = store
+    commit('addGroupChatList', {
+      commit,
+      dispatch,
+      value,
+      rootState
+    })
+  },
   deleteGroupChat: ({
     commit
   }, value) => commit('deleteGroupChat', value),

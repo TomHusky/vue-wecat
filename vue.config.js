@@ -23,7 +23,7 @@ module.exports = {
     // 需要将它改为'/my-app/'
     publicPath: BASE_URL,
     devServer: {
-        port: 8000, // 端口
+        port: 8001, // 端口
     },
     // 如果你不需要使用eslint，把lintOnSave设为false即可
     lintOnSave: false,

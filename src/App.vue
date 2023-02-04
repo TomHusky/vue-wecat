@@ -76,7 +76,7 @@ export default {
     register() {
       switch (process.env.NODE_ENV) {
         case "development":
-          window.open("http://y2725078j3.qicp.vip/chat/register.html");
+          window.open("http://127.0.0.1:80/chat/register.html");
           break;
         case "production":
           window.open("http://y2725078j3.qicp.vip/chat/register.html");

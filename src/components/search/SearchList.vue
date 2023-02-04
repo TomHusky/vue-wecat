@@ -1,7 +1,12 @@
 <!-- 搜索框 -->
 <template>
-  <div class="search-list-wrapper">
-    <div class="search-list">
+  <div
+    class="search-list-wrapper"
+  >
+    <div
+      class="search-list"
+      v-bind:class="{ 'icon-search-color': searchIconColor }"
+    >
       <i
         class="icon iconfont icon-search"
         v-bind:class="{ 'icon-search-color': searchIconColor }"
@@ -95,6 +100,10 @@ export default {
   }
 }
 
+.icon-search-color {
+  background-color: #f7f7f7 !important;
+}
+
 .search-list {
   position: relative;
   display: flex;
@@ -113,22 +122,18 @@ export default {
     outline: none;
 
     &:focus {
-      background-color: #f7f7f7;
+      background-color: #F8F8F8;
     }
   }
 
   .icon-search {
     display: inline-block;
-    width: 24px;
-    height: 24px;
-    font-size: 14px;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
     line-height: 24px;
     text-align: center;
     transform: rotateY(180deg);
-  }
-
-  .icon-search-color {
-    background-color: #f7f7f7;
   }
 
   .searchInput-delete {

@@ -30,6 +30,7 @@ const state = {
     isShow: true,
     lastMsgTime: new Date(),
     messages: [{
+      username: "99",
       type: 1,
       content: '我会跟你聊聊天的哟',
       date: now,
@@ -158,6 +159,7 @@ const mutations = {
         type: msg.msgType,
         chatId: info.chatId,
         info: {
+          username: info.username,
           nickname: info.nickname,
           avatar: info.avatar,
           remark: info.remark,

@@ -1,9 +1,11 @@
 <!-- 好友信息 -->
 <template>
   <div class="Info">
-    <FriendInfo v-if="selectedFriend.wxid!=='1' && selectedFriend.wxid!=='2'"></FriendInfo>
-    <GroupInfo v-if="selectedFriend.wxid==='2'"></GroupInfo>
-    <NewFriendInfo v-if="selectedFriend.wxid==='1'"></NewFriendInfo>
+    <FriendInfo
+      v-if="selectedFriend.wxid !== '1' && selectedFriend.wxid !== '2'"
+    ></FriendInfo>
+    <GroupInfo v-if="selectedFriend.wxid === '2'"></GroupInfo>
+    <NewFriendInfo v-if="selectedFriend.wxid === '1'"></NewFriendInfo>
   </div>
 </template>
 

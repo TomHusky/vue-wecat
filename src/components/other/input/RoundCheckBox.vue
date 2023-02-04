@@ -9,6 +9,7 @@
     class="layers-item-selector"
     v-on:change="$emit('change', $event.target.checked,value)"
     type="checkbox"
+    v-bind:disabled="disabled"
   />
 </template>
 
@@ -21,6 +22,10 @@ export default {
   },
   props: {
     checked: {
+      type: Boolean,
+      default: false,
+    },
+    disabled:{
       type: Boolean,
       default: false,
     },
@@ -64,6 +69,12 @@ export default {
 .layers-item-selector:checked {
   border: 0px;
   background: url("../../../../public/static/images/select.png") var(--color)
+    center center no-repeat;
+  background-size: 60% 60%;
+}
+.layers-item-selector:disabled {
+  border: 0px;
+  background: url("../../../../public/static/images/select.png") #CFCFCF
     center center no-repeat;
   background-size: 60% 60%;
 }
