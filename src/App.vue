@@ -11,19 +11,19 @@
 <script>
 export default {
   created() {
-    this.$store.dispatch("chat/initData");
+    this.$store.dispatch('chat/initData');
     window.fullHeight = document.documentElement.clientHeight;
     window.fullWidth = document.documentElement.clientWidth;
-    this.$store.commit("system/setWindowWidth", window.fullWidth);
-    this.$store.commit("system/setwindowHeight", window.fullHeight);
+    this.$store.commit('system/setWindowWidth', window.fullWidth);
+    this.$store.commit('system/setwindowHeight', window.fullHeight);
 
     //阻止F5刷新
     this.stopF5Refresh();
     //监听刷新事件
-    window.addEventListener("beforeunload", (e) => this.beforeunloadHandler(e));
+    window.addEventListener('beforeunload', (e) => this.beforeunloadHandler(e));
   },
   destroyed() {
-    window.removeEventListener("beforeunload", (e) =>
+    window.removeEventListener('beforeunload', (e) =>
       this.beforeunloadHandler(e)
     );
   },
@@ -39,9 +39,9 @@ export default {
   watch: {
     $route: {
       handler: function (route) {
-        if(route.path==='/login'){
+        if (route.path === '/login') {
           this.showRegister = true;
-        }else{
+        } else {
           this.showRegister = false;
         }
       },
@@ -66,27 +66,27 @@ export default {
     //浏览器刷新事件
     beforeunloadHandler(e) {
       if (
-        JSON.parse(localStorage.getItem("havePlay")) &&
-        JSON.parse(localStorage.getItem("havePlay")).currentTime ==
+        JSON.parse(localStorage.getItem('havePlay')) &&
+        JSON.parse(localStorage.getItem('havePlay')).currentTime ==
           this.currentTime
       ) {
-        window.localStorage.removeItem("havePlay");
+        window.localStorage.removeItem('havePlay');
       }
     },
     register() {
       switch (process.env.NODE_ENV) {
-        case "development":
-          window.open("http://127.0.0.1:80/chat/register.html");
+        case 'development':
+          window.open('http://127.0.0.1:80/chat/register.html');
           break;
-        case "production":
-          window.open("http://y2725078j3.qicp.vip/chat/register.html");
+        case 'production':
+          window.open('http://y2725078j3.qicp.vip/chat/register.html');
           break;
       }
     },
   },
 };
 </script>
-<style lang="stylus" >
+<style lang="stylus">
 #app {
   height: 100%;
 }

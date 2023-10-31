@@ -33,10 +33,10 @@ export default {
   },
   methods: {
     initPaint() {
-      let chess = document.getElementById("chess");
-      this.paint = chess.getContext("2d");
+      let chess = document.getElementById('chess');
+      this.paint = chess.getContext('2d');
       let paint = this.paint;
-      paint.strokeStyle = "#0C0C0C";
+      paint.strokeStyle = '#0C0C0C';
       paint.moveTo(0, 449);
       paint.lineTo(0, 0);
 
@@ -96,11 +96,11 @@ export default {
         5
       );
       if (me) {
-        gradient.addColorStop(0, "#0A0A0A");
-        gradient.addColorStop(1, "#636766");
+        gradient.addColorStop(0, '#0A0A0A');
+        gradient.addColorStop(1, '#636766');
       } else {
-        gradient.addColorStop(0, "#D1D1D1");
-        gradient.addColorStop(1, "#F9F9F9");
+        gradient.addColorStop(0, '#D1D1D1');
+        gradient.addColorStop(1, '#F9F9F9');
       }
       this.paint.fillStyle = gradient;
       this.paint.fill();
@@ -110,7 +110,7 @@ export default {
       this.paint.beginPath();
       this.paint.arc(15 + 7 * 30, 15 + 7 * 30, 3, 0, 2 * Math.PI);
       this.paint.closePath();
-      this.paint.fillStyle = "red";
+      this.paint.fillStyle = 'red';
       this.paint.fill();
     },
     dot(e) {
@@ -135,7 +135,7 @@ export default {
           this.myWin[k]++; //我方该中赢法更近一步
           this.computerWin[k] = -1; //计算机该种赢法不存在了
           if (this.myWin[k] == 5) {
-            window.alert("你赢了");
+            window.alert('你赢了');
             this.over = true;
           }
         }
@@ -255,7 +255,7 @@ export default {
           this.myWin[k] = -1; //我方该种赢法不存在了
           if (this.computerWin[k] == 5) {
             this.over = true;
-            window.alert("计算机赢了");
+            window.alert('计算机赢了');
           }
         }
       }
